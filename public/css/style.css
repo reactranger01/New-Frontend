@@ -1,0 +1,65 @@
+body {
+  background: rgb(8 20 32);
+}
+
+p {
+  color: white;
+}
+
+.react {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250px;
+  height: 250px;
+  margin-top: -125px;
+  margin-left: -125px;
+  cursor: 'pointer';
+}
+
+#notif{
+  visibility: hidden;
+  position:fixed;
+  color: white;
+  border-radius:10px;
+  top:0;
+  right:0;
+  transform: translate(-15px,15px);
+  border-radius:10px;
+  overflow:hidden
+}
+
+.notif-text-icon{
+  align-items: stretch;
+  box-shadow: 0 1px 1px rgb(10 10 10 / 10%);
+  display: flex;
+  max-width:250px;
+}
+
+.notif-message{
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  font-weight: 700;
+  padding: 15px 25px;
+}
+
+#notif.show {
+  visibility: visible; 
+  animation: show 0.5s forwards;
+}
+
+@keyframes show{
+  0% {
+    transform: translate(-15px,15px) scale(0);
+  }
+  50% {
+    transform: translate(-15px,15px) scale(1.2);
+  }
+  70% {
+    transform: translate(-15px,15px) scale(0.9);
+  }
+  100% {
+    transform: translate(-15px,15px) scale(1);
+  }
+}

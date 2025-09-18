@@ -1,0 +1,39 @@
+name: Production Deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - latest-code
+
+jobs:
+  deployment:
+    name: Deploy on remote server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH keys
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ vars.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Connect and run commands
+        run: |
+          ssh -v root@${{ vars.SSH_HOST }} \
+          "cd /var/www/html/Lotus-book-user \
+          && git remote set-url origin git@github.com:${{ vars.REPOSITORY }}.git \
+          && export NVM_DIR=~/.nvm \
+          && source ~/.nvm/nvm.sh \
+          && git config --global --add safe.directory /var/www/html/Lotus-book-user \
+          && git checkout main \
+          && git pull \
+          && npm install \
+          && npm run build \
+          && exit"
+
+      - name: Cleanup
+        run: rm -rf ~/.ssh
+
+
+        

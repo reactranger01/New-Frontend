@@ -1,0 +1,9 @@
+# dependencies
+node_modules/
+
+# build
+tempDist/
+build/
+
+.eslintcache
+.env
