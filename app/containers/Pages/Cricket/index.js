@@ -1,27 +1,17 @@
-import {
-  BetSlip,
-  BlankBtn,
-  BlueBtn,
-  Loading,
-  NewBetSlip,
-  PinkBtn,
-  SeeMoreMarkets,
-} from '@/components';
+import { Loading } from '@/components';
+import DesktopMarketAll from '@/components/DesktopMarketAll';
+import MostPopular from '@/components/MostPopular';
 import { LoginModal } from '@/containers/pageListAsync';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureData } from '@/utils/helper';
-import { reactIcons } from '@/utils/icons';
 import { useMediaQuery } from '@mui/material';
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 const Cricket = () => {
   const isLogin = isLoggedIn();
-  // eslint-disable-next-line
   // eslint-disable-next-line
   const [isLoading, setisLoading] = useState(false);
   const [loaderOneTime, setLoaderOneTime] = useState(false);
@@ -29,7 +19,7 @@ const Cricket = () => {
   const betData = useSelector((state) => state.bet.selectedBet);
   const [inplayTrue, setInplayTrue] = useState([]);
   const [inplayFalse, setInplayFalse] = useState([]);
-  const navigate = useNavigate();
+
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery('(max-width:1024px)');
@@ -113,13 +103,28 @@ const Cricket = () => {
   return (
     <>
       {isLoading && !loaderOneTime && <Loading />}
-      <div className="mb-10 flex min-h-screen  gap-4">
-        <div className="flex-1">
-          <div className="border-b border-black py-2 my-3">
-            <h1 className="text-24 text-center sm:text-left">Cricket</h1>
+      <div className="mb-10 min-h-screen">
+        <div className="">
+          <MostPopular />
+          <div className="flex items-center justify-center sm:justify-between bg-white py-[8.5px] pl-[8.5px]">
+            <div className="flex items-center gap-2 pl-2">
+              <img
+                src="/images/sidebarIcons/cricketDesk.png"
+                className="w-6 h-6"
+                alt=""
+              />
+              <p className="text-16 font-bold text-center sm:text-left">
+                Cricket{' '}
+              </p>
+            </div>
+            <div className="sm:grid grid-cols-6 hidden sm:min-w-[360px] min-w-[300px]">
+              <div className="col-span-2 flex-center text-14 font-bold">1</div>
+              <div className="col-span-2 flex-center text-14 font-bold">X</div>
+              <div className="col-span-2 flex-center text-14 font-bold">2</div>
+            </div>
           </div>
 
-          <div className="flex flex-col mb-5">
+          {/* <div className="flex flex-col mb-5">
             <div className="flex items-center justify-center sm:justify-between">
               <div className="flex items-center text-12 font-semibold">
                 <span className="text-[#3cdeff] mx-1">
@@ -441,7 +446,7 @@ const Cricket = () => {
                           {activeBetSlip == Number(_items?.matchId) &&
                             Number(_items?.matchId) ==
                               Number(bets[0]?.eventId) &&
-                            isLoggedIn() &&
+                            isLogin &&
                             betData?.length > 0 &&
                             isMobile && <NewBetSlip />}
                         </>
@@ -450,8 +455,34 @@ const Cricket = () => {
                 </>
               )}
             </div>
-          </div>
-          <div className="flex flex-col">
+          </div> */}
+          <DesktopMarketAll
+            type="Live"
+            inplayData={inplayTrue}
+            gameNameS="cricket"
+            gameNameB="Cricket"
+            setOpenModal={setOpenModal}
+            addToBetPlace={addToBetPlace}
+            isLogin={isLogin}
+            activeBetSlip={activeBetSlip}
+            isMobile={isMobile}
+            bets={bets}
+            betData={betData}
+          />
+          <DesktopMarketAll
+            type="Upcoming"
+            inplayData={inplayFalse}
+            gameNameS="cricket"
+            gameNameB="Cricket"
+            setOpenModal={setOpenModal}
+            addToBetPlace={addToBetPlace}
+            isLogin={isLogin}
+            activeBetSlip={activeBetSlip}
+            isMobile={isMobile}
+            bets={bets}
+            betData={betData}
+          />
+          {/* <div className="flex flex-col">
             <div className="flex items-center justify-center sm:justify-between">
               <div className="flex items-center text-12 font-semibold">
                 <span className="text-[#3cdeff] mx-1">
@@ -774,7 +805,7 @@ const Cricket = () => {
                           {activeBetSlip == Number(_items?.matchId) &&
                             Number(_items?.matchId) ==
                               Number(bets[0]?.eventId) &&
-                            isLoggedIn() &&
+                            isLogin &&
                             betData?.length > 0 &&
                             isMobile && <NewBetSlip />}
                         </>
@@ -783,15 +814,9 @@ const Cricket = () => {
                 </>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
-        {isLogin && betData.length > 0 ? (
-          <div className=" min-w-[300px]  h-fit hidden lg:block">
-            <BetSlip />
-          </div>
-        ) : (
-          ''
-        )}
+
         {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </>

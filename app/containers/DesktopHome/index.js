@@ -8,11 +8,11 @@ import {
   MobileFixtureFootball,
   MobileFixtureTennis,
 } from '@/containers/pageListAsync';
-import { mob } from '@/utils/constants';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureDataMobile } from '@/utils/helper';
+import DesktopFixtureCricket from '@/components/Desktop/DesktopFixtureCricket';
 const DesktopHome = () => {
   const [cricketInplay, setCricketInplay] = useState([]);
   const [soccerInplay, setsoccerInplay] = useState([]);
@@ -30,13 +30,13 @@ const DesktopHome = () => {
   const userInfo = useSelector((state) => state.user);
   const login = isLoggedIn();
   const navigate = useNavigate();
-  const handleClickCasino = (item) => {
-    if (item.available) {
-      navigate('/dashboard', { state: item });
-    } else {
-      navigate('/');
-    }
-  };
+  // const handleClickCasino = (item) => {
+  //   if (item.available) {
+  //     navigate('/dashboard', { state: item });
+  //   } else {
+  //     navigate('/');
+  //   }
+  // };
   console.log(loaderOneTime);
 
   const getCricketData = () => {
@@ -124,7 +124,7 @@ const DesktopHome = () => {
             </div>
           </div>
         )}
-        <MobileFixtureCricket
+        <DesktopFixtureCricket
           type={'LiveMatches'}
           fixtureData={inplayTrue}
           isLoading={isLoading}
@@ -139,7 +139,7 @@ const DesktopHome = () => {
           fixtureData={inplayTrueSoccer}
           isLoading={isLoadingS}
         />
-        <div className="w-[98vw] flex items-center overflow-auto slider-bg-mob-div my-2">
+        {/* <div className="w-[98vw] flex items-center overflow-auto slider-bg-mob-div my-2">
           {mob.map((_item, index) => (
             <div className="slider-bg-mob h-20 " key={index}>
               <div
@@ -157,7 +157,7 @@ const DesktopHome = () => {
               </p>
             </div>
           ))}
-        </div>
+        </div> */}
         <div className="border-b border-black py-2 my-1 mt-2 flex mx-2 items-center justify-between">
           <h1 className="text-18 text-left flex items-center gap-2">
             <span className="text-[#cc5f36]">{reactIcons.fire}</span> Most

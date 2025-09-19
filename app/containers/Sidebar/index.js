@@ -43,8 +43,8 @@ const Sidebar = () => {
     <div className="light-bg">
       <Navbar />
       <section className=" mx-auto container">
-        <div className="2xl:container  flex gap-4 mx-auto">
-          <div className="w-[180px] shrink-0 bg-white hidden lg:block border border-[#ddd] overflow-hidden">
+        <div className="2xl:container  flex gap-6 mx-auto">
+          <div className="w-[165px] shrink-0 bg-white hidden lg:block border border-[#ddd] overflow-hidden">
             {step === 0 ? (
               <div className="flex flex-col">
                 {links.map((item, index) => (
@@ -53,7 +53,7 @@ const Sidebar = () => {
                     // to={item.path}
                     key={index}
                     className={
-                      'text-12 border-b border-[#ddd] py-3 pl-5 flex items-center gap-2 hover:scale-110 hover:bg-gray-100'
+                      'text-[13px] font-bold border-b text-[#811f0f] border-[#ddd] py-[9px] pl-[15px] flex items-center gap-2 hover:scale-110 hover:bg-gray-100'
                     }
                   >
                     <span className="text-xl">
@@ -72,8 +72,11 @@ const Sidebar = () => {
               <SidebarMenu game={selectedGame} back={setStep} />
             )}
           </div>
-          <div className="flex-1 h-[100vh] w-full overflow-auto">
+          <div className="flex-1  w-full ">
             <Outlet />
+          </div>
+          <div className="w-[290px] mt-[15px]">
+            <BetSlip />
           </div>
         </div>
       </section>

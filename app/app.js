@@ -75,20 +75,20 @@ function App() {
             <Route path="rules-regulation" element={<RulesRegulation />} /> */}
             {/* <Route index element={<Casino />} /> */}
             <Route index element={<DesktopHome />} />
-            <Route path="cricket" element={<Cricket />} />
+            <Route path="/cricket" element={<Cricket />} />
             <Route path="change-password-first" element={<UpdateModal />} />
             <Route
-              path="cricket/market/:eventId"
+              path="/cricket/market/:eventId"
               element={isMobile ? <MobCricket /> : <CricketMarket />}
             />
-            <Route path="tennis" element={<Tennis />} />
+            <Route path="/tennis" element={<Tennis />} />
             <Route
-              path="tennis/market/:eventId"
+              path="/tennis/market/:eventId"
               element={isMobile ? <MobTennis /> : <TennisMarket />}
             />
-            <Route path="football" element={<Football />} />
+            <Route path="/football" element={<Football />} />
             <Route
-              path="football/market/:eventId"
+              path="/football/market/:eventId"
               element={isMobile ? <MobFootball /> : <FootballMarket />}
             />
             <Route path="no-market" element={<NoMarketAvailable />} />
