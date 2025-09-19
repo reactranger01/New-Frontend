@@ -2,30 +2,32 @@ import { reactIcons } from './icons';
 
 export const links = [
   {
-    title: 'Cricket',
+    title: 'cricket',
     path: '/dashboard/cricket',
-    icon: '/images/icons/cricket.png',
+    icon: '/images/sidebarIcons/cricket.webp',
     css: '#8C1000',
     route: 'cricket',
   },
   {
     title: 'Football',
     path: '/dashboard/football',
-    icon: '/images/icons/soccer.png',
+    icon: '/images/sidebarIcons/football.webp',
     css: '#8C1000',
     route: 'soccer',
   },
   {
-    title: 'Tennis',
+    title: 'tennis',
     path: '/dashboard/tennis',
-    icon: '/images/icons/tennis.png',
+    icon: '/images/sidebarIcons/tennis.webp',
+
     css: '#8C1000',
     route: 'tennis',
   },
   {
-    title: 'VIRTUAL SPORTS',
+    title: 'Virtual Sports',
     path: '/dashboard/no-market',
-    icon: '/images/icons/virtual_sports.png',
+    icon: '/images/sidebarIcons/virtualsports.svg',
+
     css: '#8C1000',
     route: 'null',
   },
@@ -124,27 +126,35 @@ export const linksRight = [
 ];
 export const navLinks = [
   {
-    title: 'Live Casino',
-    path: '/dashboard',
+    title: 'SPORTSBOOK',
+    path: '/',
   },
   {
-    title: 'CRICKET',
-    path: '/dashboard/cricket',
+    title: 'ESPORTS',
+    path: '/dashboard/esports',
   },
   {
-    title: 'Football',
+    title: 'MIXED MARTIAL ARTS',
+    path: '/dashboard/mixed-martial-arts',
+  },
+  {
+    title: 'GAELIC GAMES',
     path: '/dashboard/football',
   },
   {
-    title: 'TENNIS',
+    title: 'VOLLEYBALL',
     path: '/dashboard/tennis',
   },
   {
-    title: 'VIRTUAL SPORTS',
+    title: 'HANDBALL',
     path: '/dashboard/no-market',
   },
   {
-    title: 'KABADDI',
+    title: 'AUSTRALIAN RULES',
+    path: '/dashboard/no-market',
+  },
+  {
+    title: 'ICE HOCKEY',
     path: '/dashboard/no-market',
   },
   {
@@ -152,23 +162,11 @@ export const navLinks = [
     path: '/dashboard/no-market',
   },
   {
-    title: 'HORCE RACING',
+    title: 'BASEBALL',
     path: '/dashboard/no-market',
   },
   {
-    title: 'GREYHOUND RACING',
-    path: '/dashboard/no-market',
-  },
-  {
-    title: 'POLITICS',
-    path: '/dashboard/no-market',
-  },
-  {
-    title: 'GENIE BET',
-    path: '/dashboard/no-market',
-  },
-  {
-    title: 'SLOTS',
+    title: 'AMERICAN FOOTBALL',
     path: '/dashboard/no-market',
   },
 ];

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { BetSlip, SidebarMenu } from '@/components';
+import { BetSlip, Footer, MobFooter, Navbar, SidebarMenu } from '@/components';
 import { links } from '@/utils/constants';
 import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useState } from 'react';
@@ -17,6 +17,7 @@ const Sidebar = () => {
   const isLogin = isLoggedIn();
   const [state, setState] = React.useState(false);
   const isMobile = useMediaQuery('(max-width:1024px)');
+  const isMobileDevice = useMediaQuery('(max-width:768px)');
 
   const toggleDrawer = () => (event) => {
     if (
@@ -39,21 +40,13 @@ const Sidebar = () => {
     // eslint-disable-next-line
   }, [betData, isLogin]);
   return (
-    <>
-      <section className="light-bg mx-auto">
+    <div className="light-bg">
+      <Navbar />
+      <section className=" mx-auto container">
         <div className="2xl:container  flex gap-4 mx-auto">
           <div className="w-[180px] shrink-0 bg-white hidden lg:block border border-[#ddd] overflow-hidden">
             {step === 0 ? (
               <div className="flex flex-col">
-                <NavLink
-                  className={
-                    'text-12 border-b border-[#ddd] py-3 pl-5 flex items-center gap-2 hover:scale-110  hover:bg-gray-100'
-                  }
-                  to="/dashboard"
-                >
-                  <span className="text-xl">{reactIcons.casino}</span> Live
-                  Casino
-                </NavLink>
                 {links.map((item, index) => (
                   <NavLink
                     onClick={() => handleLinkClick(item)}
@@ -84,7 +77,7 @@ const Sidebar = () => {
           </div>
         </div>
       </section>
-
+      {isMobileDevice ? <MobFooter /> : <Footer />}
       {/* {isLogin && betData.length > 0 && isMobile && (
         <Drawer anchor={'bottom'} open={state} onClose={toggleDrawer()}>
           <Box role="presentation" onKeyDown={toggleDrawer('bottom', false)}>
@@ -92,7 +85,7 @@ const Sidebar = () => {
           </Box>
         </Drawer>
       )} */}
-    </>
+    </div>
   );
 };
 

@@ -200,24 +200,12 @@ html {
 }
 
 .sport-menu__link {
-  line-height: 20px;
-  font-weight: bold;
+  padding: 0;
+  margin-left: 13px;
   text-transform: uppercase;
-  color: #440a57;
-  text-shadow: 0 1px 0 #f6e4fc;
-  display: inline-block;
-  vertical-align: middle;
-  transform: perspective(1px) translateZ(0) scale(1); /* Default scale */
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  font-size: 12px; /* Default font size */
-  transition: color 0.5s, text-shadow 0.5s, box-shadow 0.5s, transform 0.2s; /* Include transform in transition */
-}
-
-.sport-menu__link:hover {
-  color: #8e2b7b; /* Example hover color */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Example hover text shadow */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Example hover box shadow */
-  transform: perspective(1px) translateZ(0) scale(1.2); /* Scale up on hover */
+  font-weight: 600;
+  color: #3e0f54;
+  font-size: 12px;
 }
 
 body {

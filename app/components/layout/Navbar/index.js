@@ -293,8 +293,8 @@ const Navbar = () => {
               )}
             </div>
           </nav>
-          <div className=" bg-white md:border-b border-gray-200 w-full overflow-x-auto ">
-            <div className="hidden md:flex-center text-[#440a57] gap-3 min-w-[1330px]">
+          <div className=" bg-white md:border-b border-gray-200 w-full overflow-hidden ">
+            <div className="hidden md:flex-center text-[#3e0f54] py-3 gap-3 min-w-[1330px]">
               <p className="font-bold text-14 py-2 shrink-0 lg:hidden">
                 <button
                   onClick={toggleDrawer(true)}
@@ -306,11 +306,19 @@ const Navbar = () => {
               {navLinks.map((item, index) => (
                 <NavLink
                   to={item.path}
-                  className="sport-menu__link py-2 shrink-0"
+                  className={(isActive) => {
+                    `${isActive && 'text-[#c95c54]'}   shrink-0`;
+                  }}
                   key={index}
                 >
-                  <p className="flex-center gap-1 leading-3">
-                    <span>{reactIcons.dot}</span> {item.title}
+                  <p
+                    className={`flex-center capitalize gap-1 leading-3  font-semibold text-12 ${
+                      location?.pathname === item?.path
+                        ? 'text-[#c95c54]'
+                        : 'text-[#3e0f54]'
+                    }`}
+                  >
+                    {index !== 0 && <span>{reactIcons.dot}</span>} {item.title}
                   </p>
                 </NavLink>
               ))}
