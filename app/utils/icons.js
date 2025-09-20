@@ -55,7 +55,12 @@ import { PiLadderSimpleBold } from 'react-icons/pi';
 import { FaCircleArrowLeft } from 'react-icons/fa6';
 import { IoTrendingUp } from 'react-icons/io5';
 import { FaAngleDoubleRight } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa6';
+import { FaMobileAlt } from 'react-icons/fa';
+
 export const reactIcons = {
+  whatsapp: <FaWhatsapp />,
+  mobile: <FaMobileAlt />,
   list1: <FaList />,
   withdraw: <RiPagesFill />,
   book: <RiBook2Fill />,

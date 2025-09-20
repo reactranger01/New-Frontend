@@ -1,18 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { MobSlider } from '@/components';
 import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useState } from 'react';
-import 'swiper/css';
-import {
-  MobileFixtureCricket,
-  MobileFixtureFootball,
-  MobileFixtureTennis,
-} from '@/containers/pageListAsync';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureDataMobile } from '@/utils/helper';
 import DesktopFixtureCricket from '@/components/Desktop/DesktopFixtureCricket';
+import DesktopFixtureTennis from '@/components/Desktop/DesktopFixtureTennis';
+import DesktopFixtureFootball from '@/components/Desktop/DesktopFixtureFootball';
+import MostPopular from '@/components/MostPopular';
+import { sportSlider1, sportSlider2, sportSliderLink } from '@/utils/constants';
+
+const gifArr = [
+  {
+    id: 1,
+    gif: '/images/gifs/1.gif',
+  },
+  {
+    id: 2,
+    gif: '/images/gifs/2.gif',
+  },
+  {
+    id: 3,
+    gif: '/images/gifs/3.gif',
+  },
+  {
+    id: 4,
+    gif: '/images/gifs/4.gif',
+  },
+];
+
 const DesktopHome = () => {
   const [cricketInplay, setCricketInplay] = useState([]);
   const [soccerInplay, setsoccerInplay] = useState([]);
@@ -27,9 +42,8 @@ const DesktopHome = () => {
   const [inplayTrueSoccer, setInplayTrueSoccer] = useState([]);
   const [inplayFalseSoccer, setInplayFalseSoccer] = useState([]);
   const [loaderOneTime, setLoaderOneTime] = useState(false);
-  const userInfo = useSelector((state) => state.user);
+  // const userInfo = useSelector((state) => state.user);
   const login = isLoggedIn();
-  const navigate = useNavigate();
   // const handleClickCasino = (item) => {
   //   if (item.available) {
   //     navigate('/dashboard', { state: item });
@@ -100,28 +114,73 @@ const DesktopHome = () => {
 
   return (
     <div className="w-full light-bg ">
-      <MobSlider />
-      <div className="bg-white mx-2 min-h-screen overflow-hidden">
+      {/* <MobSlider /> */}
+      <div className="min-h-screen overflow-hidden pb-6">
+        {/* <HomeTopSLider /> */}
+        <div className="flex items-center justify-between overflow-auto  my-2 mb-4">
+          {sportSliderLink.map((_item, index) => (
+            <div
+              key={index}
+              style={{ backgroundImage: `url(${_item?.bgImg})` }}
+              className="h-9 w-[60px] relative rounded-[4px] bg-cover bg-center bg-no-repeat"
+            >
+              <img
+                className=" absolute top-1 left-1 w-4 object-cover"
+                src={_item.img}
+                alt=""
+              />
+              <p className="absolute bottom-1 left-1 text-white  truncate text-12 leading-none font-semibold ">
+                {_item.title}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className=" grid grid-cols-2 gap-2">
+          {gifArr?.map((item, index) => (
+            <div key={index} className="rounded-[4px] overflow-hidden">
+              <img src={item?.gif} className="h-[60px] w-full" alt="" />{' '}
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 mt-2 w-full">
+          {sportSlider1?.map((item, index) => (
+            <div
+              key={index}
+              style={{ backgroundImage: `url(${item?.bgImg})` }}
+              className="h-[50px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
+            >
+              <div className="flex items-center gap-2">
+                <img src={item?.img} className="h-4 w-4" alt="" />
+                <p className="text-16 font-bold">{item?.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center gap-2 mt-2 w-full ">
+          {sportSlider2?.map((item, index) => (
+            <div
+              key={index}
+              style={{ backgroundImage: `url(${item?.bgImg})` }}
+              className="h-[50px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
+            >
+              <div className="flex items-center gap-2">
+                <img src={item?.img} className="h-4 w-4" alt="" />
+                <p className="text-16 font-bold">{item?.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
         {(cricketInplay.length > 0 ||
           soccerInplay.length > 0 ||
           tennisInplay.length > 0) && (
-          <div className="border-b border-black py-2 my-1 flex mx-2 items-center justify-between">
-            <h1 className="text-18 text-left flex items-center gap-2">
-              <span className="text-green-800">{reactIcons.play2}</span> Live
+          <div className="bg-[#1E8067] py-2 px-[10px] flex items-center justify-between rounded-[3px] my-[15px] text-white ">
+            <h1 className="flex items-center text-18 font-bold gap-1">
+              <span className=""> {reactIcons.play}</span> In Play
             </h1>
-            <div
-              onClick={() => {
-                if (login) {
-                  navigate('/dashboard/my-bets');
-                }
-              }}
-              className="flex items-center gap-1"
-            >
-              <p className="text-12">My Bets</p>{' '}
-              <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center ">
+            <p className="text-[13px] font-bold">Open Bets</p>
+            {/* <div className="bg-orange-300 shrink-0 text-10 h-5 w-5 rounded-full flex-center ">
                 {userInfo?.betcountValue || 0}
-              </div>
-            </div>
+              </div> */}
           </div>
         )}
         <DesktopFixtureCricket
@@ -129,52 +188,28 @@ const DesktopHome = () => {
           fixtureData={inplayTrue}
           isLoading={isLoading}
         />
-        <MobileFixtureTennis
+        <DesktopFixtureTennis
           type={'LiveMatches'}
           fixtureData={inplayTrueTennis}
           isLoading={isLoadingT}
         />
-        <MobileFixtureFootball
+        <DesktopFixtureFootball
           type={'LiveMatches'}
           fixtureData={inplayTrueSoccer}
           isLoading={isLoadingS}
         />
-        {/* <div className="w-[98vw] flex items-center overflow-auto slider-bg-mob-div my-2">
-          {mob.map((_item, index) => (
-            <div className="slider-bg-mob h-20 " key={index}>
-              <div
-                className="h-20 w-20 absolute ax-center -top-6"
-                onClick={() => handleClickCasino(_item)}
-              >
-                <img
-                  className="h-full w-full object-cover"
-                  src={_item.path}
-                  alt=""
-                />
-              </div>
-              <p className=" text-white absolute ax-center bottom-2 text-10 leading-none mx-auto text-center">
-                {_item.title}
-              </p>
-            </div>
-          ))}
-        </div> */}
-        <div className="border-b border-black py-2 my-1 mt-2 flex mx-2 items-center justify-between">
-          <h1 className="text-18 text-left flex items-center gap-2">
-            <span className="text-[#cc5f36]">{reactIcons.fire}</span> Most
-            Popular
-          </h1>
-        </div>
-        <MobileFixtureCricket
+        <MostPopular text="Upcoming Events" />
+        <DesktopFixtureCricket
           type={'NotLiveMatches'}
           fixtureData={inplayFalse}
           isLoading={isLoading}
-        />
-        <MobileFixtureTennis
+        />{' '}
+        <DesktopFixtureTennis
           type={'NotLiveMatches'}
           fixtureData={inplayFalseTennis}
           isLoading={isLoadingT}
         />
-        <MobileFixtureFootball
+        <DesktopFixtureFootball
           type={'NotLiveMatches'}
           fixtureData={inplayFalseSoccer}
           isLoading={isLoadingS}

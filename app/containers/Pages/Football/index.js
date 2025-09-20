@@ -1,23 +1,14 @@
-import {
-  BetSlip,
-  BlankBtn,
-  BlueBtn,
-  Loading,
-  NewBetSlip,
-  PinkBtn,
-  SeeMoreMarkets,
-} from '@/components';
+import { Loading } from '@/components';
+import DesktopMarketAll from '@/components/DesktopMarketAll';
+import MostPopular from '@/components/MostPopular';
 import { LoginModal } from '@/containers/pageListAsync';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureData } from '@/utils/helper';
-import { reactIcons } from '@/utils/icons';
 import { useMediaQuery } from '@mui/material';
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 const Football = () => {
   const isLogin = isLoggedIn();
   const [isLoading, setisLoading] = useState(false);
@@ -27,7 +18,6 @@ const Football = () => {
   const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
   const [openModal, setOpenModal] = useState(false);
   const [bets, setBets] = useState([]);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [inplayTrue, setInplayTrue] = useState([]);
   const [inplayFalse, setInplayFalse] = useState([]);
@@ -109,32 +99,56 @@ const Football = () => {
   return (
     <>
       {isLoading && !loaderOneTime && <Loading />}
-      <div className="mb-10 flex  min-h-screen gap-4">
-        <div className="flex-1">
-          <div className="border-b border-black py-2 my-3">
-            <h1 className="text-24  text-center sm:text-left">Football</h1>
+      <div className="mb-10 min-h-screen gap-4">
+        <div className="">
+          <MostPopular text="Most Popular" />
+
+          <div className="flex items-center justify-center sm:justify-between bg-white py-[8.5px] pl-[8.5px]">
+            <div className="flex items-center gap-2 pl-2">
+              <img
+                src="/images/sidebarIcons/cricketDesk.png"
+                className="w-6 h-6"
+                alt=""
+              />
+              <p className="text-16 font-bold text-center sm:text-left">
+                Football{' '}
+              </p>
+            </div>
+            <div className="sm:grid grid-cols-6 hidden sm:min-w-[360px] min-w-[300px]">
+              <div className="col-span-2 flex-center text-14 font-bold">1</div>
+              <div className="col-span-2 flex-center text-14 font-bold">X</div>
+              <div className="col-span-2 flex-center text-14 font-bold">2</div>
+            </div>
           </div>
 
-          <div className="flex flex-col mb-5">
-            <div className="flex items-center justify-center sm:justify-between">
-              <div className="flex items-center text-12 font-semibold">
-                <span className="text-[#3cdeff] mx-1">
-                  {reactIcons.lightning}
-                </span>{' '}
-                Live
-              </div>
-              <div className="sm:grid grid-cols-6 hidden sm:min-w-[360px] min-w-[300px]">
-                <div className="col-span-2 flex-center text-12 font-semibold">
-                  1
-                </div>
-                <div className="col-span-2 flex-center text-12 font-semibold">
-                  X
-                </div>
-                <div className="col-span-2 flex-center text-12 font-semibold">
-                  2
-                </div>
-              </div>
-            </div>
+          <DesktopMarketAll
+            inplayData={inplayTrue}
+            gameNameS="football"
+            gameNameB="Soccer"
+            setOpenModal={setOpenModal}
+            addToBetPlace={addToBetPlace}
+            isLogin={isLogin}
+            activeBetSlip={activeBetSlip}
+            isMobile={isMobile}
+            bets={bets}
+            betData={betData}
+          />
+          {(inplayFalse !== null || inplayFalse?.length !== 0) && (
+            <DesktopMarketAll
+              inplayData={inplayFalse}
+              gameNameS="football"
+              gameNameB="Soccer"
+              setOpenModal={setOpenModal}
+              addToBetPlace={addToBetPlace}
+              isLogin={isLogin}
+              activeBetSlip={activeBetSlip}
+              isMobile={isMobile}
+              bets={bets}
+              betData={betData}
+            />
+          )}
+          {/* 
+
             <div className="w-full border border-[#ddd]">
               {inplayTrue?.length === 0 ? (
                 <div className="flex justify-center items-center w-full h-11 border-b border-gray-200  bg-white">
@@ -427,9 +441,8 @@ const Football = () => {
                     })}
                 </>
               )}
-            </div>
-          </div>
-          <div className="flex flex-col">
+            </div> */}
+          {/* <div className="flex flex-col">
             <div className="flex items-center justify-center sm:justify-between">
               <div className="flex items-center text-12 font-semibold">
                 <span className="text-[#3cdeff] mx-1">
@@ -748,15 +761,9 @@ const Football = () => {
                 </>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
-        {isLogin && betData.length > 0 ? (
-          <div className=" min-w-[300px]  h-fit hidden lg:block">
-            <BetSlip />
-          </div>
-        ) : (
-          ''
-        )}
+
         {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </>

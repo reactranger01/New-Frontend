@@ -43,7 +43,7 @@ const Sidebar = () => {
     <div className="light-bg">
       <Navbar />
       <section className=" mx-auto container">
-        <div className="2xl:container  flex gap-6 mx-auto">
+        <div className="2xl:container  flex gap-5 mx-auto">
           <div className="w-[165px] shrink-0 bg-white hidden lg:block border border-[#ddd] overflow-hidden">
             {step === 0 ? (
               <div className="flex flex-col">
@@ -75,7 +75,7 @@ const Sidebar = () => {
           <div className="flex-1  w-full ">
             <Outlet />
           </div>
-          <div className="w-[290px] mt-[15px]">
+          <div className="!w-[290px] mt-[15px] flex-shrink-0">
             <BetSlip />
           </div>
         </div>

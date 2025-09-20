@@ -4,7 +4,6 @@ import moment from 'moment';
 import { reactIcons } from '@/utils/icons';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { navLinks } from '@/utils/constants';
-import { LoginModal } from '@/containers/pageListAsync';
 import { getAuthData, isLoggedIn, removeAuthCookie } from '@/utils/apiHandlers';
 import { useDispatch, useSelector } from 'react-redux';
 import { init } from '@/redux/actions';
@@ -14,11 +13,11 @@ import { useMediaQuery } from '@mui/material';
 import RightSidebarDrawer from '@/components/MobileComp/RightSidebarDrawer';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [time, setTime] = useState(moment().format('HH:mm:ss'));
-  const [openModal, setOpenModal] = useState(false);
   const login = isLoggedIn();
   const dispatch = useDispatch();
   const User = useSelector((state) => state.user);
@@ -267,7 +266,7 @@ const Navbar = () => {
                         {reactIcons.search}
                       </div>
                       <button
-                        onClick={() => setOpenModal(true)}
+                        onClick={() => dispatch(openModal('login'))}
                         className="text-white bg-[#2c4f58] px-2 py-1 text-12 rounded-md flex-center gap-2"
                       >
                         Login
@@ -276,13 +275,13 @@ const Navbar = () => {
                   ) : (
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => setOpenModal(true)}
+                        onClick={() => dispatch(openModal('login'))}
                         className="text-[#fcedca] text-14 font-medium flex-center gap-2 hover:underline"
                       >
                         Login
                       </button>
                       <button
-                        onClick={() => setOpenModal(true)}
+                        onClick={() => dispatch(openModal('login'))}
                         className="text-[#fcedca] text-14 font-medium flex-center gap-2 hover:underline"
                       >
                         Signup
@@ -324,7 +323,6 @@ const Navbar = () => {
               ))}
             </div>
           </div>
-          {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
           <SidebarDrawer
             setOpen={setOpen}
             toggleDrawer={toggleDrawer}

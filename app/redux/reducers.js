@@ -5,6 +5,7 @@ import user from './modules/user';
 import calculationModule from './modules/calculation';
 import userBetsModule from './modules/userBets';
 import activeIndexReducer from './Slices/newBetSlice';
+import modalReducer from './Slices/modalSlice';
 import yourReducer from './modules/stateupdate';
 
 export default function createReducer() {
@@ -16,6 +17,7 @@ export default function createReducer() {
     ui,
     activeNewBet: activeIndexReducer,
     updatestate: yourReducer,
+    modal: modalReducer,
   });
 
   return rootReducer;

@@ -15,10 +15,11 @@ const DesktopMarketAll = ({
   isMobile,
   bets,
   betData,
+  showStar = false,
 }) => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col mb-5">
+    <div className="flex flex-col">
       <div className="w-full border border-[#ddd]">
         {inplayData === null || inplayData?.length === 0 ? (
           <div className="flex justify-center items-center w-full h-11 border-b border-gray-200  bg-white">
@@ -55,9 +56,11 @@ const DesktopMarketAll = ({
                       >
                         <div className="flex items-center  justify-between  gap-1 w-full py-1 px-2">
                           <div className="flex items-center gap-1">
-                            <div className="text-[#e4c41e] w-[18px]">
-                              {reactIcons.star}
-                            </div>
+                            {showStar && (
+                              <div className="text-[#e4c41e] w-[18px]">
+                                {reactIcons.star}
+                              </div>
+                            )}
                             <div
                               onClick={() =>
                                 navigate(
@@ -340,6 +343,7 @@ DesktopMarketAll.propTypes = {
   isInplay: PropTypes.bool,
   bets: PropTypes.any,
   betData: PropTypes.any,
+  showStar: PropTypes.bool,
 };
 
 export default DesktopMarketAll;

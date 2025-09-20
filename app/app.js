@@ -42,6 +42,7 @@ import { ImageUpload, NoMarketAvailable } from './components';
 import PrivateRoute from './containers/auth/PrivateRoute';
 import { useMediaQuery } from '@mui/material';
 import DesktopHome from './containers/DesktopHome';
+import ModalManager from './components/ModalManager';
 
 const sagaMiddleware = createSagaMiddleware();
 const reducer = createReducer();
@@ -62,6 +63,7 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
+        <ModalManager />
         <Routes>
           <Route path="/mobile" element={<MobLayout />}>
             <Route index element={<MobHome />} />

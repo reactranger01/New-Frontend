@@ -10,37 +10,33 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 380,
-  bgcolor: '#0f2327',
+  width: 420,
+  bgcolor: '#1E8067',
   // border: '2px solid #000',
   // boxShadow: 24,
   outline: 'none',
-  p: 2,
+  p: 0,
   borderRadius: '10px',
 };
 
-export default function LoginModal({ open, setOpen }) {
-  const handleClose = () => setOpen(false);
-
+export default function LoginModal({ isOpen, handleClose }) {
   return (
     <div className="">
       <Modal
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div className="flex flex-col gap-5 relative p-2 py-5">
+          <div className="">
             <button
               onClick={handleClose}
-              className="absolute top-0 right-0 text-white text-xl cursor-pointer"
+              className="absolute top-2 z-20 right-2  text-black font-bold text-2xl cursor-pointer bg-[#f4d821] rounded"
             >
               {reactIcons.close}
             </button>
-            <div className="mx-auto">
-              <img src="/images/logo.png" className="h-20" alt="" />
-            </div>
+
             <LoginForm onClose={handleClose} />
           </div>
         </Box>
@@ -49,6 +45,6 @@ export default function LoginModal({ open, setOpen }) {
   );
 }
 LoginModal.propTypes = {
-  open: PropTypes.bool,
-  setOpen: PropTypes.func,
+  isOpen: PropTypes.bool,
+  handleClose: PropTypes.func,
 };

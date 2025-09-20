@@ -1,5 +1,104 @@
 import { reactIcons } from './icons';
 
+export const sportSliderLink = [
+  {
+    title: 'Pool Zone',
+    bgImg: '/images/sportSliderLinks/b1.png',
+    img: '/images/sportSliderLinks/s1.png',
+    path: '/',
+  },
+  {
+    title: 'Cricket',
+    bgImg: '/images/sportSliderLinks/b2.webp',
+    img: '/images/sportSliderLinks/s2.webp',
+    path: '/',
+  },
+  {
+    title: 'Football',
+    bgImg: '/images/sportSliderLinks/b3.webp',
+    img: '/images/sportSliderLinks/s3.webp',
+    path: '/',
+  },
+  {
+    title: 'Tennis',
+    bgImg: '/images/sportSliderLinks/b4.webp',
+    img: '/images/sportSliderLinks/s4.webp',
+    path: '/',
+  },
+  {
+    title: 'Cricket',
+    bgImg: '/images/sportSliderLinks/b5.webp',
+    img: '/images/sportSliderLinks/s5.svg',
+    path: '/',
+  },
+  {
+    title: 'FIFA CUP',
+    bgImg: '/images/sportSliderLinks/b6.webp',
+    img: '/images/sportSliderLinks/s6.png',
+    path: '/',
+  },
+
+  {
+    title: 'WINNER CUP',
+    bgImg: '/images/sportSliderLinks/b7.webp',
+    img: '/images/sportSliderLinks/s6.png',
+    path: '/',
+  },
+  {
+    title: 'ELECTION',
+    bgImg: '/images/sportSliderLinks/b8.webp',
+    img: '/images/sportSliderLinks/s6.png',
+    path: '/',
+  },
+  {
+    title: 'Kabaddi',
+    bgImg: '/images/sportSliderLinks/b9.webp',
+    img: '/images/sportSliderLinks/s6.png',
+    path: '/',
+  },
+];
+
+export const sportSlider1 = [
+  {
+    title: 'Sportsbook',
+    bgImg: '/images/sportSlider1/b1.webp',
+    img: '/images/sportSlider1/s1.webp',
+    path: '/',
+  },
+  {
+    title: 'Evolution',
+    bgImg: '/images/sportSlider1/b2.webp',
+    img: '/images/sportSlider1/s2.webp',
+    path: '/',
+  },
+  {
+    title: 'e-Cricket',
+    bgImg: '/images/sportSlider1/b3.webp',
+    img: '/images/sportSlider1/s3.webp',
+    path: '/',
+  },
+];
+export const sportSlider2 = [
+  {
+    title: 'Casino',
+    bgImg: '/images/sportSlider1/b4.webp',
+    img: '/images/sportSlider1/s3.webp',
+    path: '/',
+  },
+  {
+    title: 'Royal Gaming',
+    bgImg: '/images/sportSlider1/b5.webp',
+    img: '/images/sportSlider1/s3.webp',
+    path: '/',
+  },
+  {
+    title: 'Card Games',
+    bgImg: '/images/sportSlider1/b5.webp',
+    img: '/images/sportSlider1/s6.webp',
+    path: '/',
+  },
+];
+
 export const links = [
   {
     title: 'cricket',

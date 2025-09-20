@@ -105,7 +105,7 @@ const Cricket = () => {
       {isLoading && !loaderOneTime && <Loading />}
       <div className="mb-10 min-h-screen">
         <div className="">
-          <MostPopular />
+          <MostPopular text="Most Popular" />
           <div className="flex items-center justify-center sm:justify-between bg-white py-[8.5px] pl-[8.5px]">
             <div className="flex items-center gap-2 pl-2">
               <img
@@ -457,7 +457,6 @@ const Cricket = () => {
             </div>
           </div> */}
           <DesktopMarketAll
-            type="Live"
             inplayData={inplayTrue}
             gameNameS="cricket"
             gameNameB="Cricket"
@@ -469,19 +468,20 @@ const Cricket = () => {
             bets={bets}
             betData={betData}
           />
-          <DesktopMarketAll
-            type="Upcoming"
-            inplayData={inplayFalse}
-            gameNameS="cricket"
-            gameNameB="Cricket"
-            setOpenModal={setOpenModal}
-            addToBetPlace={addToBetPlace}
-            isLogin={isLogin}
-            activeBetSlip={activeBetSlip}
-            isMobile={isMobile}
-            bets={bets}
-            betData={betData}
-          />
+          {(inplayFalse !== null || inplayFalse?.length !== 0) && (
+            <DesktopMarketAll
+              inplayData={inplayFalse}
+              gameNameS="cricket"
+              gameNameB="Cricket"
+              setOpenModal={setOpenModal}
+              addToBetPlace={addToBetPlace}
+              isLogin={isLogin}
+              activeBetSlip={activeBetSlip}
+              isMobile={isMobile}
+              bets={bets}
+              betData={betData}
+            />
+          )}
           {/* <div className="flex flex-col">
             <div className="flex items-center justify-center sm:justify-between">
               <div className="flex items-center text-12 font-semibold">
