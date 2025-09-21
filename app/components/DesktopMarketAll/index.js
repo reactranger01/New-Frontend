@@ -52,7 +52,17 @@ const DesktopMarketAll = ({
                     ) : (
                       <div
                         key={index}
-                        className="flex flex-col sm:flex-row justify-between items-center w-full border-b border-[#ddd] bg-white"
+                        onClick={() =>
+                          navigate(
+                            _items?.event_id
+                              ? `/${gameNameS}/market/${_items?.event_id}`
+                              : `/${gameNameS}/market/${_items?.matchId}`,
+                            {
+                              state: { data: _items },
+                            },
+                          )
+                        }
+                        className="flex flex-col cursor-pointer sm:flex-row justify-between items-center w-full border-b border-[#ddd] bg-white"
                       >
                         <div className="flex items-center  justify-between  gap-1 w-full py-1 px-2">
                           <div className="flex items-center gap-1">
@@ -61,19 +71,7 @@ const DesktopMarketAll = ({
                                 {reactIcons.star}
                               </div>
                             )}
-                            <div
-                              onClick={() =>
-                                navigate(
-                                  _items?.event_id
-                                    ? `/${gameNameS}/market/${_items?.event_id}`
-                                    : `/${gameNameS}/market/${_items?.matchId}`,
-                                  {
-                                    state: { data: _items },
-                                  },
-                                )
-                              }
-                              className="flex-1 cursor-pointer  leading-3 text-black  text-12 font-bold hover:underline"
-                            >
+                            <div className="flex-1 cursor-pointer  leading-3 text-black  text-12 font-bold hover:underline">
                               {/* {' '}
                               {_items?.runners[0]?.runnerName} v{' '}
                               {_items?.runners[1]?.runnerName} */}

@@ -30,8 +30,6 @@ const MatchOdds = ({
     ? updatePlacedBetCalculation(calculation, heading, placedBetWinLossDatas)
     : placedBetWinLossDatas;
 
-  console.log(placedBetWinLossDatas, 'placedBetWinLossDatas');
-  console.log(calculation, 'calculation');
   useEffect(() => {
     if (bets?.length > 0) {
       dispatch(fetchBetDetailsAction(bets));
@@ -98,16 +96,16 @@ const MatchOdds = ({
   }
   return (
     <div className="flex flex-col mb-5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center text-12 font-semibold">
-          <span className="text-[#e4c41e] mx-1">{reactIcons.star}</span>{' '}
+      <div className="flex items-center py-[10px] justify-between bg-[#ECEAEA]">
+        <div className=" font-bold text-12">
+          <div className="text-[#e4c41e] mx-1 text-xl">{reactIcons.star}</div>{' '}
           {heading}
         </div>
         <div className="sm:grid hidden grid-cols-6 min-w-[360px]">
           <div></div>
           <div></div>
-          <div className="flex-center text-12 font-medium">Back</div>
-          <div className="flex-center text-12 font-medium">Lay</div>
+          <div className="flex-center text-14 font-bold">Back</div>
+          <div className="flex-center text-14 font-bold">Lay</div>
           <div></div>
           <div></div>
         </div>
@@ -131,7 +129,6 @@ const MatchOdds = ({
                         (odd) => odd?.id == items?.selectionId,
                       )
                     : '';
-                console.log('items', items);
                 return (
                   <>
                     <div

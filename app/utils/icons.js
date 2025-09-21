@@ -57,9 +57,13 @@ import { IoTrendingUp } from 'react-icons/io5';
 import { FaAngleDoubleRight } from 'react-icons/fa';
 import { FaWhatsapp } from 'react-icons/fa6';
 import { FaMobileAlt } from 'react-icons/fa';
+import { FaKey } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa6';
 
 export const reactIcons = {
   whatsapp: <FaWhatsapp />,
+  newLock: <FaLock />,
+  key: <FaKey />,
   mobile: <FaMobileAlt />,
   list1: <FaList />,
   withdraw: <RiPagesFill />,

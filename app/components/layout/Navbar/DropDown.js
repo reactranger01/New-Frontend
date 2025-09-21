@@ -42,7 +42,7 @@ export default function DropDown() {
                   <p
                     key={index}
                     onClick={() => handleLinkClick(item)}
-                    className="py-[6px] px-3 border-b border-gray-200 font-medium cursor-pointer"
+                    className="font-bold text1-12 px-3 border-b border-gray-200  cursor-pointer"
                   >
                     {item.title}
                   </p>

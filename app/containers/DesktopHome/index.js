@@ -8,6 +8,7 @@ import DesktopFixtureTennis from '@/components/Desktop/DesktopFixtureTennis';
 import DesktopFixtureFootball from '@/components/Desktop/DesktopFixtureFootball';
 import MostPopular from '@/components/MostPopular';
 import { sportSlider1, sportSlider2, sportSliderLink } from '@/utils/constants';
+import HomeTopSLider from '@/components/HomeTopSlider';
 
 const gifArr = [
   {
@@ -41,6 +42,7 @@ const DesktopHome = () => {
   const [inplayFalseTennis, setInplayFalseTennis] = useState([]);
   const [inplayTrueSoccer, setInplayTrueSoccer] = useState([]);
   const [inplayFalseSoccer, setInplayFalseSoccer] = useState([]);
+  // eslint-disable-next-line
   const [loaderOneTime, setLoaderOneTime] = useState(false);
   // const userInfo = useSelector((state) => state.user);
   const login = isLoggedIn();
@@ -51,7 +53,6 @@ const DesktopHome = () => {
   //     navigate('/');
   //   }
   // };
-  console.log(loaderOneTime);
 
   const getCricketData = () => {
     getFixtureDataMobile(
@@ -116,7 +117,9 @@ const DesktopHome = () => {
     <div className="w-full light-bg ">
       {/* <MobSlider /> */}
       <div className="min-h-screen overflow-hidden pb-6">
-        {/* <HomeTopSLider /> */}
+        <div className="w-full">
+          <HomeTopSLider />
+        </div>
         <div className="flex items-center justify-between overflow-auto  my-2 mb-4">
           {sportSliderLink.map((_item, index) => (
             <div

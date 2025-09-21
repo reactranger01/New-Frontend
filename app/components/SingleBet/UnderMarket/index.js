@@ -32,9 +32,6 @@ const UnderMarket = ({
 
   const dispatch = useDispatch();
 
-  console.log(placedBetWinLossDatas, 'placedBetWinLossDatas');
-  console.log(calculation, 'calculation');
-  console.log(heading, 'heading');
   useEffect(() => {
     if (bets?.length > 0) {
       dispatch(fetchBetDetailsAction(bets));
@@ -57,8 +54,6 @@ const UnderMarket = ({
     minimumBet,
     maximumBet,
   ) => {
-    console.log('minmax', minLimitOdds, maxLimitOdds);
-
     setBets([
       {
         marketId: String(_marketData?.market_id),

@@ -1,3 +1,6 @@
+{
+  /* eslint-disable */
+}
 import { LoginModal } from '@/containers/pageListAsync';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
@@ -45,8 +48,6 @@ const TennisOtherMarkets = ({
     minimumBet,
     maximumBet,
   ) => {
-    console.log('minmax', minLimitOdds, maxLimitOdds);
-
     setBets([
       {
         marketId: String(_marketData?.market_id),

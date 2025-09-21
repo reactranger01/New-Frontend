@@ -1,3 +1,6 @@
+{
+  /* eslint-disable */
+}
 import {
   // BlankBlueBtn,
   // BlankBtn,
@@ -49,8 +52,6 @@ const Set1Winner = ({
     minimumBet,
     maximumBet,
   ) => {
-    console.log('minmax', minLimitOdds, maxLimitOdds);
-
     setBets([
       {
         marketId: String(_marketData?.market_id),

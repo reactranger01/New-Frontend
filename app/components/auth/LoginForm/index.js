@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { reactIcons } from '@/utils/icons';
 import { useDispatch } from 'react-redux';
-import { openModal } from '@/redux/Slices/modalSlice';
+import { closeModal, openModal } from '@/redux/Slices/modalSlice';
 
 const LoginForm = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -78,7 +78,6 @@ const LoginForm = ({ onClose }) => {
         abortEarly: false,
       });
       const response = await postData('/user/signin', form);
-      console.log(response, 'ress');
       if (response?.status === 200 && response?.data?.data?.ut === 'USER') {
         setAuthCookie();
         Cookies.set('__users__isLoggedIn', response?.data?.data?.token);
@@ -312,12 +311,18 @@ const LoginForm = ({ onClose }) => {
             )}
           </>
         )}
-        <button
-          onClick={() => dispatch(openModal('forgot-password'))}
-          className="underline text-14 my-1 text-right text-white"
-        >
-          Forgot Password?
-        </button>
+        <div className="flex justify-end items-center">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(closeModal());
+              dispatch(openModal('forgot-password'));
+            }}
+            className="ml-auto underline text-14 my-1 text-right text-white"
+          >
+            Forgot Password?
+          </button>
+        </div>
         <div className="grid grid-cols-2 gap-2 mt-2">
           <button
             type="button"
@@ -369,7 +374,16 @@ const LoginForm = ({ onClose }) => {
         </div>
         <p className="underline my-2 text-14  text-center text-white">
           Don&apos;t have an account{' '}
-          <span className="underline text-[#f4d821]">Register</span>
+          <span
+            onClick={(e) => {
+              e.preventDefault();
+              dispatch(closeModal());
+              dispatch(openModal('register'));
+            }}
+            className="underline text-[#f4d821] cursor-pointer"
+          >
+            Register
+          </span>
         </p>
         <div className="flex-center my-2">
           <img

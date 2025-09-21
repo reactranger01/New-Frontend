@@ -24,9 +24,7 @@ const BankAccountCard = () => {
       }
     }
   };
-  const handleDeleteClick = async (id) => {
-    console.log(id);
-  };
+
   return (
     <>
       {bankAccountList &&
@@ -54,12 +52,12 @@ const BankAccountCard = () => {
                 >
                   {reactIcons.pen}
                 </div> */}
-                <div
+                {/* <div
                   onClick={() => handleDeleteClick(items?.id)}
                   className="ml-3 w-8 h-8 rounded-[4px] bg-[#505050] grid place-content-center cursor-pointer"
                 >
                   {reactIcons.delete}
-                </div>
+                </div> */}
               </div>
               <div className="mt-5">
                 {/* <h4 className="font-semibold text-22 text-[#82CFFF] mb-2">

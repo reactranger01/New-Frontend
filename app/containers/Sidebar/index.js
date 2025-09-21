@@ -1,11 +1,8 @@
 /* eslint-disable */
 import { BetSlip, Footer, MobFooter, Navbar, SidebarMenu } from '@/components';
 import { links } from '@/utils/constants';
-import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from '@mui/material';
@@ -16,7 +13,6 @@ const Sidebar = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const isLogin = isLoggedIn();
   const [state, setState] = React.useState(false);
-  const isMobile = useMediaQuery('(max-width:1024px)');
   const isMobileDevice = useMediaQuery('(max-width:768px)');
 
   const toggleDrawer = () => (event) => {
@@ -81,13 +77,6 @@ const Sidebar = () => {
         </div>
       </section>
       {isMobileDevice ? <MobFooter /> : <Footer />}
-      {/* {isLogin && betData.length > 0 && isMobile && (
-        <Drawer anchor={'bottom'} open={state} onClose={toggleDrawer()}>
-          <Box role="presentation" onKeyDown={toggleDrawer('bottom', false)}>
-            <BetSlip />
-          </Box>
-        </Drawer>
-      )} */}
     </div>
   );
 };

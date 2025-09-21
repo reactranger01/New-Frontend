@@ -28,7 +28,6 @@ const Casino = () => {
   const isLogin = isLoggedIn();
   const passedProvider = location?.state?.provider;
   const passedId = location?.state?.id;
-  console.log('userInfo', userInfo);
 
   useEffect(() => {
     if (passedProvider) {
@@ -91,7 +90,7 @@ const Casino = () => {
           toast.error(error || 'Something went wrong');
         }
       } else {
-        console.log('error');
+        console.error('error');
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

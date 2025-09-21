@@ -37,7 +37,6 @@ const MobHome = () => {
       navigate('/');
     }
   };
-  console.log(loaderOneTime);
 
   const getCricketData = () => {
     getFixtureDataMobile(

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { BetSlip, BookMaker, Loading, MatchOdds } from '@/components';
+import { BookMaker, Loading, MatchOdds } from '@/components';
 import Sessions from '@/components/SingleBet/Sessions';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import { reactIcons } from '@/utils/icons';
@@ -22,7 +22,6 @@ const CricketMarket = () => {
   const matchData = location.state?.data;
   // eslint-disable-next-line
   // eslint-disable-next-line
-  const betData = useSelector((state) => state.bet.selectedBet);
   const userIdBalance = useSelector((state) => state?.user?.balance);
   const userType = useSelector((state) => state?.user?.userType);
   const [isLiveMobile, setIsLiveMobile] = useState(false);
@@ -197,124 +196,119 @@ const CricketMarket = () => {
   return (
     <>
       {loading && !loaderOneTime && <Loading />}
-      <div className="min-h-[100vh] w-full my-2 flex lg:gap-4">
-        <div className="flex-1">
-          <div className="bg-[#0f2327] flex items-center justify-between text-white w-full py-3 px-2 mb-4">
-            <div className="flex items-center gap-2">
-              <div className="text-white">{reactIcons.play}</div>
-              <div>
-                {' '}
-                <h1 className="text-24">{matchData?.name}</h1>
-                <p className="text-[#FAFAFA80] text-12 mt-1">
-                  {matchData?.competition_name}
-                </p>
+      <div className="min-h-[100vh] w-full my-2">
+        <div className="bg-[#0f2327] flex items-center justify-between text-white w-full py-3 px-2 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="text-white">{reactIcons.play}</div>
+            <div>
+              {' '}
+              <h1 className="text-24">{matchData?.name}</h1>
+              <p className="text-[#FAFAFA80] text-12 mt-1">
+                {matchData?.competition_name}
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            {matchData?.odds?.inplay ? (
+              <div className="flex-center text-green-400 gap-1 text-10 ">
+                <span className="text-green-400 text-14">
+                  {reactIcons.play}
+                </span>
+                In-Play
               </div>
-            </div>
-            <div className="flex gap-4">
-              {matchData?.odds?.inplay ? (
-                <div className="flex-center text-green-400 gap-1 text-10 ">
-                  <span className="text-green-400 text-14">
-                    {reactIcons.play}
-                  </span>
-                  In-Play
-                </div>
-              ) : (
-                <div className="text-12">
-                  {moment(matchData?.matchDateTime).format(
-                    'DD/MM/YYYY hh:mm A',
-                  )}
-                </div>
-              )}
-              {isLogin &&
-              userIdBalance > 0 &&
-              userType !== 'DEMO' &&
-              matchData?.inplay ? (
-                <button
-                  onClick={handleLiveTV}
-                  className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                >
-                  {reactIcons.tv}
-                  <span className="text-xs">Live Tv</span>
-                </button>
-              ) : (
-                <button className="ml-auto w-auto"></button>
-              )}
-              {isLogin &&
-              userIdBalance > 0 &&
-              userType !== 'DEMO' &&
-              matchData?.inplay ? (
-                <button
-                  // onClick={handleButtonClick}
-                  onClick={handleLiveScoreMobile}
-                  className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                >
-                  <img
-                    src="/images/live-match.png"
-                    alt="live-tv"
-                    className="w-5 "
-                  />
-                  <span className="text-xs">Live Score</span>
-                </button>
-              ) : (
-                <button className="ml-auto w-auto"></button>
-              )}
-              {/* </>
+            ) : (
+              <div className="text-12">
+                {moment(matchData?.matchDateTime).format('DD/MM/YYYY hh:mm A')}
+              </div>
+            )}
+            {isLogin &&
+            userIdBalance > 0 &&
+            userType !== 'DEMO' &&
+            matchData?.inplay ? (
+              <button
+                onClick={handleLiveTV}
+                className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
+              >
+                {reactIcons.tv}
+                <span className="text-xs">Live Tv</span>
+              </button>
+            ) : (
+              <button className="ml-auto w-auto"></button>
+            )}
+            {isLogin &&
+            userIdBalance > 0 &&
+            userType !== 'DEMO' &&
+            matchData?.inplay ? (
+              <button
+                // onClick={handleButtonClick}
+                onClick={handleLiveScoreMobile}
+                className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
+              >
+                <img
+                  src="/images/live-match.png"
+                  alt="live-tv"
+                  className="w-5 "
+                />
+                <span className="text-xs">Live Score</span>
+              </button>
+            ) : (
+              <button className="ml-auto w-auto"></button>
+            )}
+            {/* </>
               )} */}
-            </div>
           </div>
-          <div
-            className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
-              isLiveMobile ? '' : 'hidden'
-            }`}
-          >
-            <iframe
-              // src={`https://diamondapi.uk/dcasino/sr.php?eventid=${eventId}&sportid=1`}
-              src={
-                isLiveTv
-                  ? `https://score.hr08bets.in/api?eventid=${eventId}`
-                  : ''
-              }
-              title="description"
-              style={{ width: '100%', height: '518px' }}
-            ></iframe>
-          </div>
-          <div
-            className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
-              isLiveTv ? '' : 'hidden'
-            }`}
-          >
-            <iframe
-              // src={`https://diamondapi.uk/dcasino/sr.php?eventid=${eventId}&sportid=1`}
-              src={
-                isLiveTv
-                  ? `https://hr08bets.in/sports-stream-live/index.html?eventid=${eventId}`
-                  : ''
-              }
-              allow="autoplay; fullscreen"
-              sandbox="allow-scripts allow-same-origin allow-popups"
-              title="description"
-              style={{ width: '100%', height: '518px' }}
-            ></iframe>
-          </div>
-          <MatchOdds
-            heading="MATCH ODDS"
-            data={oddsData}
-            competition_name={matchData?.competition_name}
-            placedBetWinLossDatas={placedBetWinLossDatas}
-          />
-          <BookMaker
-            heading="BOOKMAKERS"
-            data={{
-              ...bookmakerTransformData,
-              market_id: oddsData?.market_id,
-              noData: bookmakerData ? false : true,
-            }}
-            competition_name={matchData?.competition_name}
-            placedBetWinLossBookmakerData={placedBetWinLossBookmakerData}
-            oddsData={oddsData}
-            matchName={matchData?.name}
-          />
-          {/* <Fancy
+        </div>
+        <div
+          className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
+            isLiveMobile ? '' : 'hidden'
+          }`}
+        >
+          <iframe
+            // src={`https://diamondapi.uk/dcasino/sr.php?eventid=${eventId}&sportid=1`}
+            src={
+              isLiveTv ? `https://score.hr08bets.in/api?eventid=${eventId}` : ''
+            }
+            title="description"
+            style={{ width: '100%', height: '518px' }}
+          ></iframe>
+        </div>
+        <div
+          className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
+            isLiveTv ? '' : 'hidden'
+          }`}
+        >
+          <iframe
+            // src={`https://diamondapi.uk/dcasino/sr.php?eventid=${eventId}&sportid=1`}
+            src={
+              isLiveTv
+                ? `https://hr08bets.in/sports-stream-live/index.html?eventid=${eventId}`
+                : ''
+            }
+            allow="autoplay; fullscreen"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+            title="description"
+            style={{ width: '100%', height: '518px' }}
+          ></iframe>
+        </div>
+        <MatchOdds
+          heading="Match Odds"
+          data={oddsData}
+          competition_name={matchData?.competition_name}
+          placedBetWinLossDatas={placedBetWinLossDatas}
+        />
+        <BookMaker
+          heading="BOOKMAKERS"
+          data={{
+            ...bookmakerTransformData,
+            market_id: oddsData?.market_id,
+            noData: bookmakerData ? false : true,
+          }}
+          competition_name={matchData?.competition_name}
+          placedBetWinLossBookmakerData={placedBetWinLossBookmakerData}
+          oddsData={oddsData}
+          matchName={matchData?.name}
+        />
+        {/* <Fancy
             heading="Fancy"
             data={fancy}
             matchName={matchData?.name}
@@ -322,25 +316,14 @@ const CricketMarket = () => {
             placedBetWinLossFancy={placedBetWinLossFancy}
             competition_name={matchData?.competition_name}
           /> */}
-          <Sessions
-            sessionBooksetClcuData={sessionBooksetClcuData}
-            data={sessionData}
-            matchName={matchData?.name}
-            particularMatchData={particularMatchData}
-            competition_name={matchData?.competition_name}
-            oddsData={oddsData}
-          />
-        </div>
-        <div>
-          {' '}
-          {isLogin && betData.length > 0 ? (
-            <div className="hidden lg:block">
-              <BetSlip />
-            </div>
-          ) : (
-            ''
-          )}
-        </div>
+        <Sessions
+          sessionBooksetClcuData={sessionBooksetClcuData}
+          data={sessionData}
+          matchName={matchData?.name}
+          particularMatchData={particularMatchData}
+          competition_name={matchData?.competition_name}
+          oddsData={oddsData}
+        />
       </div>
     </>
   );

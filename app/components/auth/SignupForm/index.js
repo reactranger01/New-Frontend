@@ -30,7 +30,7 @@ const SignupForm = () => {
       if (isYupError(err)) {
         setFormError(parseYupError(err));
       } else {
-        console.log('Something went wrong');
+        console.error('Something went wrong');
       }
     }
   };

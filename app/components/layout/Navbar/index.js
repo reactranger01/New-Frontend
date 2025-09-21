@@ -224,7 +224,7 @@ const Navbar = () => {
                         Last logged in: 18/09/2025 23:13 PM
                       </p>
                     </div>
-                    {/* <div className="text-12 md:text-12 leading-4 font-semibold md:font-bold hidden  md:flex flex-col bg-white rounded-full px-4 py-1 h-[42px]">
+                    {/* <div className="text-12 md:taext-12 leading-4 font-semibold md:font-bold hidden  md:flex flex-col bg-white rounded-full px-4 py-1 h-[42px]">
                       <span className="text-black">
                         Bal:
                         {numberWithCommas(
@@ -281,7 +281,7 @@ const Navbar = () => {
                         Login
                       </button>
                       <button
-                        onClick={() => dispatch(openModal('login'))}
+                        onClick={() => dispatch(openModal('register'))}
                         className="text-[#fcedca] text-14 font-medium flex-center gap-2 hover:underline"
                       >
                         Signup

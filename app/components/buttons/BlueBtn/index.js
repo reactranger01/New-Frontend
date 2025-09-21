@@ -9,7 +9,7 @@ const BlueBtn = ({ text, size, disabled, onClick, css }) => {
       className={`${
         disabled
           ? 'cursor-not-allowed leading-4 bg-[#a7d8fd] opacity-50 '
-          : ' bg-[#a7d8fd] hover:bg-[#ffffff]'
+          : ' bg-[#a7d8fd] '
       } bet-btn flex flex-col items-center justify-center gap-[6px] ${css}`}
     >
       <span className="text-12 font-semibold leading-none"> {text}</span>

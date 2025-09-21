@@ -209,7 +209,7 @@ html {
 }
 
 body {
-  background: url('/public/images/darkBg.jpg');
+  background: url(/public/images/lightBg.jpg);
 }
 
 .ball-running-overlay {

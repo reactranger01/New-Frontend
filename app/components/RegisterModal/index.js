@@ -11,6 +11,24 @@ import Modal from '@mui/material/Modal';
 import { closeModal, openModal } from '@/redux/Slices/modalSlice';
 import { useDispatch } from 'react-redux';
 
+const sponsorArr = [
+  {
+    id: 1,
+    img: '/images/registerImg1.webp',
+    text: 'Diamond upgrade',
+  },
+  {
+    id: 2,
+    img: '/images/registerImg2.webp',
+    text: '1 to 1 customer support',
+  },
+  {
+    id: 3,
+    img: '/images/registerImg3.webp',
+    text: '24/7 instant withdrawal',
+  },
+];
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -25,9 +43,10 @@ const style = {
   borderRadius: '10px',
 };
 
-const ForgotPasswordModal = ({ isOpen, handleClose }) => {
+const RegisterModal = ({ isOpen, handleClose }) => {
   const dispatch = useDispatch();
   const [otpSent, setOtpSent] = useState(false);
+  const [useUserId, setUseUserID] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isConfirmPassword, setIsConfirmPassword] = useState(false);
   const [form, setForm] = useState({
@@ -107,7 +126,7 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                 <img src="/images/lotusLogo.jpg" className="h-[30px]" alt="" />
               </div>
               <h1 className="text-center text-20 font-bold text-white ">
-                Forget Password
+                Register
               </h1>
 
               <form action="">
@@ -157,6 +176,19 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                 {formError?.mobile && (
                   <p className="text-red-600 text-12">{formError?.mobile}</p>
                 )}
+                {!useUserId && (
+                  <div className="flex justify-end items-center">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setUseUserID(true);
+                      }}
+                      className="ml-auto underline text-12 my-1 text-right text-white"
+                    >
+                      Want To Set UserId?
+                    </button>
+                  </div>
+                )}
                 {otpSent && (
                   <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
                     <input
@@ -172,6 +204,29 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                     </span>
                   </div>
                 )}
+                {useUserId && (
+                  <>
+                    <div className="border-b-2 border-[#f4d821] pb-1 relative">
+                      <input
+                        type="text"
+                        onChange={handleChange}
+                        value={form?.username}
+                        name="username"
+                        placeholder="Enter User Id*"
+                        className="text-16 font-medium pl-6 text-white placeholder:text-white bg-transparent outline-none"
+                      />
+                      <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
+                        {reactIcons.key}
+                      </span>
+                    </div>
+                    {formError?.username && (
+                      <p className="text-red-600 text-12">
+                        {formError?.username}
+                      </p>
+                    )}
+                  </>
+                )}
+
                 <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
                   <input
                     type={!isPassword ? 'password' : 'text'}
@@ -210,17 +265,50 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                     {isConfirmPassword ? reactIcons.eye : reactIcons.eyeSlash}
                   </span>
                 </div>
+                <div className="flex justify-end items-center">
+                  <button
+                    // onClick={(e) => {
+                    //   setUseUserID(true);
+                    // }}
+                    className="ml-auto underline text-12 my-1 text-right text-white"
+                  >
+                    Have a referral code?
+                  </button>
+                </div>
 
                 <button
                   type="submit"
                   onClick={handleSubmit}
                   className="flex items-center mt-4 w-full justify-center py-2 rounded-md bg-[#F4D821] text-black text-14 font-medium"
                 >
-                  Update Password
+                  Register
                 </button>
 
+                <p className="my-1 mt-2 text-14 font-medium text-white text-center">
+                  Get Your Ready-Made ID From Whatsapp
+                </p>
+                <button
+                  type="button"
+                  className="flex mx-auto rounded-3xl text-white w-[80%] items-center font-semibold text-16 justify-center gap-2 py-2 bg-[#4caf50]  "
+                >
+                  {reactIcons.whatsapp} Whatsapp Now
+                </button>
+
+                <div className="grid grid-cols-3 gap-2 my-4 text-white">
+                  {sponsorArr.map((item, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <img
+                        src={item?.img}
+                        className="h-[60px] w-[60px]"
+                        alt=""
+                      />
+                      <p className="text-[11px] leading-4">{item?.text}</p>
+                    </div>
+                  ))}
+                </div>
+
                 <p className="underline my-2 text-14  text-center text-white">
-                  Remember your password?{' '}
+                  Already Have Account?{' '}
                   <span
                     onClick={(e) => {
                       e.preventDefault();
@@ -229,12 +317,8 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                     }}
                     className="underline text-[#f4d821]"
                   >
-                    Login
+                    Log In
                   </span>
-                </p>
-
-                <p className="underline text-14 my-2 text-center text-white">
-                  Create New Account
                 </p>
               </form>
             </div>
@@ -245,9 +329,9 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
   );
 };
 
-ForgotPasswordModal.propTypes = {
+RegisterModal.propTypes = {
   isOpen: PropTypes.bool,
   handleClose: PropTypes.func,
 };
 
-export default ForgotPasswordModal;
+export default RegisterModal;

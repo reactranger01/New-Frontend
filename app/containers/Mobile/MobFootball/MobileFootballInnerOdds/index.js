@@ -12,7 +12,7 @@ import { LoginModal } from '@/containers/pageListAsync';
 import { updatePlacedBetCalculation } from '@/utils/helper';
 const MobileFootballInnerOdds = ({
   data,
-  fixtureEventName,
+
   placedBetWinLossDatas,
   competition_name,
 }) => {
@@ -91,7 +91,6 @@ const MobileFootballInnerOdds = ({
     minLimitOdds = data?.offPlayMinLimit;
     maxLimitOdds = data?.offPlayMaxLimit;
   }
-  console.log(fixtureEventName);
   return (
     <>
       {' '}

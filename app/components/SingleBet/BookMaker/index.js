@@ -59,9 +59,7 @@ const BookMaker = ({
     minimumBet,
     maximumBet,
   ) => {
-    console.log(OddsPrice, 'OddsPrice');
     if (OddsPrice > 1) {
-      console.log('bookmaker data', eventId);
       setBets([
         {
           marketId: String(data?.market_id),

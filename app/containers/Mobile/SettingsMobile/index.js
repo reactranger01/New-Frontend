@@ -61,7 +61,7 @@ const SettingsMobile = () => {
       setStakeData(editedStakes);
       setIsEditing(false);
     } else {
-      console.log('Update failed');
+      console.error('Update failed');
     }
   };
   const label = { inputProps: { 'aria-label': 'Color switch demo' } };
