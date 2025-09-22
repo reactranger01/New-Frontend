@@ -115,9 +115,9 @@ const Navbar = () => {
       {!searchOn ? (
         <>
           <nav className="bg-[#1E8067]">
-            <div className="container  pt-[20px] pb-[30px] flex items-center justify-between gap-10">
+            <div className="xl:container px-3 xl:px-0 py-[10px] lg:pt-[20px] lg:pb-[30px] flex items-center justify-between gap-10">
               <div className="flex items-center gap-2">
-                {location.pathname == '/' ? (
+                {/* {location.pathname == '/' ? (
                   <div
                     onClick={toggleDrawer(true)}
                     className="md:hidden flex-center text-xl text-white"
@@ -131,16 +131,19 @@ const Navbar = () => {
                   >
                     {reactIcons.bigLeft}
                   </div>
-                )}
+                )} */}
 
                 <div className="flex-center gap-3 w-fit">
+                  <div className="font-bold text-2xl lg:hidden text-white">
+                    {reactIcons.newMenu}
+                  </div>
                   <img
                     onClick={() => navigate('/')}
                     src="/images/lotusLogo.jpg"
                     alt="LOGO"
-                    className="  h-9 cursor-pointer"
+                    className=" h-8 md:h-9 cursor-pointer"
                   />
-                  <p className="md:flex-center hidden text-white text-12 ">
+                  <p className="hidden lg:flex-center  text-white text-12 ">
                     {moment().format('MMM D, YYYY')}
                     <span className=" text-white md:text-16 text-12 font-bold ml-1">
                       {time}
@@ -196,7 +199,7 @@ const Navbar = () => {
                     {isMobile && (
                       <div
                         onClick={handleSearchIconClick}
-                        className="text-xl text-white"
+                        className="text-xl text-white font-bold"
                       >
                         {reactIcons.search}
                       </div>
@@ -204,9 +207,12 @@ const Navbar = () => {
                     {!(location.pathname === '/dashboard' && isMobile) && (
                       <button
                         onClick={toggleRightDrawer(true)}
-                        className="text-white bg-[#2c4f58] px-2 py-1 text-12 rounded-md flex-center gap-2"
+                        className="text-black leading-none  w-[70px] h-10 text-12 rounded flex-center flex-col  bg-white"
                       >
-                        {reactIcons.user}{' '}
+                        <span className="text-16 mb-1">
+                          {' '}
+                          {reactIcons.user}{' '}
+                        </span>
                         {numberWithCommas(
                           userInfo?.balance -
                             Math.abs(userInfo?.exposureAmount) || 0,
@@ -335,18 +341,24 @@ const Navbar = () => {
           />
         </>
       ) : (
-        <div className="relative w-full h-[56px]  flex items-center">
+        <div className="relative w-full h-[56px] bg-[#1e8067] text-white flex items-center">
+          <div
+            onClick={handleCloseSearch}
+            className="absolute ay-center left-3 text-white font-bold text-xl"
+          >
+            {reactIcons.bigLeft}
+          </div>
           <input
             type="text"
             placeholder="Search Events"
             value={searchQuery}
             onChange={handleSearch}
-            className="text-white text-14 bg-transparent w-full px-3 pr-10 h-full outline-none"
+            className="text-white text-14 bg-transparent w-full px-10 h-full outline-none"
           />
           {filteredResults.length == 0 && searchQuery.length >= 3 ? (
-            <ul className="absolute bg-white shadow-lg rounded  w-full z-10 top-[60px]">
-              <li className="p-2 hover:bg-gray-200 cursor-pointer">
-                Match Not Found
+            <ul className="absolute bg-white shadow-lg rounded text-black  w-full z-10 top-[60px]">
+              <li className="p-1 text-center text-14 hover:bg-gray-200 cursor-pointer">
+                No Event Found
               </li>
             </ul>
           ) : (
@@ -356,7 +368,7 @@ const Navbar = () => {
                   {filteredResults.map((result, index) => (
                     <li
                       key={index}
-                      className="p-2 hover:bg-gray-200 cursor-pointer"
+                      className="p-1 border-b border-gray-300 text-black text-14 hover:bg-gray-200 cursor-pointer"
                       onClick={() => handleEventClick(result)}
                     >
                       {result?.name}
@@ -368,7 +380,7 @@ const Navbar = () => {
           )}
           <div
             onClick={handleCloseSearch}
-            className="absolute ay-center right-3 text-white text-xl"
+            className="absolute ay-center right-3 font-bold text-white text-2xl"
           >
             {reactIcons.close}
           </div>

@@ -38,7 +38,7 @@ const Sidebar = () => {
   return (
     <div className="light-bg">
       <Navbar />
-      <section className=" mx-auto container">
+      <section className=" mx-auto xl:container  px-4 md:px-6  xl:px-0">
         <div className="2xl:container  flex gap-5 mx-auto">
           <div className="w-[165px] shrink-0 bg-white hidden lg:block border border-[#ddd] overflow-hidden">
             {step === 0 ? (
@@ -68,10 +68,10 @@ const Sidebar = () => {
               <SidebarMenu game={selectedGame} back={setStep} />
             )}
           </div>
-          <div className="flex-1  w-full ">
+          <div className="flex-1 min-w-0 w-full ">
             <Outlet />
           </div>
-          <div className="!w-[290px] mt-[15px] flex-shrink-0">
+          <div className="!w-[290px] mt-[15px] hidden lg:block flex-shrink-0">
             <BetSlip />
           </div>
         </div>

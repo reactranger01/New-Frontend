@@ -37,14 +37,14 @@ const imagesArr = [
 
 const HomeTopSLider = () => {
   return (
-    <div className="my-2 relative w-full max-w-[48vw] mx-auto">
+    <div className="my-2 relative w-full ">
       <Swiper
         pagination={true}
         loop={true}
         slidesPerView={3}
         spaceBetween={0}
         autoplay={{
-          delay: 3000,
+          delay: 30000,
           disableOnInteraction: true,
         }}
         breakpoints={{

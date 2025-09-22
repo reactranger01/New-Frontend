@@ -4,7 +4,6 @@ import { MobFooter, Navbar } from '@/components';
 import { Outlet } from 'react-router-dom';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { useSelector } from 'react-redux';
-import HeaderMarque from '@/components/HeaderMarque';
 // import { isLoggedIn } from '@/utils/apiHandlers';
 
 function MobLayout() {
@@ -32,12 +31,12 @@ function MobLayout() {
     <>
       <div className="relative light-bg">
         <div className="fixed w-full top-0 z-50">
-          {login && showMarquee && (
+          {/* {login && showMarquee && (
             <HeaderMarque
               showMarquee={showMarquee}
               setShowMarquee={setShowMarquee}
             />
-          )}
+          )} */}
           <Navbar />
         </div>
         <div

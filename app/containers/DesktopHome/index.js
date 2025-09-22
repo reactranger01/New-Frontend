@@ -117,6 +117,15 @@ const DesktopHome = () => {
     <div className="w-full light-bg ">
       {/* <MobSlider /> */}
       <div className="min-h-screen overflow-hidden pb-6">
+        <div className="bg-white mt-1 grid grid-cols-2 gap-2 p-3 rounded-md bg-[linear-gradient(90deg,#fff_50%,#f5dba0)]">
+          <button className="flex items-center justify-center py-2 gap-2 text-14 font-bold rounded-sm bg-[#1e8067] text-white">
+            <img src="/images/deposit.png" className="w-5 h-5" alt="" /> Deposit
+          </button>
+          <button className="flex items-center justify-center py-2 gap-2 text-14 font-bold rounded-sm  text-white  bg-[#dc2626]">
+            <img src="/images/withdraw.png" className="w-5 h-5" alt="" />{' '}
+            Withdraw
+          </button>
+        </div>
         <div className="w-full">
           <HomeTopSLider />
         </div>

@@ -149,13 +149,15 @@ const MatchOdds = ({
                                       : 'text-[#CE2C16]'
                                   }`}
                                 >
-                                  <span className=" ">
+                                  {/* <span className=" ">
                                     {reactIcons?.doubleArrowR}{' '}
-                                  </span>
+                                  </span> */}
                                   <span className=" ">
+                                    (
                                     {Number(
                                       matchOddsExposer?.data || 0,
                                     ).toFixed(2)}
+                                    )
                                   </span>
                                 </div>
                               </div>
