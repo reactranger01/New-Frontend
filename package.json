@@ -15,7 +15,7 @@
     "lint-staged": "lint-staged",
     "commitlint": "commitlint",
     "build:clean": "rimraf ./build",
-    "build:mount": "npm run build:clean && move tempDist build",
+    "build:mount": "npm run build:clean && mv tempDist build",
     "build": "webpack --color --progress --config webpack/webpack.prod.js",
     "postbuild": "npm run build:mount"
   },
