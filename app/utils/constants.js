@@ -102,21 +102,21 @@ export const sportSlider2 = [
 export const links = [
   {
     title: 'cricket',
-    path: '/dashboard/cricket',
+    path: '/cricket',
     icon: '/images/sidebarIcons/cricket.webp',
     css: '#8C1000',
     route: 'cricket',
   },
   {
     title: 'Football',
-    path: '/dashboard/football',
+    path: '/football',
     icon: '/images/sidebarIcons/football.webp',
     css: '#8C1000',
     route: 'soccer',
   },
   {
     title: 'tennis',
-    path: '/dashboard/tennis',
+    path: '/tennis',
     icon: '/images/sidebarIcons/tennis.webp',
 
     css: '#8C1000',
@@ -124,7 +124,7 @@ export const links = [
   },
   {
     title: 'Virtual Sports',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/virtualsports.svg',
 
     css: '#8C1000',
@@ -132,7 +132,7 @@ export const links = [
   },
   {
     title: 'Indian Card Games',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/card-games.svg',
     css: '#8C1000',
     route: 'null',
@@ -140,21 +140,21 @@ export const links = [
 
   {
     title: 'Sports Book',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/virtualsports.svg',
     css: '#8C1000',
     route: 'null',
   },
   {
     title: 'Casino',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/live-casino.svg',
     css: '#8C1000',
     route: 'null',
   },
   {
     title: 'Slot Games',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/slots-games.svg',
 
     css: '#8C1000',
@@ -162,28 +162,28 @@ export const links = [
   },
   {
     title: 'Matka',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/matka.webp',
     css: '#8C1000',
     route: 'null',
   },
   {
     title: 'FIFA CUP WINNER',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/fifa-cup.png',
     css: '#8C1000',
     route: 'null',
   },
   {
     title: 'WINNER CUP',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/fifa-cup.png',
     css: '#8C1000',
     route: 'null',
   },
   {
     title: 'ELECTION',
-    path: '/dashboard/no-market',
+    path: '/no-market',
     icon: '/images/sidebarIcons/fifa-cup.png',
     css: '#8C1000',
     route: 'null',
@@ -192,38 +192,38 @@ export const links = [
 export const linksRight = [
   {
     title: 'Settings',
-    path: '/dashboard/settings-stake',
+    path: '/settings-stake',
     icon: reactIcons.setting,
   },
   {
     title: 'Open Bets',
-    path: '/dashboard/my-bets',
+    path: '/my-bets',
     icon: reactIcons.list1,
   },
   {
     title: 'Deposit',
     icon: reactIcons.withdraw,
-    path: '/dashboard/deposit',
+    path: '/deposit',
   },
   {
     title: 'Withdraw',
-    path: '/dashboard/withdraw',
+    path: '/withdraw',
     icon: reactIcons.file,
   },
   {
     title: 'Change Password',
-    path: '/dashboard/settings',
+    path: '/settings',
     icon: reactIcons.setting,
   },
   {
     title: 'Transfer Statement',
-    path: '/dashboard/account-statement',
+    path: '/account-statement',
     icon: reactIcons.book,
   },
 
   {
     title: 'Betting Profit and Loss',
-    path: '/dashboard/profit-loss',
+    path: '/profit-loss',
     icon: reactIcons.money,
   },
   {
@@ -239,74 +239,74 @@ export const navLinks = [
   },
   {
     title: 'ESPORTS',
-    path: '/dashboard/esports',
+    path: '/esports',
   },
   {
     title: 'MIXED MARTIAL ARTS',
-    path: '/dashboard/mixed-martial-arts',
+    path: '/mixed-martial-arts',
   },
   {
     title: 'GAELIC GAMES',
-    path: '/dashboard/football',
+    path: '/football',
   },
   {
     title: 'VOLLEYBALL',
-    path: '/dashboard/tennis',
+    path: '/tennis',
   },
   {
     title: 'HANDBALL',
-    path: '/dashboard/no-market',
+    path: '/no-market',
   },
   {
     title: 'AUSTRALIAN RULES',
-    path: '/dashboard/no-market',
+    path: '/no-market',
   },
   {
     title: 'ICE HOCKEY',
-    path: '/dashboard/no-market',
+    path: '/no-market',
   },
   {
     title: 'BASKETBALL',
-    path: '/dashboard/no-market',
+    path: '/no-market',
   },
   {
     title: 'BASEBALL',
-    path: '/dashboard/no-market',
+    path: '/no-market',
   },
   {
     title: 'AMERICAN FOOTBALL',
-    path: '/dashboard/no-market',
+    path: '/no-market',
   },
 ];
 export const dropNavLinks = [
   {
     title: 'My Bets',
-    path: '/dashboard/my-bets',
+    path: '/my-bets',
   },
   {
     title: 'Deposit',
-    path: '/dashboard/deposit',
+    path: '/deposit',
   },
   {
     title: 'Withdraw',
-    path: '/dashboard/withdraw',
+    path: '/withdraw',
   },
   {
     title: 'Settings',
-    path: '/dashboard/settings',
+    path: '/settings',
   },
   {
     title: 'Account Statement',
-    path: '/dashboard/account-statement',
+    path: '/account-statement',
   },
   {
     title: 'Betting Profit and Loss',
-    path: '/dashboard/profit-loss',
+    path: '/profit-loss',
   },
 
   // {
   //   title: 'Transfer Statement',
-  //   path: '/dashboard/tennis',
+  //   path: '/tennis',
   // },
 ];
 export const slider2Img = [

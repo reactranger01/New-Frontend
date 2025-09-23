@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable  */
 import {
   BlueBtn,
   Loading,
@@ -426,7 +426,7 @@ const MobCricket = () => {
     <>
       {isLoading && !loaderOneTime && <Loading />}
       <div className="min-h-[550px]">
-        <div className="bg-[#163439] p-3 items-center gap-2  text-white justify-between">
+        {/* <div className="bg-[#163439] p-3 items-center gap-2  text-white justify-between">
           {matchData?.inplay && (
             <span className="text-12 p-1 px-2 italic bg-[#00A725] rounded-2xl mt-1">
               In play
@@ -488,7 +488,7 @@ const MobCricket = () => {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
         <div
           className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
             isLiveMobile ? '' : 'hidden'
@@ -525,7 +525,7 @@ const MobCricket = () => {
           ></iframe>
         </div>
         {oddsData?.runners?.length > 0 ? (
-          <div className="matchodds bg-white p-1  rounded-lg mb-3 mx-2">
+          <div className="matchodds bg-white   rounded-lg mb-3 ">
             <div className="flex items-center justify-between py-1">
               <div className="font-bold text-14 pl-2">Match Odds</div>
               <div className="flex items-center gap-2 text-[#9d9c9d]">
@@ -657,12 +657,12 @@ const MobCricket = () => {
                           </div>
                         </div>
 
-                        {activeBetSlip == Number(items?.selectionId) &&
+                        {/* {activeBetSlip == Number(items?.selectionId) &&
                           Number(items?.selectionId) ==
                             Number(bets[0]?.selectionId) &&
                           isLoggedIn() &&
                           betData?.length > 0 &&
-                          isMobile && <NewBetSlip />}
+                          isMobile && <NewBetSlip />} */}
                       </>
                     );
                   })}
@@ -813,12 +813,12 @@ const MobCricket = () => {
                               )}
                           </div>
                         </div>
-                        {activeBetSlip == Number(items?.selectionId) &&
+                        {/* {activeBetSlip == Number(items?.selectionId) &&
                           Number(items?.selectionId) ==
                             Number(bets[0]?.selectionId) &&
                           isLoggedIn() &&
                           betData?.length > 0 &&
-                          isMobile && <NewBetSlip />}
+                          isMobile && <NewBetSlip />} */}
                       </>
                     );
                   })}
@@ -978,12 +978,12 @@ const MobCricket = () => {
                             </div>
                           </div>
                         </div>
-                        {activeBetSlip == items?.SelectionId &&
+                        {/* {activeBetSlip == items?.SelectionId &&
                           Number(items?.SelectionId) ==
                             Number(betsFancy[0]?.selectionId) &&
                           isLoggedIn() &&
                           betData?.length > 0 &&
-                          isMobile && <NewBetSlip />}
+                          isMobile && <NewBetSlip />} */}
                       </>
                     );
                   })}

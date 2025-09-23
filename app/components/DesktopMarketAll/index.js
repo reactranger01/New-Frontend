@@ -12,7 +12,7 @@ const DesktopMarketAll = ({
   addToBetPlace,
   isLogin,
   activeBetSlip,
-  isMobile,
+  // isMobile,
   bets,
   betData,
   showStar = false,
@@ -29,7 +29,6 @@ const DesktopMarketAll = ({
           </div>
         ) : (
           <>
-            {' '}
             {inplayData &&
               inplayData.map((_items, index) => {
                 let minLimitOdds, maxLimitOdds;
@@ -72,9 +71,6 @@ const DesktopMarketAll = ({
                               </div>
                             )}
                             <div className="flex-1 cursor-pointer  leading-3 text-black  text-12 font-bold hover:underline">
-                              {/* {' '}
-                              {_items?.runners[0]?.runnerName} v{' '}
-                              {_items?.runners[1]?.runnerName} */}
                               {_items?.name}
                             </div>
                           </div>
@@ -87,18 +83,6 @@ const DesktopMarketAll = ({
                             </div>
                           ) : (
                             ''
-                            // <div className="flex flex-col text-10 text-[#0f2327] justify-end items-end ">
-                            //   <p className="leading-4">
-                            //     {moment(_items?.matchDateTime).format(
-                            //       'DD/MM/YYYY',
-                            //     )}
-                            //   </p>
-                            //   <p className="leading-4">
-                            //     {moment(_items?.matchDateTime).format(
-                            //       'hh:mm A',
-                            //     )}
-                            //   </p>
-                            // </div>
                           )}
                         </div>
                         {_items?.runners?.[0]?.backPrice1 ||
@@ -316,8 +300,10 @@ const DesktopMarketAll = ({
                     {activeBetSlip == Number(_items?.matchId) &&
                       Number(_items?.matchId) == Number(bets[0]?.eventId) &&
                       isLogin &&
-                      betData?.length > 0 &&
-                      isMobile && <NewBetSlip />}
+                      betData?.length > 0 && (
+                        // isMobile && <NewBetSlip />}
+                        <NewBetSlip />
+                      )}
                   </>
                 );
               })}

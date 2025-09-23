@@ -42,19 +42,15 @@ function MobLayout() {
         <div
           className={`${
             login && showMarquee
-              ? 'mt-[80px]'
+              ? 'mt-[70px]'
               : login && !showMarquee
               ? 'mt-[56px]'
               : !login && !showMarquee
               ? 'mt-[56px]'
               : 'mt-[56px]'
-          } mb-[56px]`}
+          } mb-[56px] px-2 lg:px-0`}
         >
           <Outlet />
-        </div>
-
-        <div className="fixed w-full bottom-0 z-50">
-          <MobFooter />
         </div>
       </div>
     </>

@@ -1,5 +1,7 @@
 import { Loading } from '@/components';
+import DesktopGameHeader from '@/components/Desktop/DesktopGameHeader';
 import DesktopMarketAll from '@/components/DesktopMarketAll';
+import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
 import MostPopular from '@/components/MostPopular';
 import { LoginModal } from '@/containers/pageListAsync';
 import { fetchBetDetailsAction } from '@/redux/actions';
@@ -19,7 +21,7 @@ const Tennis = () => {
   const [loaderOneTime, setLoaderOneTime] = useState(false);
   const betData = useSelector((state) => state.bet.selectedBet);
   const [bets, setBets] = useState([]);
-  const isMobile = useMediaQuery('(max-width:1024px)');
+  const isMobile = useMediaQuery('(max-width:660px)');
   const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -104,49 +106,44 @@ const Tennis = () => {
         <div className="flex-1">
           <MostPopular text="Most Popular" />
 
-          <div className="flex items-center justify-center sm:justify-between bg-white py-[8.5px] pl-[8.5px]">
-            <div className="flex items-center gap-2 pl-2">
-              <img
-                src="/images/sidebarIcons/cricketDesk.png"
-                className="w-6 h-6"
-                alt=""
-              />
-              <p className="text-16 font-bold text-center sm:text-left">
-                Tennis{' '}
-              </p>
-            </div>
-            <div className="sm:grid grid-cols-6 hidden sm:min-w-[360px] min-w-[300px]">
-              <div className="col-span-2 flex-center text-14 font-bold">1</div>
-              <div className="col-span-2 flex-center text-14 font-bold">X</div>
-              <div className="col-span-2 flex-center text-14 font-bold">2</div>
-            </div>
-          </div>
-
-          <DesktopMarketAll
-            inplayData={inplayTrue}
-            gameNameS="tennis"
-            gameNameB="Tennis"
-            setOpenModal={setOpenModal}
-            addToBetPlace={addToBetPlace}
-            isLogin={isLogin}
-            activeBetSlip={activeBetSlip}
-            isMobile={isMobile}
-            bets={bets}
-            betData={betData}
+          <DesktopGameHeader
+            GameName={'Tennis'}
+            image="/images/sidebarIcons/tennis.webp"
+            isSmall={true}
           />
-          {(inplayFalse !== null || inplayFalse?.length !== 0) && (
+          {isMobile ? (
+            <MobileMarketAll inplayData={inplayTrue} gameNameS="tennis" />
+          ) : (
             <DesktopMarketAll
-              inplayData={inplayFalse}
+              inplayData={inplayTrue}
               gameNameS="tennis"
               gameNameB="Tennis"
-              setOpenModal={setOpenModal}
               addToBetPlace={addToBetPlace}
+              setOpenModal={setOpenModal}
               isLogin={isLogin}
               activeBetSlip={activeBetSlip}
-              isMobile={isMobile}
+              // isMobile={isMobile}
               bets={bets}
               betData={betData}
             />
+          )}
+          {isMobile ? (
+            <MobileMarketAll inplayData={inplayFalse} gameNameS="tennis" />
+          ) : (
+            (inplayFalse !== null || inplayFalse?.length !== 0) && (
+              <DesktopMarketAll
+                inplayData={inplayFalse}
+                gameNameS="tennis"
+                gameNameB="Tennis"
+                addToBetPlace={addToBetPlace}
+                setOpenModal={setOpenModal}
+                isLogin={isLogin}
+                activeBetSlip={activeBetSlip}
+                // isMobile={isMobile}
+                bets={bets}
+                betData={betData}
+              />
+            )
           )}
         </div>
         {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}

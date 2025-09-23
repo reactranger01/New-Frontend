@@ -10,6 +10,7 @@ import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import DesktopMarketAll from '@/components/DesktopMarketAll';
 import DesktopGameHeader from '../DesktopGameHeader';
+import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
 
 const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
   const isLogin = isLoggedIn();
@@ -18,7 +19,7 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const betData = useSelector((state) => state.bet.selectedBet);
-  const isMobile = useMediaQuery('(max-width:1024px)');
+  const isMobile = useMediaQuery('(max-width:660px)');
   const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
   useEffect(() => {
     if (bets?.length > 0) {
@@ -115,19 +116,23 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
             </div>
           ) : (
             <>
-              <DesktopMarketAll
-                inplayData={fixtureData}
-                gameNameS="cricket"
-                gameNameB="Cricket"
-                setOpenModal={setOpenModal}
-                addToBetPlace={addToBetPlace}
-                isLogin={isLogin}
-                activeBetSlip={activeBetSlip}
-                isMobile={isMobile}
-                bets={bets}
-                betData={betData}
-                showStar={false}
-              />{' '}
+              {isMobile ? (
+                <MobileMarketAll inplayData={fixtureData} gameNameS="cricket" />
+              ) : (
+                <DesktopMarketAll
+                  inplayData={fixtureData}
+                  gameNameS="cricket"
+                  gameNameB="Cricket"
+                  setOpenModal={setOpenModal}
+                  addToBetPlace={addToBetPlace}
+                  isLogin={isLogin}
+                  activeBetSlip={activeBetSlip}
+                  // isMobile={isMobile}
+                  bets={bets}
+                  betData={betData}
+                  showStar={false}
+                />
+              )}
             </>
           )}
         </>
@@ -141,19 +146,26 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
             </div>
           ) : (
             <>
-              <DesktopMarketAll
-                inplayData={sortedInplayFalseMatches}
-                gameNameS="cricket"
-                gameNameB="Cricket"
-                setOpenModal={setOpenModal}
-                addToBetPlace={addToBetPlace}
-                isLogin={isLogin}
-                activeBetSlip={activeBetSlip}
-                isMobile={isMobile}
-                bets={bets}
-                betData={betData}
-                showStar={false}
-              />
+              {isMobile ? (
+                <MobileMarketAll
+                  inplayData={sortedInplayFalseMatches}
+                  gameNameS="cricket"
+                />
+              ) : (
+                <DesktopMarketAll
+                  inplayData={sortedInplayFalseMatches}
+                  gameNameS="cricket"
+                  gameNameB="Cricket"
+                  setOpenModal={setOpenModal}
+                  addToBetPlace={addToBetPlace}
+                  isLogin={isLogin}
+                  activeBetSlip={activeBetSlip}
+                  // isMobile={isMobile}
+                  bets={bets}
+                  betData={betData}
+                  showStar={false}
+                />
+              )}
             </>
           )}
         </>

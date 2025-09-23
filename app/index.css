@@ -110,7 +110,7 @@ html {
     @apply text-red-500 text-14;
   }
   .bet-btn {
-    @apply h-[40px] min-w-[40px] md:min-w-[60px] w-[40px] md:w-[60px] border border-[#ddd] text-12;
+    @apply h-[42px] min-w-[56px] md:min-w-[60px] w-[56px] md:w-[60px] border border-[#ddd] text-12;
   }
   .form-eror {
     @apply text-12 md:text-14 text-red-700;
@@ -427,4 +427,22 @@ input[type='number']::-webkit-outer-spin-button {
   height: 1px;
   width: 32%;
   transform: rotate(0.35deg);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.css-j400xw-MuiPaper-root-MuiDrawer-paper::-webkit-scrollbar {
+  display: none;
+}
+
+.css-j400xw-MuiPaper-root-MuiDrawer-paper::-webkit-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

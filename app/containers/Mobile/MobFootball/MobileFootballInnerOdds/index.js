@@ -1,3 +1,7 @@
+{
+  /* eslint-disable*/
+}
+
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { isLoggedIn } from '@/utils/apiHandlers';
@@ -221,12 +225,12 @@ const MobileFootballInnerOdds = ({
                           />
                         </div>
                       </div>
-                      {activeBetSlip == Number(items?.selectionId) &&
+                      {/* {activeBetSlip == Number(items?.selectionId) &&
                         Number(items?.selectionId) ==
                           Number(bets[0]?.selectionId) &&
                         isLoggedIn() &&
                         betData?.length > 0 &&
-                        isMobile && <NewBetSlip />}
+                        isMobile && <NewBetSlip />} */}
                     </>
                   );
                 })}

@@ -134,7 +134,10 @@ const Navbar = () => {
                 )} */}
 
                 <div className="flex-center gap-3 w-fit">
-                  <div className="font-bold text-2xl lg:hidden text-white">
+                  <div
+                    onClick={toggleDrawer(true)}
+                    className="font-bold text-2xl lg:hidden text-white"
+                  >
                     {reactIcons.newMenu}
                   </div>
                   <img
@@ -264,18 +267,26 @@ const Navbar = () => {
               ) : (
                 <div>
                   {isMobile ? (
-                    <div className="flex items-center gap-2">
-                      <div
-                        onClick={handleSearchIconClick}
-                        className="text-xl text-white"
-                      >
-                        {reactIcons.search}
-                      </div>
+                    <div className="flex items-center gap-1">
+                      {isLogin && (
+                        <div
+                          onClick={handleSearchIconClick}
+                          className="text-xl text-white mr-1"
+                        >
+                          {reactIcons.search}
+                        </div>
+                      )}
                       <button
                         onClick={() => dispatch(openModal('login'))}
-                        className="text-white bg-[#2c4f58] px-2 py-1 text-12 rounded-md flex-center gap-2"
+                        className="text-black w-[70px] h-10 bg-[#f4d821]  text-[13px] rounded-[2px] flex-center "
                       >
                         Login
+                      </button>
+                      <button
+                        onClick={() => dispatch(openModal('register'))}
+                        className="text-black w-[70px] h-10 bg-white  text-[13px] rounded-[2px] flex-center "
+                      >
+                        Sign up
                       </button>
                     </div>
                   ) : (

@@ -29,7 +29,6 @@ const BetSlip = () => {
     stake: '',
   });
 
-  console.log(betData, 'betData');
   useEffect(() => {
     setBetData(bets?.[0]);
     setEnent_ID(bets?.[0]?.eventId);

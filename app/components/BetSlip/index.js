@@ -229,7 +229,6 @@ const BetSlip = () => {
     }
   }, [betData, bets]);
 
-  console.log(betData, 'betData');
   return (
     <>
       <div className=" pb-2 text-12 ">

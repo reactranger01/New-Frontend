@@ -1,4 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+{
+  /* eslint-disable*/
+}
 import { LoginModal } from '@/containers/pageListAsync';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import {
@@ -130,7 +132,7 @@ const MobFootball = () => {
     <>
       {isLoading && !loaderOneTime && <Loading />}
       <div className="min-h-[550px]">
-        <div className="bg-[#163439] p-3 items-center gap-2  text-white justify-between">
+        {/* <div className="bg-[#163439] p-3 items-center gap-2  text-white justify-between">
           {matchData?.inplay && (
             <span className="text-12 p-1 px-2 italic bg-[#00A725] rounded-2xl mt-1">
               In play
@@ -193,7 +195,7 @@ const MobFootball = () => {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
         <div
           className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
             isLiveMobile ? '' : 'hidden'

@@ -13,7 +13,9 @@ const PinkBtn = ({ text, size, disabled, onClick, css }) => {
       } bet-btn flex flex-col items-center justify-center gap-[6px] ${css}`}
     >
       <span className="text-12 font-semibold leading-none"> {text}</span>
-      {size && <span className="text-10 leading-none"> {size}</span>}
+      {size && (
+        <span className="text-[9px] leading-none truncate"> {size}</span>
+      )}
     </button>
   );
 };
