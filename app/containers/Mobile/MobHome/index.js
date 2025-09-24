@@ -26,6 +26,7 @@ const MobHome = () => {
   const [inplayFalseTennis, setInplayFalseTennis] = useState([]);
   const [inplayTrueSoccer, setInplayTrueSoccer] = useState([]);
   const [inplayFalseSoccer, setInplayFalseSoccer] = useState([]);
+  // eslint-disable-next-line
   const [loaderOneTime, setLoaderOneTime] = useState(false);
   const userInfo = useSelector((state) => state.user);
   const login = isLoggedIn();

@@ -446,3 +446,6 @@ input[type='number']::-webkit-outer-spin-button {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+.css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
+  background-color: transparent !important;
+}

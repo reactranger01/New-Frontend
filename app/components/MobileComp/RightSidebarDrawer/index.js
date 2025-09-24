@@ -6,12 +6,14 @@ import { reactIcons } from '@/utils/icons';
 import { NavLink } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import Cookies from 'js-cookie';
-import { removeAuthCookie } from '@/utils/apiHandlers';
+import { isLoggedIn, removeAuthCookie } from '@/utils/apiHandlers';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { numberWithCommas } from '@/utils/numberWithCommas';
-
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
+  const login = isLoggedIn();
   const userInfo = useSelector((state) => state.user);
   const handleLogout = () => {
     Cookies.remove('__users__isLoggedIn');
@@ -29,8 +31,51 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
     return (
       <div className="flex flex-col">
         <div>
-          <div className="border-b border-gray-100 py-2 text-16 text-black mx-auto text-center font-bold">
-            {userInfo?.username}
+          <div className="flex items-center justify-between bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)] border-b border-gray-100 py-2 text-14 text-black mx-auto text-start font-bold">
+            <div className="flex items-center gap-2 text-white pl-2">
+              {userInfo?.username} {reactIcons.copy}
+            </div>
+            <button
+              onClick={toggleDrawer}
+              className="absolute top-2 z-20 right-2  text-black font-bold text-xl cursor-pointer bg-[#f4d821] rounded"
+            >
+              {reactIcons.close}
+            </button>
+          </div>
+          {login && (
+            <div className="  grid grid-cols-2 gap-2 p-2 rounded-md bg-white">
+              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-sm bg-[#1e8067] text-white">
+                <img
+                  src="/images/deposit.png"
+                  className="w-[18px] h-[18px]"
+                  alt=""
+                />{' '}
+                Deposit
+              </button>
+              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-sm  text-white  bg-[#dc2626]">
+                <img
+                  src="/images/withdraw.png"
+                  className="w-[18px] h-[18px]"
+                  alt=""
+                />{' '}
+                Withdraw
+              </button>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <p>One Click Bet</p>
+            <div>
+              <FormControlLabel
+                control={
+                  <Switch
+                    // checked={isChecked === true}
+                    // onChange={() => handleToggle(item.id, isChecked, idx)}
+                    color="primary"
+                    // disabled={loading}
+                  />
+                }
+              />
+            </div>
           </div>
           <div className="p-3">
             <div className="flex items-center gap-2 font-bold">

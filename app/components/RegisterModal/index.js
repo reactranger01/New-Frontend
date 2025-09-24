@@ -112,6 +112,9 @@ const RegisterModal = ({ isOpen, handleClose }) => {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          backgroundColor: '#8f8f8f',
+        }}
       >
         <Box sx={style}>
           <div className="">

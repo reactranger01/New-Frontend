@@ -60,11 +60,12 @@ import { FaMobileAlt } from 'react-icons/fa';
 import { FaKey } from 'react-icons/fa';
 import { FaLock } from 'react-icons/fa6';
 import { FaBars } from 'react-icons/fa6';
+import { TbCopy } from 'react-icons/tb';
 
 export const reactIcons = {
   whatsapp: <FaWhatsapp />,
   newMenu: <FaBars />,
-
+  copy: <TbCopy />,
   newLock: <FaLock />,
   key: <FaKey />,
   mobile: <FaMobileAlt />,
