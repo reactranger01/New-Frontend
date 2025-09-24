@@ -84,13 +84,15 @@ const TennisOddsInner = ({
   return (
     <>
       {data?.runners?.length > 0 ? (
-        <div className="matchoddsexchnage bg-white p-1 rounded-lg mb-3 mx-2">
-          <div className="flex items-center justify-between py-1">
-            <div className="font-bold text-14 pl-2">Match Odds (exchange)</div>
-            <div className="flex items-center gap-2 text-[#9d9c9d]">
-              <p>{reactIcons.play}</p>
-              <p>{reactIcons.lock}</p>
-              <p>{reactIcons.downArrow}</p>
+        <div className="matchoddsexchnage  rounded-lg mb-3">
+          <div className="bg-[#eceaea]  flex items-center justify-between py-1">
+            <div className="font-bold flex items-center gap-1 text-12 pl-1">
+              <span className="text-sm text-black">{reactIcons.star}</span>{' '}
+              Match Odds (exchange)
+            </div>
+            <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+              <p className="mx-auto">BACK</p>
+              <p className="mx-auto">LAY</p>
             </div>
           </div>
 
@@ -102,13 +104,6 @@ const TennisOddsInner = ({
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between border-t border-gray-100">
-                <div className="flex-1"></div>
-                <div className="w-[121px] grid grid-cols-2 text-[#9d9c9d] text-10">
-                  <p className="mx-auto">Back</p>
-                  <p className="mx-auto">Lay</p>
-                </div>
-              </div>
               {data &&
                 data?.runners &&
                 data?.runners?.map((items, index) => {
@@ -133,10 +128,10 @@ const TennisOddsInner = ({
                     <>
                       <div
                         key={index}
-                        className="flex items-center justify-between border-b border-gray-100"
+                        className="flex bg-white items-center justify-between border-b border-gray-100"
                       >
                         <div className="">
-                          <div className="flex-1 text-[#333333] pl-2 text-14">
+                          <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
                             {items?.runnerName}
                           </div>
                           <div
@@ -157,7 +152,7 @@ const TennisOddsInner = ({
                             )}
                           </div>
                         </div>
-                        <div className="w-[121px] grid grid-cols-2">
+                        <div className="w-[132px] grid grid-cols-2">
                           <BlueBtn
                             onClick={async () => {
                               if (isLogin) {
@@ -184,7 +179,7 @@ const TennisOddsInner = ({
                                 : ''
                             }
                             disabled={items?.backPrice1 ? false : true}
-                            css="w-[60px] mx-auto"
+                            css="w-[65px] mx-auto"
                           />
                           <PinkBtn
                             onClick={async () => {
@@ -212,7 +207,7 @@ const TennisOddsInner = ({
                                 : ''
                             }
                             disabled={items?.layPrice1 ? false : true}
-                            css="w-[60px] mx-auto"
+                            css="w-[65px] mx-auto"
                           />
                         </div>
                       </div>
@@ -222,6 +217,19 @@ const TennisOddsInner = ({
                         isLoggedIn() &&
                         betData?.length > 0 &&
                         isMobile && <NewBetSlip />}
+                      <div className="flex justify-between">
+                        <div></div>
+                        <div className="w-[138px] relative overflow-hidden">
+                          <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                            <div className="text-right pr-1">
+                              Min : {minLimitOdds}
+                            </div>
+                            <div className="border-l pl-1 border-black ">
+                              Min : {maxLimitOdds}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </>
                   );
                 })}

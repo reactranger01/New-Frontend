@@ -1,5 +1,3 @@
-import { reactIcons } from './icons';
-
 export const sportSliderLink = [
   {
     title: 'Pool Zone',
@@ -191,46 +189,61 @@ export const links = [
 ];
 export const linksRight = [
   {
-    title: 'Settings',
-    path: '/settings-stake',
-    icon: reactIcons.setting,
-  },
-  {
     title: 'Open Bets',
     path: '/my-bets',
-    icon: reactIcons.list1,
+    icon: '/images/rightDrawer/settings.svg',
   },
   {
-    title: 'Deposit',
-    icon: reactIcons.withdraw,
-    path: '/deposit',
-  },
-  {
-    title: 'Withdraw',
-    path: '/withdraw',
-    icon: reactIcons.file,
-  },
-  {
-    title: 'Change Password',
-    path: '/settings',
-    icon: reactIcons.setting,
-  },
-  {
-    title: 'Transfer Statement',
-    path: '/account-statement',
-    icon: reactIcons.book,
+    title: 'Bet History',
+    path: '/my-bets',
+    icon: '/images/rightDrawer/betHistory.svg',
   },
 
   {
     title: 'Betting Profit and Loss',
     path: '/profit-loss',
-    icon: reactIcons.money,
+    icon: '/images/rightDrawer/bettingPL.svg',
+  },
+  {
+    title: 'Account Statement',
+    path: '/account-statement',
+    icon: '/images/rightDrawer/accountS.svg',
+  },
+  {
+    title: 'Transactions',
+    path: '/account-statement',
+    icon: '/images/rightDrawer/transactions.svg',
+  },
+  {
+    title: 'Change Password',
+    path: '/settings',
+    icon: '/images/rightDrawer/lock.svg',
+  },
+  {
+    title: 'Notifications',
+    path: '/notifications',
+    icon: '/images/rightDrawer/notification.svg',
   },
   {
     title: 'Rules & Regulation',
     path: '/rules-regulation',
-    icon: reactIcons.book,
+    icon: '/images/rightDrawer/betHistory.svg',
   },
+  {
+    title: 'Settings',
+    path: '/settings-stake',
+    icon: '/images/rightDrawer/settings1.svg',
+  },
+  // {
+  //   title: 'Deposit',
+  //   icon: reactIcons.withdraw,
+  //   path: '/deposit',
+  // },
+  // {
+  //   title: 'Withdraw',
+  //   path: '/withdraw',
+  //   icon: reactIcons.file,
+  // },
 ];
 export const navLinks = [
   {

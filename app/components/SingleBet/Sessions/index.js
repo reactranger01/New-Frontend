@@ -13,7 +13,6 @@ import { intToString } from '@/utils/margeData';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
-import { LoginModal } from '@/containers/pageListAsync';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
@@ -27,6 +26,7 @@ const Sessions = ({
   oddsData,
 }) => {
   const dispatch = useDispatch();
+  // eslint-disable-next-line
   const [openModal, setOpenModal] = useState(false);
   const isLogin = isLoggedIn();
   const inplay = oddsData?.inplay;
@@ -148,15 +148,13 @@ const Sessions = ({
       {' '}
       {loading && <Loading />}
       <div className="flex flex-col mb-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center  font-medium text-xl">
-            <span className="text-[#e4c41e] mx-1">{reactIcons.star}</span> Fancy
-          </div>
+        <div className="flex items-center py-[10px] justify-between bg-[#ECEAEA]">
+          <div className=" font-bold text-12 pl-1">Fancy</div>
           <div className="sm:grid hidden grid-cols-6 min-w-[360px]">
             <div></div>
             <div></div>
-            <div className="flex-center text-12 font-medium">No</div>
-            <div className="flex-center text-12 font-medium">Yes</div>
+            <div className="flex-center text-14 font-bold">Back</div>
+            <div className="flex-center text-14 font-bold">Lay</div>
             <div></div>
             <div></div>
           </div>
@@ -302,6 +300,19 @@ const Sessions = ({
                             )}
                         </div>
                       </div>
+                      <div className="flex justify-between">
+                        <div></div>
+                        <div className="w-[138px] relative overflow-hidden">
+                          <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                            <div className="text-right pr-1">
+                              Min : {minLimitsession}
+                            </div>
+                            <div className="border-l pl-1 border-black ">
+                              Min : {maxLimitsession}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                       <div>
                         {isOpen &&
                           singleRowData?.selectionId == items?.SelectionId && (
@@ -369,7 +380,6 @@ const Sessions = ({
             </>
           )}
         </div>
-        {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </>
   );

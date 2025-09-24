@@ -43,8 +43,8 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             </button>
           </div>
           {login && (
-            <div className="  grid grid-cols-2 gap-2 p-2 rounded-md bg-white">
-              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-sm bg-[#1e8067] text-white">
+            <div className=" px-2 grid grid-cols-2 gap-2 p-1 rounded-md bg-white">
+              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg bg-[#1e8067] text-white">
                 <img
                   src="/images/deposit.png"
                   className="w-[18px] h-[18px]"
@@ -52,7 +52,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
                 />{' '}
                 Deposit
               </button>
-              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-sm  text-white  bg-[#dc2626]">
+              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg  text-white  bg-[#dc2626]">
                 <img
                   src="/images/withdraw.png"
                   className="w-[18px] h-[18px]"
@@ -62,10 +62,13 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               </button>
             </div>
           )}
-          <div className="flex items-center justify-between">
-            <p>One Click Bet</p>
-            <div>
+          <div className="bg-[#daf1eb] flex items-center justify-between px-3 ">
+            <p className="text-14 font-semibold">One Click Bet</p>
+            <div className="w-fit">
               <FormControlLabel
+                sx={{
+                  marginX: 0,
+                }}
                 control={
                   <Switch
                     // checked={isChecked === true}
@@ -77,34 +80,36 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               />
             </div>
           </div>
-          <div className="p-3">
-            <div className="flex items-center gap-2 font-bold">
-              {reactIcons.bank} Balance Information
+          <div className=" px-[11px] ">
+            <div className="flex items-center justify-between">
+              <div className="py-[5px] flex items-center  text-[13px] font-bold">
+                <p className="w-[85px]">Display Name</p>
+                <p>: {numberWithCommas(userInfo?.balance || 0)}</p>
+              </div>
+              <div className="text-[#1e8067] font-bold">{reactIcons.edit}</div>
             </div>
-            <div className="flex items-center justify-between text-14 my-2">
-              <p>Available Credit</p>
-              <p>{numberWithCommas(userInfo?.balance || 0)}</p>
+            <div className="flex items-center text-[13px] font-bold">
+              <p className="w-[85px]">Balance</p>
+              <p>: {numberWithCommas(userInfo?.balance || 0)}</p>
             </div>
-            <div className="flex items-center justify-between text-14 my-2">
-              <p>Credit limit</p>
-              <p>{numberWithCommas(userInfo?.creditAmount || 0)}</p>
-            </div>
-            <div className="flex items-center justify-between text-14 my-2">
-              <p>Winnings</p>
-              <p
-                className={`${
-                  Number(userInfo?.balance) - Number(userInfo?.creditAmount) <
-                    0 && 'text-red-500'
-                }`}
-              >
-                {numberWithCommas(
-                  Number(userInfo?.balance) - Number(userInfo?.creditAmount),
-                ) || 0}
+            {/* <div className="flex items-center text-[13px] font-bold">
+              <p className="w-[85px]">Credit limit</p>
+              <p>: {numberWithCommas(userInfo?.creditAmount || 0)}</p>
+            </div> */}
+            <div className="flex items-center text-[13px] font-bold">
+              <p className="w-[85px]">Net Exposure</p>
+              <p className="text-red-500">
+                : {numberWithCommas(userInfo?.exposureAmount || 0) || 0}
               </p>
             </div>
-            <div className="flex items-center justify-between text-14 my-2">
-              <p>Net Exposure</p>
-              <p>{numberWithCommas(userInfo?.exposureAmount || 0) || 0}</p>
+
+            <div>
+              <button className="text-14 my-2 py-2 flex-center border border-[#1e8067] bg-[#1e8067] text-white rounded-[30px] w-full">
+                LOCKED BONUS 120.00
+              </button>
+              <button className="text-14 my-2 py-2 flex-center rounded-[30px] text-white w-full bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)]">
+                REFER & EARN
+              </button>
             </div>
           </div>
         </div>
@@ -113,14 +118,19 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             to={item.path}
             onClick={() => setOpen(false)}
             key={index}
-            className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center gap-2 "
+            className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-semibold gap-2 "
           >
-            <span className="text-xl">{item.icon}</span> {item.title}
+            <img
+              src={item.icon}
+              className="rightS-svg w-[18px] h-[18px]"
+              alt=""
+            />{' '}
+            {item.title}
           </NavLink>
         ))}
         <div
           onClick={handleLogout}
-          className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center gap-2 "
+          className="text-12  bg-[#DC2626] py-3 px-3 flex items-center font-semibold text-white gap-2 "
         >
           <span className="text-xl">{reactIcons.logout}</span> Sign Out
         </div>

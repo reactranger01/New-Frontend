@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 const SliderTwo = ({ number, imgs, num1, num2, hide }) => {
   const navigate = useNavigate();
   const handleCasino = (item) => {
-    navigate('/dashboard', { state: item });
+    navigate('/', { state: item });
   };
 
   return (

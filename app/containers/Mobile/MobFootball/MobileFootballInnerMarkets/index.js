@@ -98,12 +98,12 @@ const MobileFootballInnerMarkets = ({
   return (
     <>
       {data?.runners?.length > 0 && (
-        <div className="matchoddsbookmaker bg-white p-1 rounded-lg mb-3 mx-2">
-          <div className="flex items-center justify-between py-1">
-            <div className="font-bold text-14 pl-2">{heading}</div>
-            <div className="flex items-center gap-2 text-[#9d9c9d]">
-              <p>{reactIcons.play}</p>
-              <p>{reactIcons.downArrow}</p>
+        <div className="matchoddsbookmaker  rounded-lg mb-3 ">
+          <div className="bg-[#eceaea] flex items-center justify-between py-1">
+            <div className="font-bold  text-12 pl-1">{heading}</div>
+            <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+              <p className="mx-auto">BACK</p>
+              <p className="mx-auto">LAY</p>
             </div>
           </div>
 
@@ -115,13 +115,6 @@ const MobileFootballInnerMarkets = ({
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between border-t border-gray-100">
-                <div className="flex-1"></div>
-                <div className="w-[121px] grid grid-cols-2 text-[#9d9c9d] text-10">
-                  <p className="mx-auto">Yes</p>
-                  <p className="mx-auto">No</p>
-                </div>
-              </div>
               {data &&
                 data?.runners &&
                 data?.runners?.map((items, index) => {
@@ -138,10 +131,10 @@ const MobileFootballInnerMarkets = ({
                     <>
                       <div
                         key={index}
-                        className="flex items-center justify-between border-b border-gray-100"
+                        className="flex bg-white items-center justify-between border-b border-gray-100"
                       >
-                        <div className="">
-                          <div className="flex-1 text-[#333333] pl-2 text-14">
+                        <div className="flex items-center justify-between ">
+                          <div className=" text-black pl-2 text-12 font-lato font-bold">
                             {items?.runnerName}
                           </div>
                           <div
@@ -163,7 +156,7 @@ const MobileFootballInnerMarkets = ({
                           </div>
                         </div>
 
-                        <div className="w-[121px] relative">
+                        <div className="w-[132px] relative">
                           <div className="grid grid-cols-2">
                             <BlueBtn
                               onClick={async () => {
@@ -193,7 +186,7 @@ const MobileFootballInnerMarkets = ({
                                   : ''
                               }
                               disabled={items?.backPrice1 ? false : true}
-                              css="w-[60px] mx-auto"
+                              css="w-[65px] mx-auto"
                             />
                             <PinkBtn
                               text={items?.layPrice1 || '-'}
@@ -222,7 +215,7 @@ const MobileFootballInnerMarkets = ({
                                 }
                               }}
                               disabled={items?.layPrice1 ? false : true}
-                              css="w-[60px] mx-auto"
+                              css="w-[65px] mx-auto"
                             />
                           </div>
                           {items?.status == '' ||
@@ -234,6 +227,7 @@ const MobileFootballInnerMarkets = ({
                             ))}
                         </div>
                       </div>
+
                       {activeBetSlip == Number(items?.selectionId) &&
                         Number(items?.selectionId) ==
                           Number(bets[0]?.selectionId) &&
@@ -243,6 +237,17 @@ const MobileFootballInnerMarkets = ({
                     </>
                   );
                 })}
+              <div className="flex justify-between">
+                <div></div>
+                <div className="w-[138px] relative overflow-hidden">
+                  <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                    <div className="text-right pr-1">Min : {minLimitOdds}</div>
+                    <div className="border-l pl-1 border-black ">
+                      Min : {maxLimitOdds}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>

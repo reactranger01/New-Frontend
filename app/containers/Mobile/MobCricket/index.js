@@ -26,6 +26,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import InnerHeading from '../InnerHeading';
 
 const MobCricket = () => {
   const [matchOdd, setMatchOdd] = useState(false);
@@ -426,69 +427,6 @@ const MobCricket = () => {
     <>
       {isLoading && !loaderOneTime && <Loading />}
       <div className="min-h-[550px]">
-        {/* <div className="bg-[#163439] p-3 items-center gap-2  text-white justify-between">
-          {matchData?.inplay && (
-            <span className="text-12 p-1 px-2 italic bg-[#00A725] rounded-2xl mt-1">
-              In play
-            </span>
-          )}
-          {isLogin && matchData?.inplay ? (
-            <div>
-              <div className="flex items-center gap-2 text-16">
-                <p>{matchData?.name}</p>
-              </div>
-              <div className="text-10 flex justify-between items-center gap-2">
-                <div className="flex gap-2 items-center">
-                  {matchData?.competition_name}
-                  <span className="text-[6px] text-[#c0bebe]">
-                    {reactIcons.play2}
-                  </span>
-                </div>
-                <div className="flex gap-1 py-1">
-                  {isLogin &&
-                  userIdBalancetv > 0 &&
-                  matchData?.inplay &&
-                  userType !== 'DEMO' ? (
-                    <button
-                      onClick={handleLiveTV}
-                      className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                    >
-                      {reactIcons.tv}
-                    </button>
-                  ) : (
-                    <button className="ml-auto w-auto"></button>
-                  )}
-                  {isLogin &&
-                  matchData?.inplay &&
-                  userIdBalance?.balance > 0 ? (
-                    <button
-                      onClick={handleLiveScoreMobile}
-                      className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                    >
-                      {reactIcons.score}
-                    </button>
-                  ) : (
-                    <button className="ml-auto w-auto"></button>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 text-16">
-                <p>{matchData?.name}</p>
-              </div>
-              <div className="text-10 flex justify-between items-center gap-2">
-                <div className="flex gap-2 items-center">
-                  {matchData?.competition_name}
-                  <span className="text-[6px] text-[#c0bebe]">
-                    {reactIcons.play2}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div> */}
         <div
           className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
             isLiveMobile ? '' : 'hidden'
@@ -524,13 +462,19 @@ const MobCricket = () => {
             }}
           ></iframe>
         </div>
+        <div className="my-2">
+          <InnerHeading />
+        </div>
         {oddsData?.runners?.length > 0 ? (
-          <div className="matchodds bg-white   rounded-lg mb-3 ">
-            <div className="flex items-center justify-between py-1">
-              <div className="font-bold text-14 pl-2">Match Odds</div>
-              <div className="flex items-center gap-2 text-[#9d9c9d]">
-                <p>{reactIcons.play}</p>
-                <p>{reactIcons.downArrow}</p>
+          <div className="matchodds    rounded-lg mb-3 ">
+            <div className="bg-[#eceaea]  flex items-center justify-between py-1">
+              <div className="font-bold flex items-center gap-1 text-12 pl-1">
+                <span className="text-sm text-black">{reactIcons.star}</span>{' '}
+                Match Odds
+              </div>
+              <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+                <p className="mx-auto">BACK</p>
+                <p className="mx-auto">LAY</p>
               </div>
             </div>
             {oddsData === null || oddsData?.runners?.length === 0 ? (
@@ -541,13 +485,6 @@ const MobCricket = () => {
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between border-t border-gray-100">
-                  <div className="flex-1"></div>
-                  <div className="w-[121px] grid grid-cols-2 text-[#9d9c9d] text-10">
-                    <p className="mx-auto">Back</p>
-                    <p className="mx-auto">Lay</p>
-                  </div>
-                </div>
                 {oddsData &&
                   oddsData?.runners &&
                   oddsData?.runners?.map((items, index) => {
@@ -570,10 +507,10 @@ const MobCricket = () => {
                       <>
                         <div
                           key={index}
-                          className="flex items-center justify-between border-b border-gray-100"
+                          className="flex bg-white items-center justify-between border-b border-gray-100"
                         >
                           <div className="">
-                            <div className="flex-1 text-[#333333] pl-2 text-14">
+                            <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
                               {items?.runnerName}
                             </div>
                             <div
@@ -596,7 +533,7 @@ const MobCricket = () => {
                               )}
                             </div>
                           </div>
-                          <div className="w-[121px] grid grid-cols-2">
+                          <div className="w-[132px] grid grid-cols-2">
                             <BlueBtn
                               onClick={async () => {
                                 if (isLogin) {
@@ -624,7 +561,7 @@ const MobCricket = () => {
                                   : ''
                               }
                               disabled={items?.backPrice1 ? false : true}
-                              css="w-[60px] mx-auto"
+                              css="w-[65px] mx-auto"
                             />
                             <PinkBtn
                               onClick={async () => {
@@ -652,17 +589,30 @@ const MobCricket = () => {
                                   : ''
                               }
                               disabled={items?.layPrice1 ? false : true}
-                              css="w-[60px] mx-auto"
+                              css="w-[65px] mx-auto"
                             />
                           </div>
                         </div>
 
-                        {/* {activeBetSlip == Number(items?.selectionId) &&
+                        {activeBetSlip == Number(items?.selectionId) &&
                           Number(items?.selectionId) ==
                             Number(bets[0]?.selectionId) &&
                           isLoggedIn() &&
                           betData?.length > 0 &&
-                          isMobile && <NewBetSlip />} */}
+                          isMobile && <NewBetSlip />}
+                        <div className="flex justify-between">
+                          <div></div>
+                          <div className="w-[138px] relative overflow-hidden">
+                            <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                              <div className="text-right pr-1">
+                                Min : {minLimitOdds}
+                              </div>
+                              <div className="border-l pl-1 border-black ">
+                                Min : {maxLimitOdds}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </>
                     );
                   })}
@@ -672,18 +622,16 @@ const MobCricket = () => {
         ) : (
           ''
         )}
-        {bookmakerTransformData?.[0]?.runners?.length > 0 ? (
-          <div className="matchoddsbookmaker bg-white p-1 rounded-lg mb-3 mx-2">
-            <div
-              onClick={() => setMatchOdd(!matchOdd)}
-              className="flex items-center justify-between py-1"
-            >
-              <div className="font-bold text-14 pl-2">
+        {/* {bookmakerTransformData?.[0]?.runners?.length > 0 ? (
+          <div className="matchoddsbookmaker bg-white rounded-lg mb-3">
+            <div className="bg-[#eceaea] flex items-center justify-between py-1">
+              <div className="font-bold  text-12 pl-1">
+                {' '}
                 Match Odds (Bookmaker)
               </div>
-              <div className="flex items-center gap-2 text-[#9d9c9d]">
-                <p>{reactIcons.play}</p>
-                <p>{reactIcons.downArrow}</p>
+              <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+                <p className="mx-auto">BACK</p>
+                <p className="mx-auto">LAY</p>
               </div>
             </div>
 
@@ -696,13 +644,6 @@ const MobCricket = () => {
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between border-t border-gray-100">
-                  <div className="flex-1"></div>
-                  <div className="w-[121px] grid grid-cols-2 text-[#9d9c9d] text-10">
-                    <p className="mx-auto">Back</p>
-                    <p className="mx-auto">Lay</p>
-                  </div>
-                </div>{' '}
                 {bookmakerTransformData &&
                   bookmakerTransformData[0]?.runners &&
                   bookmakerTransformData[0]?.runners.map((items, index) => {
@@ -721,7 +662,7 @@ const MobCricket = () => {
                           className="flex items-center justify-between border-b border-gray-100"
                         >
                           <div className="">
-                            <div className="flex-1 text-[#333333] pl-2 text-14">
+                            <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
                               {items?.runnerName}
                             </div>
                             <div
@@ -744,7 +685,7 @@ const MobCricket = () => {
                               )}
                             </div>
                           </div>
-                          <div className="relative w-[121px] ">
+                          <div className="relative w-[132px] ">
                             <div className="grid grid-cols-2">
                               <BlueBtn
                                 onClick={async () => {
@@ -773,7 +714,7 @@ const MobCricket = () => {
                                     : '0'
                                 }
                                 disabled={items?.backPrice1 ? false : true}
-                                css="w-[60px] mx-auto"
+                                css="w-[65px] mx-auto"
                               />
                               <PinkBtn
                                 onClick={async () => {
@@ -802,7 +743,7 @@ const MobCricket = () => {
                                     : '0'
                                 }
                                 disabled={items?.layPrice1 ? false : true}
-                                css="w-[60px] mx-auto"
+                                css="w-[65px] mx-auto"
                               />
                             </div>
                             {items?.status !== '' &&
@@ -813,12 +754,13 @@ const MobCricket = () => {
                               )}
                           </div>
                         </div>
-                        {/* {activeBetSlip == Number(items?.selectionId) &&
+                        
+                        {activeBetSlip == Number(items?.selectionId) &&
                           Number(items?.selectionId) ==
                             Number(bets[0]?.selectionId) &&
                           isLoggedIn() &&
                           betData?.length > 0 &&
-                          isMobile && <NewBetSlip />} */}
+                          isMobile && <NewBetSlip />}
                       </>
                     );
                   })}
@@ -827,13 +769,16 @@ const MobCricket = () => {
           </div>
         ) : (
           ''
-        )}
+        )} */}
 
         {sessionData?.catalogue?.[0]?.runners?.length > 0 && (
           <div>
-            <h1 className="border-b border-black py-2 mx-2 text-14 ">FANCY</h1>
-            <div className="flex justify-end text-[#9d9c9d] text-lg my-1 mx-2 pr-5">
-              {reactIcons.play}
+            <div className="bg-[#eceaea] flex items-center justify-between py-1">
+              <div className="font-bold  text-12 pl-1">Fancy</div>
+              <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+                <p className="mx-auto">BACK</p>
+                <p className="mx-auto">LAY</p>
+              </div>
             </div>
             {sessionData === null ||
             sessionData?.catalogue?.[0]?.runners?.length === 0 ? (
@@ -844,13 +789,6 @@ const MobCricket = () => {
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between border-t border-gray-100">
-                  <div className="flex-1"></div>
-                  <div className="w-[121px] grid grid-cols-2 text-[#9d9c9d] text-10">
-                    <p className="mx-auto">No</p>
-                    <p className="mx-auto">Yes</p>
-                  </div>
-                </div>
                 {sessionData &&
                   sessionData?.catalogue?.[0] &&
                   sessionData?.catalogue?.[0]?.runners?.map((items, index) => {
@@ -866,12 +804,12 @@ const MobCricket = () => {
                       <>
                         <div
                           key={index}
-                          className={`flex items-center justify-between border-b border-gray-100 bg-white mx-2 my-1 ${
+                          className={`flex items-center justify-between border-b border-gray-100 bg-white  my-1 ${
                             index == index - 1 && 'mb-16'
                           }`}
                         >
-                          <div className="leading-1 w-[55%] pl-2">
-                            <div className="flex-1 text-[#333333]   text-14">
+                          <div className="leading-1 w-[55%] ">
+                            <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
                               {items?.RunnerName}
                             </div>
                             <div className="flex gap-[2px] ">
@@ -908,7 +846,7 @@ const MobCricket = () => {
                               </div>
                             )}
 
-                            <div className=" relative w-[121px]">
+                            <div className=" relative w-[132px]">
                               <div className="grid grid-cols-2">
                                 <PinkBtn
                                   onClick={async () => {
@@ -937,7 +875,7 @@ const MobCricket = () => {
                                       : '0'
                                   }
                                   disabled={items?.LayPrice1 ? false : true}
-                                  css="w-[60px] mx-auto"
+                                  css="w-[65px] mx-auto"
                                 />
                                 <BlueBtn
                                   onClick={async () => {
@@ -966,7 +904,7 @@ const MobCricket = () => {
                                       : '0'
                                   }
                                   disabled={items?.BackPrice1 ? false : true}
-                                  css="w-[60px] mx-auto"
+                                  css="w-[65px] mx-auto"
                                 />
                               </div>
                               {items?.GameStatus !== '' &&
@@ -978,12 +916,13 @@ const MobCricket = () => {
                             </div>
                           </div>
                         </div>
-                        {/* {activeBetSlip == items?.SelectionId &&
+
+                        {activeBetSlip == items?.SelectionId &&
                           Number(items?.SelectionId) ==
                             Number(betsFancy[0]?.selectionId) &&
                           isLoggedIn() &&
                           betData?.length > 0 &&
-                          isMobile && <NewBetSlip />} */}
+                          isMobile && <NewBetSlip />}
                       </>
                     );
                   })}

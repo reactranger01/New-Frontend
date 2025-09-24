@@ -61,9 +61,11 @@ import { FaKey } from 'react-icons/fa';
 import { FaLock } from 'react-icons/fa6';
 import { FaBars } from 'react-icons/fa6';
 import { TbCopy } from 'react-icons/tb';
+import { MdModeEditOutline } from 'react-icons/md';
 
 export const reactIcons = {
   whatsapp: <FaWhatsapp />,
+  edit: <MdModeEditOutline />,
   newMenu: <FaBars />,
   copy: <TbCopy />,
   newLock: <FaLock />,

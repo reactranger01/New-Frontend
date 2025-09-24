@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { BookMaker, Loading, MatchOdds } from '@/components';
+import { Loading, MatchOdds } from '@/components';
 import Sessions from '@/components/SingleBet/Sessions';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
-import { reactIcons } from '@/utils/icons';
-import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -15,15 +13,12 @@ import {
   getUserBets,
   transformBookmakerData,
 } from '@/utils/helper';
+import InnerHeading from '@/containers/Mobile/InnerHeading';
 const CricketMarket = () => {
   const isLogin = isLoggedIn();
   const location = useLocation();
   const { eventId } = useParams();
   const matchData = location.state?.data;
-  // eslint-disable-next-line
-  // eslint-disable-next-line
-  const userIdBalance = useSelector((state) => state?.user?.balance);
-  const userType = useSelector((state) => state?.user?.userType);
   const [isLiveMobile, setIsLiveMobile] = useState(false);
   const [isLiveTv, setIsLiveTV] = useState(false);
   const islogin = isLoggedIn();
@@ -39,6 +34,7 @@ const CricketMarket = () => {
   const [matchOddsMarket, setMatchOddsMarket] = useState();
   const [particularMatchData, setParticularMatchData] = useState({});
   const [placedBetWinLossDatas, setPlacedBetWinLossData] = useState({});
+  // eslint-disable-next-line
   const [placedBetWinLossBookmakerData, setPlacedBetWinLossBookmakerData] =
     useState({});
   const [sessionBooksetClcuData, setSessionBooksetClcuData] = useState([]);
@@ -93,11 +89,12 @@ const CricketMarket = () => {
     };
     fetchUserBets();
   }, [eventId, stateUpdate, islogin]);
-
+  // eslint-disable-next-line
   const handleLiveScoreMobile = () => {
     setIsLiveMobile(!isLiveMobile);
     setIsLiveTV(false);
   };
+  // eslint-disable-next-line
   const handleLiveTV = () => {
     setIsLiveTV(!isLiveTv);
     setIsLiveMobile(false);
@@ -197,67 +194,6 @@ const CricketMarket = () => {
     <>
       {loading && !loaderOneTime && <Loading />}
       <div className="min-h-[100vh] w-full my-2">
-        <div className="bg-[#0f2327] flex items-center justify-between text-white w-full py-3 px-2 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="text-white">{reactIcons.play}</div>
-            <div>
-              {' '}
-              <h1 className="text-24">{matchData?.name}</h1>
-              <p className="text-[#FAFAFA80] text-12 mt-1">
-                {matchData?.competition_name}
-              </p>
-            </div>
-          </div>
-          <div className="flex gap-4">
-            {matchData?.odds?.inplay ? (
-              <div className="flex-center text-green-400 gap-1 text-10 ">
-                <span className="text-green-400 text-14">
-                  {reactIcons.play}
-                </span>
-                In-Play
-              </div>
-            ) : (
-              <div className="text-12">
-                {moment(matchData?.matchDateTime).format('DD/MM/YYYY hh:mm A')}
-              </div>
-            )}
-            {isLogin &&
-            userIdBalance > 0 &&
-            userType !== 'DEMO' &&
-            matchData?.inplay ? (
-              <button
-                onClick={handleLiveTV}
-                className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-              >
-                {reactIcons.tv}
-                <span className="text-xs">Live Tv</span>
-              </button>
-            ) : (
-              <button className="ml-auto w-auto"></button>
-            )}
-            {isLogin &&
-            userIdBalance > 0 &&
-            userType !== 'DEMO' &&
-            matchData?.inplay ? (
-              <button
-                // onClick={handleButtonClick}
-                onClick={handleLiveScoreMobile}
-                className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-              >
-                <img
-                  src="/images/live-match.png"
-                  alt="live-tv"
-                  className="w-5 "
-                />
-                <span className="text-xs">Live Score</span>
-              </button>
-            ) : (
-              <button className="ml-auto w-auto"></button>
-            )}
-            {/* </>
-              )} */}
-          </div>
-        </div>
         <div
           className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
             isLiveMobile ? '' : 'hidden'
@@ -290,14 +226,17 @@ const CricketMarket = () => {
             style={{ width: '100%', height: '518px' }}
           ></iframe>
         </div>
+        <div className="my-2">
+          <InnerHeading />
+        </div>
         <MatchOdds
           heading="Match Odds"
           data={oddsData}
           competition_name={matchData?.competition_name}
           placedBetWinLossDatas={placedBetWinLossDatas}
         />
-        <BookMaker
-          heading="BOOKMAKERS"
+        {/* <BookMaker
+          heading="Bookmakers"
           data={{
             ...bookmakerTransformData,
             market_id: oddsData?.market_id,
@@ -307,7 +246,7 @@ const CricketMarket = () => {
           placedBetWinLossBookmakerData={placedBetWinLossBookmakerData}
           oddsData={oddsData}
           matchName={matchData?.name}
-        />
+        /> */}
         {/* <Fancy
             heading="Fancy"
             data={fancy}

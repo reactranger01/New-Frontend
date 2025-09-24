@@ -36,7 +36,7 @@ const Sidebar = () => {
   return (
     <div className="light-bg">
       <Navbar />
-      <section className=" mx-auto xl:container  px-4 md:px-6  xl:px-0">
+      <section className=" mx-auto xl:container  px-4   xl:px-0">
         <div className="2xl:container  flex gap-5 mx-auto">
           <div className="w-[165px] shrink-0 bg-white hidden lg:block border border-[#ddd] overflow-hidden">
             {step === 0 ? (

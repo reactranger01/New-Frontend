@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { BetSlip, Loading, MatchOddsSoccer, UnderMarket } from '@/components';
+import InnerHeading from '@/containers/Mobile/InnerHeading';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import {
   calcPlacedBetOddsFootballOrTenisCalculation,
   fetchEventData,
 } from '@/utils/helper';
-import { reactIcons } from '@/utils/icons';
 import { logout } from '@/utils/logout';
-import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -21,8 +20,6 @@ const FootballMarket = () => {
   const [loading, setLoading] = useState(false);
   const [loaderOneTime, setLoaderOneTime] = useState(false);
   const [fixtureEventName, setFixtureEventName] = useState([]);
-  const userIdBalance = useSelector((state) => state?.user?.balance);
-  const userType = useSelector((state) => state?.user?.userType);
   const [placedBetWinLossDatas, setPlacedBetWinLossData] = useState({});
   const [usersBets, setusersBets] = useState({});
   const matchData = location.state?.data;
@@ -61,10 +58,12 @@ const FootballMarket = () => {
     // eslint-disable-next-line
   }, [eventId, isLogin]);
 
+  // eslint-disable-next-line
   const handleLiveScoreMobile = () => {
     setIsLiveMobile(!isLiveMobile);
     setIsLiveTV(false);
   };
+  // eslint-disable-next-line
   const handleLiveTV = () => {
     setIsLiveTV(!isLiveTv);
     setIsLiveMobile(false);
@@ -132,68 +131,6 @@ const FootballMarket = () => {
       {loading && !loaderOneTime && <Loading />}
       <div className="min-h-[100vh] w-full my-2 flex lg:gap-4">
         <div className="flex-1">
-          <div className="bg-[#0f2327] flex items-center justify-between text-white w-full py-3 px-2 mb-4">
-            <div className="flex items-center gap-2">
-              <div className="text-white">{reactIcons.play}</div>
-              <div>
-                {' '}
-                <h1 className="text-24">{matchData?.name}</h1>
-                <p className="text-[#FAFAFA80] text-12 mt-1">
-                  {matchData?.competition_name}
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              {matchData?.odds?.inplay ? (
-                <div className="flex-center text-green-400 gap-1 text-10">
-                  <span className="text-green-400 text-14">
-                    {reactIcons.play}
-                  </span>
-                  In-Play
-                </div>
-              ) : (
-                <div className="text-12">
-                  {moment(matchData?.matchDateTime).format(
-                    'DD/MM/YYYY hh:mm A',
-                  )}
-                </div>
-              )}
-
-              {isLogin && userIdBalance > 0 && userType !== 'DEMO' ? (
-                <button
-                  onClick={handleLiveTV}
-                  className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                >
-                  {reactIcons.tv}
-                  <span className="text-xs">Live Tv</span>
-                </button>
-              ) : (
-                <button className="ml-auto w-auto"></button>
-              )}
-              {matchData?.odds?.inplay && (
-                <>
-                  {isLogin &&
-                  userIdBalance > 0 &&
-                  userType !== 'DEMO' &&
-                  matchData?.inplay ? (
-                    <button
-                      onClick={handleLiveScoreMobile}
-                      className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                    >
-                      <img
-                        src="/images/live-match.png"
-                        alt="live-tv"
-                        className="w-5 "
-                      />
-                      <span className="text-xs">Live Score</span>
-                    </button>
-                  ) : (
-                    <button className="ml-auto w-auto"></button>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
           <div
             className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
               isLiveMobile ? '' : 'hidden'
@@ -226,28 +163,39 @@ const FootballMarket = () => {
               style={{ width: '100%', height: '518px' }}
             ></iframe>
           </div>
-          {allMarketData?.map((market, index) =>
-            market?.market_name == 'Match Odds' ? (
-              <MatchOddsSoccer
-                key={index}
-                heading="Match Odds "
-                data={market}
-                fixtureEventName={fixtureEventName}
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-              />
-            ) : (
-              <UnderMarket
-                key={index}
-                heading={market?.market_name?.toUpperCase()}
-                data={market}
-                fixtureEventName={fixtureEventName}
-                type="under15"
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-              />
-            ),
-          )}
+          <div className="my-2">
+            <InnerHeading />
+          </div>
+          {[...allMarketData]
+            .sort((a, b) =>
+              a?.market_name === 'Match Odds'
+                ? -1
+                : b?.market_name === 'Match Odds'
+                ? 1
+                : 0,
+            )
+            .map((market, index) =>
+              market?.market_name === 'Match Odds' ? (
+                <MatchOddsSoccer
+                  key={index}
+                  heading="Match Odds"
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                />
+              ) : (
+                <UnderMarket
+                  key={index}
+                  heading={market?.market_name?.toUpperCase()}
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  type="under15"
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                />
+              ),
+            )}
         </div>
         <div>
           {isLogin && betData.length > 0 ? (

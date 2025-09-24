@@ -50,7 +50,7 @@ const GameSlider = ({ number }) => {
       >
         <SwiperSlide>
           <div
-            onClick={() => navigate('/dashboard/cricket')}
+            onClick={() => navigate('/cricket')}
             className="cursor-pointer h-[150px] md:h-auto"
           >
             <img
@@ -71,7 +71,7 @@ const GameSlider = ({ number }) => {
         </SwiperSlide>
         <SwiperSlide>
           <div
-            onClick={() => navigate('/dashboard/football')}
+            onClick={() => navigate('/football')}
             className="cursor-pointer h-[150px] md:h-auto"
           >
             <img

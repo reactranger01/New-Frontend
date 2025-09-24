@@ -104,12 +104,12 @@ const TennisOtherMarkets = ({
   return (
     <>
       {data?.runners?.length > 0 ? (
-        <div className="matchoddsbookmaker bg-white p-1 rounded-lg mb-3 mx-2">
-          <div className="flex items-center justify-between py-1">
-            <div className="font-bold text-14 pl-2">{heading}</div>
-            <div className="flex items-center gap-2 text-[#9d9c9d]">
-              <p>{reactIcons.play}</p>
-              <p>{reactIcons.downArrow}</p>
+        <div className="matchoddsbookmaker bg-white rounded-lg mb-3">
+          <div className="bg-[#eceaea] flex items-center justify-between py-1">
+            <div className="font-bold  text-12 pl-1">{heading}</div>
+            <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+              <p className="mx-auto">BACK</p>
+              <p className="mx-auto">LAY</p>
             </div>
           </div>
           {data?.length === 0 ? (
@@ -120,13 +120,6 @@ const TennisOtherMarkets = ({
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between border-t border-gray-100">
-                <div className="flex-1"></div>
-                <div className="w-[121px] grid grid-cols-2 text-[#9d9c9d] text-10">
-                  <p className="mx-auto">Yes</p>
-                  <p className="mx-auto">No</p>
-                </div>
-              </div>
               {data &&
                 data?.runners &&
                 data?.runners?.map((items, index) => {
@@ -153,9 +146,8 @@ const TennisOtherMarkets = ({
                         key={index}
                         className="flex items-center justify-between border-b border-gray-100"
                       >
-                        <div className="flex items-center justify-between w-full  px-2">
-                          <div className="flex-1  text-12 font-medium ">
-                            {' '}
+                        <div className="flex items-center justify-between   ">
+                          <div className=" text-black pl-2 text-12 font-lato font-bold ">
                             {items?.runnerName || ''}
                           </div>
                           <div
@@ -177,7 +169,7 @@ const TennisOtherMarkets = ({
                           </div>
                         </div>
 
-                        <div className="w-[121px] relative">
+                        <div className="w-[132px] relative">
                           <div className="grid grid-cols-2">
                             <BlueBtn
                               onClick={async () => {
@@ -206,6 +198,7 @@ const TennisOtherMarkets = ({
                                   : ''
                               }
                               disabled={items?.backPrice1 ? false : true}
+                              css="w-[65px] mx-auto"
                             />
                             <PinkBtn
                               onClick={async () => {
@@ -233,6 +226,7 @@ const TennisOtherMarkets = ({
                                   : ''
                               }
                               disabled={items?.layPrice1 ? false : true}
+                              css="w-[65px] mx-auto"
                             />
                           </div>
                           {items?.status !== '' &&
@@ -252,6 +246,17 @@ const TennisOtherMarkets = ({
                     </>
                   );
                 })}
+              <div className="flex justify-between">
+                <div></div>
+                <div className="w-[138px] relative overflow-hidden">
+                  <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                    <div className="text-right pr-1">Min : {minLimitOdds}</div>
+                    <div className="border-l pl-1 border-black ">
+                      Min : {maxLimitOdds}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>

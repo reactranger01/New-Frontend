@@ -146,8 +146,8 @@ const MobileFixtureCricket = ({ type, fixtureData, isLoading }) => {
                             onClick={() =>
                               navigate(
                                 _items?.event_id
-                                  ? `/dashboard/cricket/market/${_items?.event_id}`
-                                  : `/dashboard/cricket/market/${_items?.matchId}`,
+                                  ? `/cricket/market/${_items?.event_id}`
+                                  : `/cricket/market/${_items?.matchId}`,
                                 {
                                   state: { data: _items },
                                 },
@@ -451,8 +451,8 @@ const MobileFixtureCricket = ({ type, fixtureData, isLoading }) => {
                               onClick={() =>
                                 navigate(
                                   _items?.event_id
-                                    ? `/dashboard/cricket/market/${_items?.event_id}`
-                                    : `/dashboard/cricket/market/${_items?.matchId}`,
+                                    ? `/cricket/market/${_items?.event_id}`
+                                    : `/cricket/market/${_items?.matchId}`,
                                   {
                                     state: { data: _items },
                                   },

@@ -92,9 +92,9 @@ const MatchOddsSoccer = ({
 
   return (
     <div className="flex flex-col mb-5">
-      <div className="flex items-center py-1 pl-1 justify-between bg-[#ECEAEA]">
-        <div className=" font-bold text-12">
-          {/* <div className="text-[#e4c41e] mx-1 text-xl">{reactIcons.star}</div>{' '} */}
+      <div className="flex items-center py-[10px] justify-between bg-[#ECEAEA]">
+        <div className=" font-bold text-12 pl-1">
+          <div className="text-[#e4c41e] mx-1 text-xl">{reactIcons.star}</div>{' '}
           {heading}
         </div>
         <div className="sm:grid hidden grid-cols-6 min-w-[360px]">
@@ -341,6 +341,7 @@ const MatchOddsSoccer = ({
                         )}
                       </div>
                     </div>
+
                     {activeBetSlip == Number(items?.selectionId) &&
                       Number(items?.selectionId) ==
                         Number(bets[0]?.selectionId) &&

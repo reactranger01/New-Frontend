@@ -82,21 +82,23 @@ const MatchOdds = ({
 
   return (
     <div className="flex flex-col mb-5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center text-12 font-semibold">
-          <span className="text-[#e4c41e] mx-1">{reactIcons.star}</span>{' '}
+      <div className="flex items-center py-[10px] justify-between bg-[#ECEAEA]">
+        <div className=" font-bold text-12 pl-1">
+          <div className="text-black lg:text-[#e4c41e] mx-1 text-md lg:text-xl">
+            {reactIcons.star}
+          </div>{' '}
           {heading}
         </div>
         <div className="sm:grid hidden grid-cols-6 min-w-[360px]">
           <div></div>
           <div></div>
-          <div className="flex-center text-12 font-medium">Back</div>
-          <div className="flex-center text-12 font-medium">Lay</div>
+          <div className="flex-center text-14 font-bold">Back</div>
+          <div className="flex-center text-14 font-bold">Lay</div>
           <div></div>
           <div></div>
         </div>
       </div>
-      <div className="w-full border border-[#ddd]">
+      <div className="w-full ">
         {data === null || data?.runners?.length === 0 ? (
           <div className="flex justify-center items-center w-full h-11 border-b border-gray-200  bg-white">
             <span className="text-12">
@@ -344,6 +346,15 @@ const MatchOdds = ({
                   </>
                 );
               })}
+            <div className="flex justify-between">
+              <div></div>
+              <div className="w-[138px] relative overflow-hidden">
+                <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                  <div className="text-right pr-1">Min : 100</div>
+                  <div className="border-l pl-1 border-black ">Min : 10000</div>
+                </div>
+              </div>
+            </div>
           </>
         )}
       </div>

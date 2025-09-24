@@ -5,7 +5,6 @@ import {
   fetchEventData,
   getUserBets,
 } from '@/utils/helper';
-import { reactIcons } from '@/utils/icons';
 import { logout } from '@/utils/logout';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -26,17 +25,17 @@ const MobTennis = () => {
   const [isLiveMobile, setIsLiveMobile] = useState(false);
   const [placedBetWinLossDatas, setPlacedBetWinLossData] = useState({});
   const [allMarketData, setAllMarketData] = useState([]);
-  const userType = useSelector((state) => state?.user?.userType);
-  const userIdBalancetv = useSelector((state) => state?.user?.balance);
   const [isLiveTv, setIsLiveTV] = useState(false);
   const timeoutRef = useRef(null);
   const stateUpdate = useSelector(
     (state) => state?.updatestate?.betPlacementSuccess,
   );
+  // eslint-disable-next-line
   const handleLiveScoreMobile = () => {
     setIsLiveMobile(!isLiveMobile);
     setIsLiveTV(false);
   };
+  // eslint-disable-next-line
   const handleLiveTV = () => {
     setIsLiveTV(!isLiveTv);
     setIsLiveMobile(false);
@@ -119,70 +118,6 @@ const MobTennis = () => {
     <>
       {isLoading && !loaderOneTime && <Loading />}
       <div className="min-h-[550px]">
-        <div className="bg-[#163439] p-2 items-center gap-2  text-white justify-between">
-          {matchData?.inplay && (
-            <span className="text-12 p-1 px-2 italic bg-[#00A725] rounded-2xl mt-1">
-              In play
-            </span>
-          )}
-          {isLogin && matchData?.inplay ? (
-            <div>
-              <div className="flex items-center gap-2 text-16">
-                <p>{matchData?.name}</p>
-              </div>
-              <div className="text-10 flex justify-between items-center gap-2">
-                <div className="flex gap-2 items-center">
-                  {matchData?.competition_name}
-                  <span className="text-[6px] text-[#c0bebe]">
-                    {reactIcons.play2}
-                  </span>
-                </div>
-                <div className="flex gap-1 py-1">
-                  {isLogin &&
-                  userIdBalancetv > 0 &&
-                  matchData?.inplay &&
-                  userType !== 'DEMO' ? (
-                    <button
-                      onClick={handleLiveTV}
-                      className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                    >
-                      {reactIcons.tv}
-                    </button>
-                  ) : (
-                    <button className="ml-auto w-auto"></button>
-                  )}
-                  {isLogin &&
-                  userIdBalancetv > 0 &&
-                  matchData?.inplay &&
-                  userType !== 'DEMO' ? (
-                    <button
-                      onClick={handleLiveScoreMobile}
-                      className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
-                    >
-                      {reactIcons.score}
-                    </button>
-                  ) : (
-                    <button className="ml-auto w-auto"></button>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2 text-16">
-                <p>{matchData?.name}</p>
-              </div>
-              <div className="text-10 flex justify-between items-center gap-2">
-                <div className="flex gap-2 items-center">
-                  {matchData?.competition_name}
-                  <span className="text-[6px] text-[#c0bebe]">
-                    {reactIcons.play2}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
         <div
           className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
             isLiveMobile ? '' : 'hidden'
@@ -218,30 +153,38 @@ const MobTennis = () => {
             }}
           ></iframe>
         </div>
-        {allMarketData?.map((market, index) =>
-          market?.market_name == 'Match Odds' ? (
-            <TennisOddsInner
-              key={index}
-              heading="Match Odds "
-              data={market}
-              fixtureEventName={fixtureEventName}
-              placedBetWinLossDatas={placedBetWinLossDatas}
-              competition_name={matchData?.competition_name}
-              allMarketData={allMarketData[0]}
-            />
-          ) : (
-            <TennisOtherMarkets
-              key={index}
-              heading={market?.market_name?.toUpperCase()}
-              data={market}
-              fixtureEventName={fixtureEventName}
-              type="under15"
-              placedBetWinLossDatas={placedBetWinLossDatas}
-              competition_name={matchData?.competition_name}
-              allMarketData={allMarketData[0]}
-            />
-          ),
-        )}
+        {[...allMarketData]
+          .sort((a, b) =>
+            a?.market_name === 'Match Odds'
+              ? -1
+              : b?.market_name === 'Match Odds'
+              ? 1
+              : 0,
+          )
+          .map((market, index) =>
+            market?.market_name === 'Match Odds' ? (
+              <TennisOddsInner
+                key={index}
+                heading="Match Odds "
+                data={market}
+                fixtureEventName={fixtureEventName}
+                placedBetWinLossDatas={placedBetWinLossDatas}
+                competition_name={matchData?.competition_name}
+                allMarketData={allMarketData[0]}
+              />
+            ) : (
+              <TennisOtherMarkets
+                key={index}
+                heading={market?.market_name?.toUpperCase()}
+                data={market}
+                fixtureEventName={fixtureEventName}
+                type="under15"
+                placedBetWinLossDatas={placedBetWinLossDatas}
+                competition_name={matchData?.competition_name}
+                allMarketData={allMarketData[0]}
+              />
+            ),
+          )}
       </div>
     </>
   );

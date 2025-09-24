@@ -76,7 +76,7 @@ const Navbar = () => {
 
   const handleEventClick = (event) => {
     navigate(
-      `/dashboard/${
+      `/${
         event?.sportId == '1'
           ? 'football'
           : event?.sportId == '2'

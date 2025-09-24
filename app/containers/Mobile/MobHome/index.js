@@ -33,7 +33,7 @@ const MobHome = () => {
   const navigate = useNavigate();
   const handleClickCasino = (item) => {
     if (item.available) {
-      navigate('/dashboard', { state: item });
+      navigate('/', { state: item });
     } else {
       navigate('/');
     }
@@ -112,7 +112,7 @@ const MobHome = () => {
             <div
               onClick={() => {
                 if (login) {
-                  navigate('/dashboard/my-bets');
+                  navigate('/my-bets');
                 }
               }}
               className="flex items-center gap-1"

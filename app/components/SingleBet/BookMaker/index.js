@@ -95,16 +95,13 @@ const BookMaker = ({
 
   return (
     <div className="flex flex-col mb-5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center text-12 font-semibold">
-          <span className="text-[#e4c41e] mx-1">{reactIcons.star}</span>{' '}
-          {heading}
-        </div>
+      <div className="flex items-center py-[10px] justify-between bg-[#ECEAEA]">
+        <div className=" font-bold text-12 pl-1">{heading}</div>
         <div className="sm:grid hidden grid-cols-6 min-w-[360px]">
           <div></div>
           <div></div>
-          <div className="flex-center text-12 font-medium">Back</div>
-          <div className="flex-center text-12 font-medium">Lay</div>
+          <div className="flex-center text-14 font-bold">Back</div>
+          <div className="flex-center text-14 font-bold">Lay</div>
           <div></div>
           <div></div>
         </div>
@@ -150,7 +147,7 @@ const BookMaker = ({
                             <>
                               <div>
                                 <div
-                                  className={`flex gap-1 font-semibold text-14 items-center ${
+                                  className={`flex gap-1 font-semibold text-12 items-center ${
                                     bookmakerExposer?.type == 'profit'
                                       ? 'text-[#04a928]'
                                       : 'text-[#CE2C16]'

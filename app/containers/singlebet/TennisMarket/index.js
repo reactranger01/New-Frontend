@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { BetSlip, Loading, MatchOddsTennis, Set1Winner } from '@/components';
+import InnerHeading from '@/containers/Mobile/InnerHeading';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import {
   calcPlacedBetOddsFootballOrTenisCalculation,
@@ -241,30 +242,41 @@ const TennisMarket = () => {
             </div>
           </div> */}
           </div>
-          {allMarketData?.map((market, index) =>
-            market?.market_name == 'Match Odds' ? (
-              <MatchOddsTennis
-                key={index}
-                heading="Match Odds "
-                data={market}
-                fixtureEventName={fixtureEventName}
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-                allMarketData={allMarketData[0]}
-              />
-            ) : (
-              <Set1Winner
-                key={index}
-                heading={market?.market_name?.toUpperCase()}
-                data={market}
-                fixtureEventName={fixtureEventName}
-                type="under15"
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-                allMarketData={allMarketData[0]}
-              />
-            ),
-          )}
+          <div className="my-2">
+            <InnerHeading />
+          </div>
+          {[...allMarketData]
+            .sort((a, b) =>
+              a?.market_name === 'Match Odds'
+                ? -1
+                : b?.market_name === 'Match Odds'
+                ? 1
+                : 0,
+            )
+            .map((market, index) =>
+              market?.market_name === 'Match Odds' ? (
+                <MatchOddsTennis
+                  key={index}
+                  heading="Match Odds "
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                  allMarketData={allMarketData[0]}
+                />
+              ) : (
+                <Set1Winner
+                  key={index}
+                  heading={market?.market_name?.toUpperCase()}
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  type="under15"
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                  allMarketData={allMarketData[0]}
+                />
+              ),
+            )}
           {/* <Set1Winner
           heading="Set 2 Winner "
           data={set2Winner}

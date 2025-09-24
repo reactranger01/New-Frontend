@@ -123,8 +123,8 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                             onClick={() =>
                               navigate(
                                 _items?.event_id
-                                  ? `/dashboard/football/market/${_items?.event_id}`
-                                  : `/dashboard/football/market/${_items?.matchId}`,
+                                  ? `/football/market/${_items?.event_id}`
+                                  : `/football/market/${_items?.matchId}`,
                                 {
                                   state: { data: _items },
                                 },
@@ -400,8 +400,8 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                             onClick={() =>
                               navigate(
                                 _items?.event_id
-                                  ? `/dashboard/football/market/${_items?.event_id}`
-                                  : `/dashboard/football/market/${_items?.matchId}`,
+                                  ? `/football/market/${_items?.event_id}`
+                                  : `/football/market/${_items?.matchId}`,
                                 {
                                   state: { data: _items },
                                 },

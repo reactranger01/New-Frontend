@@ -54,22 +54,22 @@ const SidebarSubMenu = ({ item, game, setOpen }) => {
     if (game === 'cricket') {
       navigate(
         child?.event_id
-          ? `/dashboard/cricket/market/${child?.event_id}`
-          : `/dashboard/cricket/market/${child?.matchId}`,
+          ? `/cricket/market/${child?.event_id}`
+          : `/cricket/market/${child?.matchId}`,
         { state: { data: child } },
       );
     } else if (game === 'soccer') {
       navigate(
         child?.event_id
-          ? `/dashboard/football/market/${child?.event_id}`
-          : `/dashboard/football/market/${child?.matchId}`,
+          ? `/football/market/${child?.event_id}`
+          : `/football/market/${child?.matchId}`,
         { state: { data: child } },
       );
     } else if (game === 'tennis') {
       navigate(
         child?.event_id
-          ? `/dashboard/tennis/market/${child?.event_id}`
-          : `/dashboard/tennis/market/${child?.matchId}`,
+          ? `/tennis/market/${child?.event_id}`
+          : `/tennis/market/${child?.matchId}`,
         { state: { data: child } },
       );
     }

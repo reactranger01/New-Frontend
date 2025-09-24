@@ -122,8 +122,8 @@ const MobileFixtureTennis = ({ type, fixtureData, isLoading }) => {
                             onClick={() =>
                               navigate(
                                 _items?.event_id
-                                  ? `/dashboard/tennis/market/${_items?.event_id}`
-                                  : `/dashboard/tennis/market/${_items?.matchId}`,
+                                  ? `/tennis/market/${_items?.event_id}`
+                                  : `/tennis/market/${_items?.matchId}`,
                                 {
                                   state: { data: _items },
                                 },
@@ -407,8 +407,8 @@ const MobileFixtureTennis = ({ type, fixtureData, isLoading }) => {
                               onClick={() =>
                                 navigate(
                                   _items?.event_id
-                                    ? `/dashboard/tennis/market/${_items?.event_id}`
-                                    : `/dashboard/tennis/market/${_items?.matchId}`,
+                                    ? `/tennis/market/${_items?.event_id}`
+                                    : `/tennis/market/${_items?.matchId}`,
                                   {
                                     state: { data: _items },
                                   },

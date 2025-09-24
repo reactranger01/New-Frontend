@@ -20,7 +20,7 @@ export default function MobSlider() {
           <SwiperSlide
             className="mb-2 "
             key={index}
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/')}
           >
             <img
               src={item.path}

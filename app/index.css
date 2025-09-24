@@ -449,3 +449,8 @@ input[type='number']::-webkit-outer-spin-button {
 .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
   background-color: transparent !important;
 }
+
+.rightS-svg {
+  filter: brightness(0) saturate(100%) invert(30%) sepia(3%) saturate(4313%)
+    hue-rotate(115deg) brightness(114%) contrast(114%) !important;
+}
