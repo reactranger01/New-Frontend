@@ -600,22 +600,22 @@ const MobCricket = () => {
                           isLoggedIn() &&
                           betData?.length > 0 &&
                           isMobile && <NewBetSlip />}
-                        <div className="flex justify-between">
-                          <div></div>
-                          <div className="w-[138px] relative overflow-hidden">
-                            <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
-                              <div className="text-right pr-1">
-                                Min : {minLimitOdds}
-                              </div>
-                              <div className="border-l pl-1 border-black ">
-                                Min : {maxLimitOdds}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                       </>
                     );
                   })}
+                <div className="flex justify-between">
+                  <div></div>
+                  <div className="w-[138px] relative overflow-hidden">
+                    <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                      <div className="text-right pr-1">
+                        Min : {oddsData?.inPlayMinLimit}
+                      </div>
+                      <div className="border-l pl-1 border-black ">
+                        Min : {oddsData?.inPlayMaxLimit}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </>
             )}
           </div>
