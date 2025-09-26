@@ -95,7 +95,7 @@ function App() {
             />
             <Route path="no-market" element={<NoMarketAvailable />} />
             <Route
-              path="my-bets"
+              path="/my-bets"
               element={
                 <PrivateRoute>
                   <MyBets />
@@ -127,7 +127,7 @@ function App() {
               }
             />
             <Route
-              path="settings"
+              path="/change-password"
               element={
                 <PrivateRoute>
                   <Settings />
@@ -146,6 +146,7 @@ function App() {
               element={<EditBankAccountDetails />}
             />
           </Route>
+
           <Route path="/*" element={<NotFound />} />
 
           <Route path="/img" element={<ImageUpload />} />

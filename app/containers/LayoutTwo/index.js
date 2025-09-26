@@ -2,10 +2,9 @@
 import { BetSlip, Footer, Navbar } from '@/components';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-
 import LeftSidebarDesk from '@/components/LeftSidebarDesk';
 
-const Sidebar = () => {
+const LayoutTwo = () => {
   return (
     <div className="light-bg">
       <Navbar />
@@ -15,11 +14,6 @@ const Sidebar = () => {
           <div className="flex-1 min-w-0 w-full ">
             <Outlet />
           </div>
-          <div className="!w-[290px] mt-[15px] hidden lg:block flex-shrink-0">
-            {!['/change-password', '/my-bets'].includes(location.pathname) && (
-              <BetSlip />
-            )}
-          </div>
         </div>
       </section>
       <Footer />
@@ -27,4 +21,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default LayoutTwo;

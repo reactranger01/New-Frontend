@@ -1,8 +1,7 @@
+import GradientHeading from '@/components/GradientHeading';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
-import { reactIcons } from '@/utils/icons';
 import { numberWithDigit } from '@/utils/numberWithDigit';
-import { Empty } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -11,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 function MyBets() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  // eslint-disable-next-line
   const [betType, setBetType] = useState('current');
   const [betsData, setBetsData] = useState({});
   const [page, setPage] = useState(1);
@@ -46,73 +46,59 @@ function MyBets() {
       }
     }
   };
-
+  console.log(betsData, 'betsData');
   return (
     <div className="min-h-screen mx-1 md:mx-0">
-      <div className="md:border-b border-black py-2 mt-3">
-        <h1 className="text-18 md:text-24 mt-4 md:mt-0">Open Bets</h1>
+      <div className=" py-2 mt-3">
+        <GradientHeading heading={'Open Bets'} />
       </div>
 
-      <div className="flex justify-between md:gap-8 gap-2 my-4 md:mb-10 mb-3">
-        <div className="">
-          <button
-            onClick={() => setBetType('current')}
-            className={`${
-              betType == 'current'
-                ? 'bg-[#4283ca] text-white'
-                : 'bg-white border border-gray-300 text-gray-700'
-            } rounded-md  text-12 px-5 w-[100px] mr-1 mb-2 md:mb-0`}
-          >
-            Current
-          </button>
-          <button
-            onClick={() => setBetType('past')}
-            className={`${
-              betType == 'past'
-                ? 'bg-[#4283ca] text-white'
-                : 'bg-white border border-gray-300 text-gray-700'
-            } rounded-md text-12 px-5 w-[100px] mr-1`}
-          >
-            Past
-          </button>
+      <div className="flex gap-[5px] items-center w-full mb-2">
+        <div className="w-full">
+          <p className="text-14">From Date</p>
+          <DatePicker
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            popperPlacement="bottom-start"
+          />
         </div>
-        <div className="flex md:gap-5 gap-2 items-center ">
-          <div>
-            <p className="text-12">From</p>
-            <DatePicker
-              className="px-3 text-12 py-1 w-24 sm:w-48"
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              popperPlacement="bottom-start"
-            />
-          </div>
-          <div>
-            <p className="text-12">To</p>
-            <DatePicker
-              className="px-3 text-12 py-1 w-24 sm:w-48"
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              popperPlacement="bottom-start"
-            />
-          </div>
-          <button
-            onClick={() => {
-              setStartDate(new Date()), setEndDate(new Date());
-            }}
-            className="flex items-center text-white bg-red-600 mt-6 gap-1  cursor-pointer ml-2 rounded-md py-1 px-3"
+        <div className="w-full">
+          <p className="text-14">To Date</p>
+          <DatePicker
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            popperPlacement="bottom-start"
+          />
+        </div>
+      </div>
+      <div className="flex gap-[5px] items-center w-full">
+        <div className="w-full">
+          <p className="text-14">Type</p>
+          <select
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            name=""
+            id=""
           >
-            {reactIcons.close}
-
-            {/* <h5 className="ml-2 ">Clear</h5> */}
+            <option value="cricket">Cricket</option>
+            <option value="soccer">Soccer</option>
+            <option value="tennis">Tennis</option>
+          </select>
+        </div>
+        <div className="w-full">
+          <div className="text-14 h-6"></div>
+          <button className="bg-primary-1300 text-16  h-10 flex-center rounded-[4px] w-full text-white">
+            APPLY
           </button>
         </div>
       </div>
-      <div className="data-table overflow-x-auto">
+      <div className="data-table overflow-x-auto mt-3">
         {betType === 'past' && (
           <table>
             <thead className="">
-              <tr className="bg-gray-400">
-                <th className="w-[65px]">Sports</th>
+              <tr className="bg-gray-400 text-black capitalize font-bold">
+                <th className="w-[65px] ">Sports</th>
                 <th>Event</th>
                 <th>Market</th>
                 <th>Type</th>
@@ -128,14 +114,13 @@ function MyBets() {
               {betsData?.bets?.length === 0 || betsData?.bets === null ? (
                 <tr className="h-[42px] w-full">
                   <td colSpan={10}>
-                    <div className="text-center flex-center h-[140px]">
-                      <Empty />
+                    <div className="text-center flex-center h-8 bg-[#DAE1DF] border border-gray-400 text-14">
+                      No Event Found
                     </div>
                   </td>
                 </tr>
               ) : (
                 <>
-                  {' '}
                   {betsData &&
                     betsData?.bets?.map((items, index) => {
                       return (
@@ -250,7 +235,7 @@ function MyBets() {
         {betType === 'current' && (
           <table>
             <thead className="">
-              <tr className="bg-gray-400">
+              <tr className="bg-gray-400 text-black capitalize font-bold">
                 <th className="w-[65px]">Sports</th>
                 <th>Event</th>
                 <th>Market</th>
@@ -264,12 +249,18 @@ function MyBets() {
               </tr>
             </thead>
             <tbody>
-              {betsData?.bets?.length === 0 || betsData?.bets === null ? (
+              {!betsData ||
+              betsData?.bets?.length === 0 ||
+              betsData?.bets === null ? (
                 <tr className="h-[42px] w-full">
                   <td colSpan={10}>
-                    <div className="text-center flex-center h-[140px]">
-                      <Empty />
-                    </div>
+                    <tr className="h-[42px] w-full">
+                      <td colSpan={10}>
+                        <div className="text-center flex-center h-8 bg-[#DAE1DF] border border-gray-400 text-14">
+                          No Event Found
+                        </div>
+                      </td>
+                    </tr>
                   </td>
                 </tr>
               ) : (

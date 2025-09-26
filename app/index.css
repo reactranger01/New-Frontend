@@ -454,3 +454,7 @@ input[type='number']::-webkit-outer-spin-button {
   filter: brightness(0) saturate(100%) invert(30%) sepia(3%) saturate(4313%)
     hue-rotate(115deg) brightness(114%) contrast(114%) !important;
 }
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}

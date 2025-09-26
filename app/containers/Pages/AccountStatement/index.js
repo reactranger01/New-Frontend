@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import GradientHeading from '@/components/GradientHeading';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
-import { reactIcons } from '@/utils/icons';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 import { Empty } from 'antd';
 import moment from 'moment';
@@ -12,7 +12,6 @@ import { useSelector } from 'react-redux';
 
 function AccountStatement() {
   const [startDate, setStartDate] = useState(new Date());
-  const User = useSelector((state) => state.user);
   const { id } = useSelector((state) => state.user || { id: null });
   const [endDate, setEndDate] = useState(new Date());
   const [statementData, setStatementData] = useState([]);
@@ -53,50 +52,62 @@ function AccountStatement() {
   };
   return (
     <div className="min-h-screen mx-1 md:mx-0">
-      <div className="md:border-b border-black py-2 mt-3">
+      <div className=" py-2 mt-3">
         <h1 className="text-18 md:text-24 font-bold mt-4 md:mt-0">
-          Transfer Statement
+          <GradientHeading heading={'Account Statement'} />
         </h1>
       </div>
 
-      <div className="flex items-end gap-8 my-4 md:mb-10 mb-3">
-        <div className="flex md:gap-5 gap-2 items-center ">
-          <div className="from-date">
-            <p className="text-12">From</p>
-            <DatePicker
-              className="px-3 text-12 py-1 w-24 sm:w-48"
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              popperPlacement="bottom-start"
-            />
-          </div>
-          <div>
-            <p className="text-12">To</p>
-            <DatePicker
-              className="px-3 text-12 py-1 w-24 sm:w-48"
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              popperPlacement="bottom-start"
-            />
-          </div>
-          <button
-            onClick={() => {
-              setStartDate(new Date()), setEndDate(new Date());
-            }}
-            className="flex items-center text-white bg-red-600 mt-6 gap-1  cursor-pointer  rounded-md py-1 px-3"
+      <div className="flex gap-[5px] items-center w-full mb-2">
+        <div className="w-full">
+          <p className="text-14">From Date</p>
+          <DatePicker
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            popperPlacement="bottom-start"
+          />
+        </div>
+        <div className="w-full">
+          <p className="text-14">To Date</p>
+          <DatePicker
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            popperPlacement="bottom-start"
+          />
+        </div>
+      </div>
+      <div className="flex gap-[5px] items-center w-full mb-3">
+        <div className="w-full">
+          <p className="text-14">Type</p>
+          <select
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            name=""
+            id=""
           >
-            {reactIcons.close}
-          </button>
+            <option value="cricket">Cricket</option>
+            <option value="soccer">Soccer</option>
+            <option value="tennis">Tennis</option>
+          </select>
+        </div>
+        <div className="w-full">
+          <div className="text-14 h-6"></div>
+          <div className="flex items-center gap-2">
+            <button className="bg-primary-1300 text-16  h-10 flex-center rounded-[4px] w-full text-white">
+              APPLY
+            </button>
+            <div className="bg-primary-1300 flex-center gap-[5px] h-[38px] w-[43px] rounded-[4px] ">
+              <img
+                src="/images/rightDrawer/downloadNew.svg"
+                className="h-5 w-5"
+                alt=""
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div>
-        <p className="md:text-20 text-16 font-medium">
-          Account Balance:{' '}
-          {numberWithCommas(User?.balance - Math.abs(User?.exposureAmount)) ||
-            0}
-        </p>
-      </div>
       <div className="data-table overflow-x-auto">
         <table className="overflow-x-auto">
           <thead className="">
