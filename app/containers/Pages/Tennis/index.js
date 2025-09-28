@@ -3,26 +3,22 @@ import DesktopGameHeader from '@/components/Desktop/DesktopGameHeader';
 import DesktopMarketAll from '@/components/DesktopMarketAll';
 import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
 import MostPopular from '@/components/MostPopular';
-import { LoginModal } from '@/containers/pageListAsync';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureData } from '@/utils/helper';
 import { useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const Tennis = () => {
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
   const [inplayTrue, setInplayTrue] = useState([]);
   const [inplayFalse, setInplayFalse] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [loaderOneTime, setLoaderOneTime] = useState(false);
-  const betData = useSelector((state) => state.bet.selectedBet);
   const [bets, setBets] = useState([]);
   const isMobile = useMediaQuery('(max-width:660px)');
-  const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
   const dispatch = useDispatch();
   useEffect(() => {
     if (bets?.length > 0) {
@@ -119,12 +115,6 @@ const Tennis = () => {
               gameNameS="tennis"
               gameNameB="Tennis"
               addToBetPlace={addToBetPlace}
-              setOpenModal={setOpenModal}
-              isLogin={isLogin}
-              activeBetSlip={activeBetSlip}
-              // isMobile={isMobile}
-              bets={bets}
-              betData={betData}
             />
           )}
           {isMobile ? (
@@ -136,17 +126,10 @@ const Tennis = () => {
                 gameNameS="tennis"
                 gameNameB="Tennis"
                 addToBetPlace={addToBetPlace}
-                setOpenModal={setOpenModal}
-                isLogin={isLogin}
-                activeBetSlip={activeBetSlip}
-                // isMobile={isMobile}
-                bets={bets}
-                betData={betData}
               />
             )
           )}
         </div>
-        {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </>
   );

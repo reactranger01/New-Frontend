@@ -34,13 +34,17 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 420,
+  maxWidth: 424,
+  minWidth: '350px',
   bgcolor: '#1E8067',
   // border: '2px solid #000',
   // boxShadow: 24,
+  // overflowY: 'auto',
   outline: 'none',
   p: 0,
   borderRadius: '10px',
+
+  width: '100%',
 };
 
 const RegisterModal = ({ isOpen, handleClose }) => {
@@ -114,17 +118,18 @@ const RegisterModal = ({ isOpen, handleClose }) => {
         aria-describedby="modal-modal-description"
         sx={{
           backgroundColor: '#8f8f8f',
+          overflowY: 'auto',
         }}
       >
         <Box sx={style}>
-          <div className="">
+          <div className="w-full">
             <button
               onClick={handleClose}
               className="absolute top-2 z-20 right-2  text-black font-bold text-2xl cursor-pointer bg-[#f4d821] rounded"
             >
               {reactIcons.close}
             </button>
-            <div className="flex flex-col gap-2 relative px-[10px] py-7">
+            <div className="flex flex-col w-full gap-2 relative px-[10px] py-7">
               <div className="mx-auto">
                 <img src="/images/lotusLogo.jpg" className="h-[30px]" alt="" />
               </div>
@@ -132,8 +137,8 @@ const RegisterModal = ({ isOpen, handleClose }) => {
                 Register
               </h1>
 
-              <form action="">
-                <div className="flex items-center gap-4">
+              <form action="" className="w-full">
+                <div className="flex items-center gap-4 w-full">
                   <div className="border-b-2 border-[#f4d821] pb-1">
                     <select
                       onChange={handleChange}

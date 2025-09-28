@@ -2,19 +2,13 @@ import { reactIcons } from '@/utils/icons';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BlankBtn, BlueBtn, NewBetSlip, PinkBtn, SeeMoreMarkets } from '..';
+import { BlankBtn, BlueBtn, PinkBtn, SeeMoreMarkets } from '..';
 
 const DesktopMarketAll = ({
   inplayData,
   gameNameS,
   gameNameB,
-  setOpenModal,
   addToBetPlace,
-  isLogin,
-  activeBetSlip,
-  // isMobile,
-  bets,
-  betData,
   showStar = false,
 }) => {
   const navigate = useNavigate();
@@ -96,26 +90,22 @@ const DesktopMarketAll = ({
                               {_items?.runners?.[0]?.backPrice1 ? (
                                 <BlueBtn
                                   onClick={() => {
-                                    if (isLogin) {
-                                      addToBetPlace(
-                                        _items?.competition_name,
-                                        _items?.event_id || _items?.matchId,
-                                        _items?.runners?.[0]?.selectionId,
-                                        _items?.runners?.[0],
-                                        gameNameB,
-                                        _items?.runners?.[0]?.backPrice1,
-                                        _items?.market_name,
-                                        'BACK',
-                                        _items?.name,
-                                        _items?.market_id,
-                                        _items?.runners,
-                                        _items?.sportId,
-                                        minLimitOdds,
-                                        maxLimitOdds,
-                                      );
-                                    } else {
-                                      setOpenModal(true);
-                                    }
+                                    addToBetPlace(
+                                      _items?.competition_name,
+                                      _items?.event_id || _items?.matchId,
+                                      _items?.runners?.[0]?.selectionId,
+                                      _items?.runners?.[0],
+                                      gameNameB,
+                                      _items?.runners?.[0]?.backPrice1,
+                                      _items?.market_name,
+                                      'BACK',
+                                      _items?.name,
+                                      _items?.market_id,
+                                      _items?.runners,
+                                      _items?.sportId,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
                                   }}
                                   text={_items?.runners?.[0]?.backPrice1 || '-'}
                                   size={_items?.runners?.[0]?.backsize1 || '-'}
@@ -128,24 +118,22 @@ const DesktopMarketAll = ({
                               {_items?.runners?.[0]?.layPrice1 ? (
                                 <PinkBtn
                                   onClick={() => {
-                                    isLogin
-                                      ? addToBetPlace(
-                                          _items?.competition_name,
-                                          _items?.event_id || _items?.matchId,
-                                          _items?.runners?.[0]?.selectionId,
-                                          _items?.runners?.[0],
-                                          gameNameB,
-                                          _items?.runners?.[0]?.layPrice1,
-                                          _items?.market_name,
-                                          'LAY',
-                                          _items?.name,
-                                          _items?.market_id,
-                                          _items?.runners,
-                                          _items?.sportId,
-                                          minLimitOdds,
-                                          maxLimitOdds,
-                                        )
-                                      : setOpenModal(true);
+                                    addToBetPlace(
+                                      _items?.competition_name,
+                                      _items?.event_id || _items?.matchId,
+                                      _items?.runners?.[0]?.selectionId,
+                                      _items?.runners?.[0],
+                                      gameNameB,
+                                      _items?.runners?.[0]?.layPrice1,
+                                      _items?.market_name,
+                                      'LAY',
+                                      _items?.name,
+                                      _items?.market_id,
+                                      _items?.runners,
+                                      _items?.sportId,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
                                   }}
                                   text={_items?.runners?.[0]?.layPrice1 || '-'}
                                   size={_items?.runners?.[0]?.laysize1 || '-'}
@@ -158,24 +146,22 @@ const DesktopMarketAll = ({
                               {_items?.runners?.[2]?.backPrice1 ? (
                                 <BlueBtn
                                   onClick={() => {
-                                    isLogin
-                                      ? addToBetPlace(
-                                          _items?.competition_name,
-                                          _items?.event_id || _items?.matchId,
-                                          _items?.runners?.[2]?.selectionId,
-                                          _items?.runners?.[2],
-                                          gameNameB,
-                                          _items?.runners?.[2]?.backPrice1,
-                                          _items?.market_name,
-                                          'BACK',
-                                          _items?.name,
-                                          _items?.market_id,
-                                          _items?.runners,
-                                          _items?.sportId,
-                                          minLimitOdds,
-                                          maxLimitOdds,
-                                        )
-                                      : setOpenModal(true);
+                                    addToBetPlace(
+                                      _items?.competition_name,
+                                      _items?.event_id || _items?.matchId,
+                                      _items?.runners?.[2]?.selectionId,
+                                      _items?.runners?.[2],
+                                      gameNameB,
+                                      _items?.runners?.[2]?.backPrice1,
+                                      _items?.market_name,
+                                      'BACK',
+                                      _items?.name,
+                                      _items?.market_id,
+                                      _items?.runners,
+                                      _items?.sportId,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
                                   }}
                                   text={_items?.runners?.[2]?.backPrice1 || '-'}
                                   size={_items?.runners?.[2]?.backsize1 || '-'}
@@ -188,24 +174,22 @@ const DesktopMarketAll = ({
                               {_items?.runners?.[2]?.layPrice1 ? (
                                 <PinkBtn
                                   onClick={() => {
-                                    isLogin
-                                      ? addToBetPlace(
-                                          _items?.competition_name,
-                                          _items?.event_id || _items?.matchId,
-                                          _items?.runners?.[2]?.selectionId,
-                                          _items?.runners?.[2],
-                                          gameNameB,
-                                          _items?.runners?.[2]?.layPrice1,
-                                          _items?.market_name,
-                                          'LAY',
-                                          _items?.name,
-                                          _items?.market_id,
-                                          _items?.runners,
-                                          _items?.sportId,
-                                          minLimitOdds,
-                                          maxLimitOdds,
-                                        )
-                                      : setOpenModal(true);
+                                    addToBetPlace(
+                                      _items?.competition_name,
+                                      _items?.event_id || _items?.matchId,
+                                      _items?.runners?.[2]?.selectionId,
+                                      _items?.runners?.[2],
+                                      gameNameB,
+                                      _items?.runners?.[2]?.layPrice1,
+                                      _items?.market_name,
+                                      'LAY',
+                                      _items?.name,
+                                      _items?.market_id,
+                                      _items?.runners,
+                                      _items?.sportId,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
                                   }}
                                   text={_items?.runners?.[2]?.layPrice1 || '-'}
                                   size={_items?.runners?.[2]?.laysize1 || '-'}
@@ -218,24 +202,22 @@ const DesktopMarketAll = ({
                               {_items?.runners?.[1]?.backPrice1 ? (
                                 <BlueBtn
                                   onClick={() => {
-                                    isLogin
-                                      ? addToBetPlace(
-                                          _items?.competition_name,
-                                          _items?.event_id || _items?.matchId,
-                                          _items?.runners?.[1]?.selectionId,
-                                          _items?.runners?.[1],
-                                          gameNameB,
-                                          _items?.runners?.[1]?.backPrice1,
-                                          _items?.market_name,
-                                          'BACK',
-                                          _items?.name,
-                                          _items?.market_id,
-                                          _items?.runners,
-                                          _items?.sportId,
-                                          minLimitOdds,
-                                          maxLimitOdds,
-                                        )
-                                      : setOpenModal(true);
+                                    addToBetPlace(
+                                      _items?.competition_name,
+                                      _items?.event_id || _items?.matchId,
+                                      _items?.runners?.[1]?.selectionId,
+                                      _items?.runners?.[1],
+                                      gameNameB,
+                                      _items?.runners?.[1]?.backPrice1,
+                                      _items?.market_name,
+                                      'BACK',
+                                      _items?.name,
+                                      _items?.market_id,
+                                      _items?.runners,
+                                      _items?.sportId,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
                                   }}
                                   text={_items?.runners?.[1]?.backPrice1 || '-'}
                                   size={_items?.runners?.[1]?.backsize1 || '-'}
@@ -248,24 +230,22 @@ const DesktopMarketAll = ({
                               {_items?.runners?.[1]?.layPrice1 ? (
                                 <PinkBtn
                                   onClick={() => {
-                                    isLogin
-                                      ? addToBetPlace(
-                                          _items?.competition_name,
-                                          _items?.event_id || _items?.matchId,
-                                          _items?.runners?.[1]?.selectionId,
-                                          _items?.runners?.[1],
-                                          gameNameB,
-                                          _items?.runners?.[1]?.layPrice1,
-                                          _items?.market_name,
-                                          'LAY',
-                                          _items?.name,
-                                          _items?.market_id,
-                                          _items?.runners,
-                                          _items?.sportId,
-                                          minLimitOdds,
-                                          maxLimitOdds,
-                                        )
-                                      : setOpenModal(true);
+                                    addToBetPlace(
+                                      _items?.competition_name,
+                                      _items?.event_id || _items?.matchId,
+                                      _items?.runners?.[1]?.selectionId,
+                                      _items?.runners?.[1],
+                                      gameNameB,
+                                      _items?.runners?.[1]?.layPrice1,
+                                      _items?.market_name,
+                                      'LAY',
+                                      _items?.name,
+                                      _items?.market_id,
+                                      _items?.runners,
+                                      _items?.sportId,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
                                   }}
                                   text={_items?.runners?.[1]?.layPrice1 || '-'}
                                   size={_items?.runners?.[1]?.laysize1 || '-'}
@@ -296,14 +276,6 @@ const DesktopMarketAll = ({
                         )}
                       </div>
                     )}
-
-                    {activeBetSlip == Number(_items?.matchId) &&
-                      Number(_items?.matchId) == Number(bets[0]?.eventId) &&
-                      isLogin &&
-                      betData?.length > 0 && (
-                        // isMobile && <NewBetSlip />}
-                        <NewBetSlip />
-                      )}
                   </>
                 );
               })}

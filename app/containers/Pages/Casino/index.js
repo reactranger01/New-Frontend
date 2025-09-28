@@ -5,12 +5,12 @@ import { isMobile } from 'react-device-detect';
 import toast from 'react-hot-toast';
 import React, { useCallback, useEffect, useState } from 'react';
 import CasinoPlay from '@/components/CasinoPlay';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { reactIcons } from '@/utils/icons';
-import { LoginModal } from '@/containers/pageListAsync';
 import { useLocation } from 'react-router-dom';
 // import CasinoModal from '../CasinoModal';
 import { useMediaQuery } from '@mui/material';
+import { openModal } from '@/redux/Slices/modalSlice';
 const Casino = () => {
   const [isLoading, setisLoading] = useState(false);
   const [allCasinoGame, setAllCasinoGame] = useState([]);
@@ -20,7 +20,8 @@ const Casino = () => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const userIdFromRedux = useSelector((state) => state.user.id);
   const userInfo = useSelector((state) => state.user);
-  const [openModal, setOpenModal] = useState(false);
+  const dispatch = useDispatch();
+
   // const [casinoPoints, setCasinoPoints] = useState(false);
   // const [gameId, setGameId] = useState();
   const location = useLocation();
@@ -172,7 +173,7 @@ const Casino = () => {
                     // setGameId(item?.id);
                     // setCasinoPoints(true);
                   } else {
-                    setOpenModal(true);
+                    dispatch(openModal('login'));
                   }
                 }}
               >
@@ -199,7 +200,6 @@ const Casino = () => {
             gameId={gameId}
           />
         )} */}
-        {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </div>
   );

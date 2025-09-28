@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { intToString } from '@/utils/margeData';
 import { isLoggedIn } from '@/utils/apiHandlers';
-import { LoginModal } from '@/containers/pageListAsync';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { updatePlacedBetCalculation } from '@/utils/helper';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const MatchOddsSoccer = ({
   heading,
@@ -19,7 +19,6 @@ const MatchOddsSoccer = ({
   competition_name,
 }) => {
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
   const [bets, setBets] = useState([]);
   const inplay = data?.inplay;
   const betData = useSelector((state) => state.bet.selectedBet);
@@ -52,34 +51,38 @@ const MatchOddsSoccer = ({
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(_marketData?.market_id),
-        eventId: Number(eventId),
-        gameId: 1,
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: data?.name,
-        market: _marketData?.market_name,
-        gameType: _marketData?.market_name,
-        nation: betDetails,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: data?.name,
-        percent: 100,
-        selection: betDetails,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-        _marketData,
-      },
-    ]);
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(_marketData?.market_id),
+          eventId: Number(eventId),
+          gameId: 1,
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: data?.name,
+          market: _marketData?.market_name,
+          gameType: _marketData?.market_name,
+          nation: betDetails,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: data?.name,
+          percent: 100,
+          selection: betDetails,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+          _marketData,
+        },
+      ]);
+    } else {
+      dispatch(openModal('login'));
+    }
   };
   let minLimitOdds, maxLimitOdds;
   if (inplay) {
@@ -167,23 +170,19 @@ const MatchOddsSoccer = ({
                         <div className="grid grid-cols-6">
                           <BlueBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.backPrice3,
-                                  data?.market_name,
-                                  'BACK',
-                                  data,
-                                  'ODDS',
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.backPrice3,
+                                data?.market_name,
+                                'BACK',
+                                data,
+                                'ODDS',
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.backPrice3 || '0'}
                             size={
@@ -195,23 +194,19 @@ const MatchOddsSoccer = ({
                           />
                           <BlueBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.backPrice2,
-                                  data?.market_name,
-                                  'BACK',
-                                  data,
-                                  'ODDS',
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.backPrice2,
+                                data?.market_name,
+                                'BACK',
+                                data,
+                                'ODDS',
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.backPrice2 || '0'}
                             size={
@@ -223,23 +218,19 @@ const MatchOddsSoccer = ({
                           />
                           <BlueBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.backPrice1,
-                                  data?.market_name,
-                                  'BACK',
-                                  data,
-                                  'ODDS',
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.backPrice1,
+                                data?.market_name,
+                                'BACK',
+                                data,
+                                'ODDS',
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.backPrice1 || '0'}
                             size={
@@ -251,23 +242,19 @@ const MatchOddsSoccer = ({
                           />
                           <PinkBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.layPrice1,
-                                  data?.market_name,
-                                  'LAY',
-                                  data,
-                                  'ODDS',
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.layPrice1,
+                                data?.market_name,
+                                'LAY',
+                                data,
+                                'ODDS',
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.layPrice1 || '0'}
                             size={
@@ -279,23 +266,19 @@ const MatchOddsSoccer = ({
                           />
                           <PinkBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.layPrice2,
-                                  data?.market_name,
-                                  'LAY',
-                                  data,
-                                  'ODDS',
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.layPrice2,
+                                data?.market_name,
+                                'LAY',
+                                data,
+                                'ODDS',
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.layPrice2 || '0'}
                             size={
@@ -307,23 +290,19 @@ const MatchOddsSoccer = ({
                           />
                           <PinkBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.layPrice3,
-                                  data?.market_name,
-                                  'LAY',
-                                  data,
-                                  'ODDS',
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.layPrice3,
+                                data?.market_name,
+                                'LAY',
+                                data,
+                                'ODDS',
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.layPrice3 || '0'}
                             size={
@@ -354,7 +333,6 @@ const MatchOddsSoccer = ({
           </>
         )}
       </div>
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

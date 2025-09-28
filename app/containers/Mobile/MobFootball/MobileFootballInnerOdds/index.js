@@ -14,6 +14,7 @@ import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { LoginModal } from '@/containers/pageListAsync';
 import { updatePlacedBetCalculation } from '@/utils/helper';
+import { openModal } from '@/redux/Slices/modalSlice';
 const MobileFootballInnerOdds = ({
   data,
 
@@ -21,7 +22,7 @@ const MobileFootballInnerOdds = ({
   competition_name,
 }) => {
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const inplay = data?.inplay;
   const isMobile = useMediaQuery('(max-width:1024px)');
@@ -57,34 +58,38 @@ const MobileFootballInnerOdds = ({
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(_marketData?.market_id),
-        eventId: Number(eventId),
-        gameId: 1,
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: data?.name,
-        market: _marketData?.market_name,
-        gameType: _marketData?.market_name,
-        nation: betDetails,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: data?.name,
-        percent: 100,
-        selection: betDetails,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-        _marketData,
-      },
-    ]);
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(_marketData?.market_id),
+          eventId: Number(eventId),
+          gameId: 1,
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: data?.name,
+          market: _marketData?.market_name,
+          gameType: _marketData?.market_name,
+          nation: betDetails,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: data?.name,
+          percent: 100,
+          selection: betDetails,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+          _marketData,
+        },
+      ]);
+    } else {
+      dispatch(openModal('login'));
+    }
   };
 
   let minLimitOdds, maxLimitOdds;
@@ -242,7 +247,6 @@ const MobileFootballInnerOdds = ({
               </div>
             </>
           )}
-          {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
         </div>
       )}
     </>

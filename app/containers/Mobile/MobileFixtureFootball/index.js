@@ -9,15 +9,16 @@ import { isLoggedIn } from '@/utils/apiHandlers';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { isToday } from '@/utils/constants';
 import moment from 'moment';
-import { LoginModal, MobileGameHeader } from '@/containers/pageListAsync';
+import { MobileGameHeader } from '@/containers/pageListAsync';
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
   const navigate = useNavigate();
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const betData = useSelector((state) => state.bet.selectedBet);
@@ -44,34 +45,38 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(market_id),
-        eventId: Number(eventId),
-        gameId: Number(sportId),
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: name,
-        market: betType,
-        gameType: betType,
-        nation: betDetails?.runnerName,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: name,
-        percent: 100,
-        selection: betDetails?.runnerName,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-        _marketData,
-      },
-    ]);
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(market_id),
+          eventId: Number(eventId),
+          gameId: Number(sportId),
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: name,
+          market: betType,
+          gameType: betType,
+          nation: betDetails?.runnerName,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: name,
+          percent: 100,
+          selection: betDetails?.runnerName,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+          _marketData,
+        },
+      ]);
+    } else {
+      dispatch(openModal('login'));
+    }
   };
 
   useEffect(() => {
@@ -159,24 +164,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                   <BlueBtn
                                     text={_items?.runners?.[0]?.backPrice1}
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[0]?.selectionId,
-                                            _items?.runners?.[0],
-                                            'Soccer',
-                                            _items?.runners?.[0]?.backPrice1,
-                                            _items?.market_name,
-                                            'BACK',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[0]?.selectionId,
+                                        _items?.runners?.[0],
+                                        'Soccer',
+                                        _items?.runners?.[0]?.backPrice1,
+                                        _items?.market_name,
+                                        'BACK',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                   />
                                 ) : (
@@ -189,24 +192,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                       _items?.runners?.[2]?.backPrice1 || '-'
                                     }
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[2]?.selectionId,
-                                            _items?.runners?.[2],
-                                            'Soccer',
-                                            _items?.runners?.[2]?.backPrice1,
-                                            _items?.market_name,
-                                            'BACK',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[2]?.selectionId,
+                                        _items?.runners?.[2],
+                                        'Soccer',
+                                        _items?.runners?.[2]?.backPrice1,
+                                        _items?.market_name,
+                                        'BACK',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                   />
                                 ) : (
@@ -215,24 +216,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[1]?.backPrice1 ? (
                                   <BlueBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[1]?.selectionId,
-                                            _items?.runners?.[1],
-                                            'Soccer',
-                                            _items?.runners?.[1]?.backPrice1,
-                                            _items?.market_name,
-                                            'BACK',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[1]?.selectionId,
+                                        _items?.runners?.[1],
+                                        'Soccer',
+                                        _items?.runners?.[1]?.backPrice1,
+                                        _items?.market_name,
+                                        'BACK',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[1]?.backPrice1 || '-'
@@ -248,24 +247,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[0]?.layPrice1 ? (
                                   <PinkBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[0]?.selectionId,
-                                            _items?.runners?.[0],
-                                            'Soccer',
-                                            _items?.runners?.[0]?.layPrice1,
-                                            _items?.market_name,
-                                            'LAY',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[0]?.selectionId,
+                                        _items?.runners?.[0],
+                                        'Soccer',
+                                        _items?.runners?.[0]?.layPrice1,
+                                        _items?.market_name,
+                                        'LAY',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[0]?.layPrice1 || '-'
@@ -277,24 +274,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[2]?.layPrice1 ? (
                                   <PinkBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[2]?.selectionId,
-                                            _items?.runners?.[2],
-                                            'Soccer',
-                                            _items?.runners?.[2]?.layPrice1,
-                                            _items?.market_name,
-                                            'LAY',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[2]?.selectionId,
+                                        _items?.runners?.[2],
+                                        'Soccer',
+                                        _items?.runners?.[2]?.layPrice1,
+                                        _items?.market_name,
+                                        'LAY',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[2]?.layPrice1 || '-'
@@ -306,24 +301,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[1]?.layPrice1 ? (
                                   <PinkBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[1]?.selectionId,
-                                            _items?.runners?.[1],
-                                            'Soccer',
-                                            _items?.runners?.[1]?.layPrice1,
-                                            _items?.market_name,
-                                            'LAY',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[1]?.selectionId,
+                                        _items?.runners?.[1],
+                                        'Soccer',
+                                        _items?.runners?.[1]?.layPrice1,
+                                        _items?.market_name,
+                                        'LAY',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[1]?.layPrice1 || '-'
@@ -436,24 +429,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                   <BlueBtn
                                     text={_items?.runners?.[0]?.backPrice1}
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[0]?.selectionId,
-                                            _items?.runners?.[0],
-                                            'Soccer',
-                                            _items?.runners?.[0]?.backPrice1,
-                                            _items?.market_name,
-                                            'BACK',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[0]?.selectionId,
+                                        _items?.runners?.[0],
+                                        'Soccer',
+                                        _items?.runners?.[0]?.backPrice1,
+                                        _items?.market_name,
+                                        'BACK',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                   />
                                 ) : (
@@ -466,24 +457,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                       _items?.runners?.[2]?.backPrice1 || '-'
                                     }
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[2]?.selectionId,
-                                            _items?.runners?.[2],
-                                            'Soccer',
-                                            _items?.runners?.[2]?.backPrice1,
-                                            _items?.market_name,
-                                            'BACK',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[2]?.selectionId,
+                                        _items?.runners?.[2],
+                                        'Soccer',
+                                        _items?.runners?.[2]?.backPrice1,
+                                        _items?.market_name,
+                                        'BACK',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                   />
                                 ) : (
@@ -492,24 +481,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[1]?.backPrice1 ? (
                                   <BlueBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[1]?.selectionId,
-                                            _items?.runners?.[1],
-                                            'Soccer',
-                                            _items?.runners?.[1]?.backPrice1,
-                                            _items?.market_name,
-                                            'BACK',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[1]?.selectionId,
+                                        _items?.runners?.[1],
+                                        'Soccer',
+                                        _items?.runners?.[1]?.backPrice1,
+                                        _items?.market_name,
+                                        'BACK',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[1]?.backPrice1 || '-'
@@ -525,24 +512,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[0]?.layPrice1 ? (
                                   <PinkBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[0]?.selectionId,
-                                            _items?.runners?.[0],
-                                            'Soccer',
-                                            _items?.runners?.[0]?.layPrice1,
-                                            _items?.market_name,
-                                            'LAY',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[0]?.selectionId,
+                                        _items?.runners?.[0],
+                                        'Soccer',
+                                        _items?.runners?.[0]?.layPrice1,
+                                        _items?.market_name,
+                                        'LAY',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[0]?.layPrice1 || '-'
@@ -554,24 +539,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[2]?.layPrice1 ? (
                                   <PinkBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[2]?.selectionId,
-                                            _items?.runners?.[2],
-                                            'Soccer',
-                                            _items?.runners?.[2]?.layPrice1,
-                                            _items?.market_name,
-                                            'LAY',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[2]?.selectionId,
+                                        _items?.runners?.[2],
+                                        'Soccer',
+                                        _items?.runners?.[2]?.layPrice1,
+                                        _items?.market_name,
+                                        'LAY',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[2]?.layPrice1 || '-'
@@ -583,24 +566,22 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
                                 {_items?.runners?.[1]?.layPrice1 ? (
                                   <PinkBtn
                                     onClick={() => {
-                                      isLogin
-                                        ? addToBetPlace(
-                                            _items?.competition_name,
-                                            _items?.event_id || _items?.matchId,
-                                            _items?.runners?.[1]?.selectionId,
-                                            _items?.runners?.[1],
-                                            'Soccer',
-                                            _items?.runners?.[1]?.layPrice1,
-                                            _items?.market_name,
-                                            'LAY',
-                                            _items?.name,
-                                            _items?.market_id,
-                                            _items?.runners,
-                                            _items?.sportId,
-                                            minLimitOdds,
-                                            maxLimitOdds,
-                                          )
-                                        : setOpenModal(true);
+                                      addToBetPlace(
+                                        _items?.competition_name,
+                                        _items?.event_id || _items?.matchId,
+                                        _items?.runners?.[1]?.selectionId,
+                                        _items?.runners?.[1],
+                                        'Soccer',
+                                        _items?.runners?.[1]?.layPrice1,
+                                        _items?.market_name,
+                                        'LAY',
+                                        _items?.name,
+                                        _items?.market_id,
+                                        _items?.runners,
+                                        _items?.sportId,
+                                        minLimitOdds,
+                                        maxLimitOdds,
+                                      );
                                     }}
                                     text={
                                       _items?.runners?.[1]?.layPrice1 || '-'
@@ -627,7 +608,6 @@ const MobileFixtureFootball = ({ type, fixtureData, isLoading }) => {
           )}
         </>
       )}
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

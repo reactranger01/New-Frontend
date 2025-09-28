@@ -8,12 +8,14 @@ import { PropTypes } from 'prop-types';
 import Cookies from 'js-cookie';
 import { isLoggedIn, removeAuthCookie } from '@/utils/apiHandlers';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { openModal } from '@/redux/Slices/modalSlice';
 export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
   const login = isLoggedIn();
+  const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user);
   const handleLogout = () => {
     Cookies.remove('__users__isLoggedIn');
@@ -113,21 +115,36 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             </div>
           </div>
         </div>
-        {linksRight.map((item, index) => (
-          <NavLink
-            to={item.path}
-            onClick={() => setOpen(false)}
-            key={index}
-            className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-semibold gap-2 "
-          >
-            <img
-              src={item.icon}
-              className="rightS-svg w-[18px] h-[18px]"
-              alt=""
-            />{' '}
-            {item.title}
-          </NavLink>
-        ))}
+        {linksRight.map((item, index) => {
+          return item?.type && item?.type === 'rules' ? (
+            <div
+              onClick={() => dispatch(openModal('rules'))}
+              key={index}
+              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-semibold gap-2 "
+            >
+              <img
+                src={item.icon}
+                className="rightS-svg w-[18px] h-[18px]"
+                alt=""
+              />{' '}
+              {item.title}
+            </div>
+          ) : (
+            <NavLink
+              to={item.path}
+              onClick={() => setOpen(false)}
+              key={index}
+              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-semibold gap-2 "
+            >
+              <img
+                src={item.icon}
+                className="rightS-svg w-[18px] h-[18px]"
+                alt=""
+              />{' '}
+              {item.title}
+            </NavLink>
+          );
+        })}
         <div
           onClick={handleLogout}
           className="text-12  bg-[#DC2626] py-3 px-3 flex items-center font-semibold text-white gap-2 "

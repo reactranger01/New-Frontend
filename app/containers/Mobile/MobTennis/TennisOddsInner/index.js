@@ -1,4 +1,3 @@
-import { LoginModal } from '@/containers/pageListAsync';
 import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
@@ -10,6 +9,7 @@ import { useMediaQuery } from '@mui/material';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { updatePlacedBetCalculation } from '@/utils/helper';
+import { openModal } from '@/redux/Slices/modalSlice';
 const TennisOddsInner = ({
   data,
   placedBetWinLossDatas,
@@ -17,7 +17,7 @@ const TennisOddsInner = ({
   allMarketData,
 }) => {
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const inplay = data?.inplay;
@@ -44,34 +44,38 @@ const TennisOddsInner = ({
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(_marketData?.market_id || data?.market_id),
-        eventId: Number(eventId),
-        gameId: 2,
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: data?.name,
-        market: _marketData?.market_name,
-        gameType: _marketData?.market_name,
-        nation: betDetails,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: data?.name,
-        percent: 100,
-        selection: betDetails,
-        _marketData,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-      },
-    ]);
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(_marketData?.market_id || data?.market_id),
+          eventId: Number(eventId),
+          gameId: 2,
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: data?.name,
+          market: _marketData?.market_name,
+          gameType: _marketData?.market_name,
+          nation: betDetails,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: data?.name,
+          percent: 100,
+          selection: betDetails,
+          _marketData,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+        },
+      ]);
+    } else {
+      dispatch(openModal('login'));
+    }
   };
   useEffect(() => {
     if (bets?.length > 0) {
@@ -155,22 +159,18 @@ const TennisOddsInner = ({
                         <div className="w-[132px] grid grid-cols-2">
                           <BlueBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Tennis',
-                                  items?.backPrice1 || items?.back?.[0]?.price,
-                                  data?.market,
-                                  'BACK',
-                                  data,
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Tennis',
+                                items?.backPrice1 || items?.back?.[0]?.price,
+                                data?.market,
+                                'BACK',
+                                data,
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.backPrice1 || '-'}
                             size={
@@ -183,22 +183,18 @@ const TennisOddsInner = ({
                           />
                           <PinkBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Tennis',
-                                  items?.layPrice1 || items?.lay?.[1]?.price,
-                                  data?.market,
-                                  'LAY',
-                                  data,
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Tennis',
+                                items?.layPrice1 || items?.lay?.[1]?.price,
+                                data?.market,
+                                'LAY',
+                                data,
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.layPrice1 || '-'}
                             size={
@@ -239,7 +235,6 @@ const TennisOddsInner = ({
       ) : (
         ''
       )}
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </>
   );
 };

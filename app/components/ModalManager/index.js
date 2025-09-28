@@ -4,6 +4,7 @@ import { LoginModal } from '@/containers/pageListAsync';
 import ForgotPasswordModal from '../FogotPasswordModal';
 import { closeModal } from '@/redux/Slices/modalSlice';
 import RegisterModal from '../RegisterModal';
+import RulesModal from '../RulesModal';
 
 const ModalManager = () => {
   const { type, isOpen } = useSelector((state) => state.modal);
@@ -33,7 +34,13 @@ const ModalManager = () => {
           handleClose={() => dispatch(closeModal())}
         />
       );
-
+    case 'rules':
+      return (
+        <RulesModal
+          isOpen={isOpen}
+          handleClose={() => dispatch(closeModal())}
+        />
+      );
     default:
       return null;
   }

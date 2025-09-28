@@ -7,10 +7,10 @@ import { isLoggedIn } from '@/utils/apiHandlers';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import { LoginModal } from '@/containers/pageListAsync';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { updatePlacedBetCalculation } from '@/utils/helper';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const BookMaker = ({
   heading,
@@ -22,7 +22,6 @@ const BookMaker = ({
 }) => {
   const isLogin = isLoggedIn();
   const EventId = data['0']?.EventID;
-  const [openModal, setOpenModal] = useState(false);
   const [bets, setBets] = useState([]);
   const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
   const isMobile = useMediaQuery('(max-width:1024px)');
@@ -59,37 +58,41 @@ const BookMaker = ({
     minimumBet,
     maximumBet,
   ) => {
-    if (OddsPrice > 1) {
-      setBets([
-        {
-          marketId: String(data?.market_id),
-          eventId: Number(eventId || EventId),
-          gameId: 4,
-          selectionId: String(selectionId),
-          betOn: selectType,
-          price: parseFloat(OddsPrice),
-          stake: '',
-          eventType: game,
-          competition: competition_name,
-          event: matchName,
-          market: 'bookmaker',
-          gameType: 'bookmaker',
-          nation: betDetails,
-          type: selectType,
-          calcFact: 0,
-          bettingOn: 'bookmaker',
-          runners: 2,
-          row: 1,
-          matchName: matchName,
-          percent: 100,
-          selection: betDetails,
-          minimumBet: minimumBet,
-          maximumBet: maximumBet,
-          _marketData,
-        },
-      ]);
+    if (isLogin) {
+      if (OddsPrice > 1) {
+        setBets([
+          {
+            marketId: String(data?.market_id),
+            eventId: Number(eventId || EventId),
+            gameId: 4,
+            selectionId: String(selectionId),
+            betOn: selectType,
+            price: parseFloat(OddsPrice),
+            stake: '',
+            eventType: game,
+            competition: competition_name,
+            event: matchName,
+            market: 'bookmaker',
+            gameType: 'bookmaker',
+            nation: betDetails,
+            type: selectType,
+            calcFact: 0,
+            bettingOn: 'bookmaker',
+            runners: 2,
+            row: 1,
+            matchName: matchName,
+            percent: 100,
+            selection: betDetails,
+            minimumBet: minimumBet,
+            maximumBet: maximumBet,
+            _marketData,
+          },
+        ]);
+      } else {
+        toast.error('Market not available');
+      }
     } else {
-      toast.error('Market not available');
+      dispatch(openModal('login'));
     }
   };
 
@@ -176,23 +179,19 @@ const BookMaker = ({
                           <BlueBtn disabled={true} />
                           <BlueBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  EventId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Cricket',
-                                  items?.backPrice1,
-                                  data?.marketName,
-                                  'BACK',
-                                  data,
-                                  'BOOKMAKERS',
-                                  minLimitBookmaker,
-                                  maxLimitBookmaker,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                EventId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Cricket',
+                                items?.backPrice1,
+                                data?.marketName,
+                                'BACK',
+                                data,
+                                'BOOKMAKERS',
+                                minLimitBookmaker,
+                                maxLimitBookmaker,
+                              );
                             }}
                             text={items?.backPrice1 || '0'}
                             size={
@@ -204,23 +203,19 @@ const BookMaker = ({
                           />
                           <PinkBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  EventId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Cricket',
-                                  items?.layPrice1,
-                                  data?.marketName,
-                                  'LAY',
-                                  data,
-                                  'BOOKMAKERS',
-                                  minLimitBookmaker,
-                                  maxLimitBookmaker,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                EventId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Cricket',
+                                items?.layPrice1,
+                                data?.marketName,
+                                'LAY',
+                                data,
+                                'BOOKMAKERS',
+                                minLimitBookmaker,
+                                maxLimitBookmaker,
+                              );
                             }}
                             text={items?.layPrice1 || '0'}
                             size={
@@ -252,7 +247,6 @@ const BookMaker = ({
           </>
         )}
       </div>
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

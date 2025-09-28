@@ -1,7 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+{
+  /* eslint-disable */
+}
+import GradientHeading from '@/components/GradientHeading';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
-import { reactIcons } from '@/utils/icons';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 import { Empty } from 'antd';
 import moment from 'moment';
@@ -15,8 +17,8 @@ function ProfitAndLoss() {
   const [profitLoss, setProfitLossData] = useState([]);
   const User = useSelector((state) => state.user);
   const [profitData, setProfitData] = useState([]);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [page, setPage] = useState(1);
   const take = 15;
   const [pagination, setPagination] = useState({
@@ -39,11 +41,11 @@ function ProfitAndLoss() {
       title: 'Tennis',
       earning: '0.00',
     },
-    {
-      id: 'casino',
-      title: 'Casino & Aviator',
-      earning: '0.00',
-    },
+    // {
+    //   id: 'casino',
+    //   title: 'Casino & Aviator',
+    //   earning: '0.00',
+    // },
   ];
 
   useEffect(() => {
@@ -160,48 +162,39 @@ function ProfitAndLoss() {
   });
   return (
     <div className="min-h-screen mx-1 md:mx-0">
-      <div className="md:border-b border-black py-2 mt-3">
-        <h1 className="text-18 md:text-24 font-bold mt-4 md:mt-0">
-          Betting Profit and Loss
-        </h1>
+      <div className="w-full ">
+        <GradientHeading heading={' Betting Profit and Loss'} />
       </div>
 
-      <div className="flex items-end gap-8 my-4 md:mb-10 mb-3">
-        <div className="flex md:gap-5 gap-2 items-center ">
-          <div className="from-date">
-            <p className="text-12">From</p>
-            <DatePicker
-              className="px-3 text-12 py-1 w-24 sm:w-48"
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              popperPlacement="bottom-start"
-            />
-          </div>
-          <div>
-            <p className="text-12">To</p>
-            <DatePicker
-              className="px-3 text-12 py-1 w-24 sm:w-48"
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              popperPlacement="bottom-start"
-            />
-          </div>
-          <button
-            onClick={() => {
-              setStartDate(new Date()), setEndDate(new Date());
-            }}
-            className="flex items-center text-white bg-red-600 mt-6 gap-1  cursor-pointer rounded-md py-1 px-3"
-          >
-            {reactIcons.close}
-          </button>
+      <div className="flex gap-[5px] items-center w-full mb-2">
+        <div className="w-full">
+          <p className="text-14">From Date</p>
+          <DatePicker
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            popperPlacement="bottom-start"
+          />
+        </div>
+        <div className="w-full">
+          <p className="text-14">To Date</p>
+          <DatePicker
+            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            popperPlacement="bottom-start"
+          />
         </div>
       </div>
+      <button className="bg-primary-1300 text-16  h-10 flex-center rounded-[4px] w-full text-white">
+        SEARCH
+      </button>
 
       <div className="data-table  ">
         <div className="tab-body max-w-full ">
           <div className="tabber min-h-[350px] flex justify-between bg-white overflow-hidden rounded-lg flex-col md:flex-row">
             <div className="tabber-menu min-w-[147px] md:min-w-[221px]">
-              <div className="rounded-tl-lg w-full text-center 2xl:text-16 text-[15px] text-black font-medium 2xl:p-[10px_5px] p-[7px_5px] shadow-[0_0_15px_2px_#00000050]">
+              {/* <div className="rounded-tl-lg w-full text-center 2xl:text-16 text-[15px] text-black font-medium 2xl:p-[10px_5px] p-[7px_5px] shadow-[0_0_15px_2px_#00000050]">
                 Games
               </div>
               <div className="rounded-md w-[calc(100%-20px)] mx-auto my-3 text-center text-14 text-black font-medium p-[7px_5px] shadow-[0px_4px_8px_1px_#00000025]">
@@ -217,34 +210,47 @@ function ProfitAndLoss() {
                 >
                   {totalProfitLoss.toFixed(2)}
                 </span>
+              </div> */}
+
+              <div className="grid grid-cols-2 gap-[1px] mt-2 ">
+                <div className="text-white font-bold flex-center text-14 bg-[#8f8f8f] py-1 ">
+                  EVENT
+                </div>
+                <div className="text-white font-bold flex-center text-14 bg-[#8f8f8f] py-1 ">
+                  P&L
+                </div>
               </div>
 
-              <ul className="flex md:block">
-                {tabberMenu.map((item) => (
+              <ul className="border border-[#e9e9e9]">
+                {tabberMenu.map((item, index) => (
                   <li
                     key={item.id}
-                    className={`text-14 font-medium flex items-center justify-between flex-col md:flex-row gap-1 border-b border-b-[#D8D8D8] p-[5px_10px_7px_20px] cursor-pointer ${
-                      activeTab == item.id ? 'text-[#004774]' : 'text-black'
-                    }`}
+                    className={`text-14 font-medium grid grid-cols-2 gap-[1px] ${
+                      index % 2 !== 0 ? 'bg-white' : 'bg-[#f1f0f0]'
+                    }    cursor-pointer`}
                     onClick={() => setActiveTab(item.id)}
                   >
-                    <span>{item.title}</span>
-                    <span
-                      className={
+                    <div className="flex-center py-1 border-r-[2px] border-[#e9e9e9]">
+                      <div className="bg-primary-1300  text-14 max-w-[90px] mx-auto m-1  h-9 flex-center  w-full text-white rounded-md">
+                        <p className="text-center w-full">{item.title}</p>
+                      </div>
+                    </div>
+                    <div
+                      className={`${
                         item.earning > 0
                           ? '!text-green-700'
                           : item.earning < 0
                           ? '!text-red-700'
                           : 'text-black'
-                      }
+                      } flex-center `}
                     >
                       {item.earning}
-                    </span>
+                    </div>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className=" md:w-[calc(100%-235px)]  overflow-x-auto ">
+            {/* <div className=" md:w-[calc(100%-235px)]  overflow-x-auto ">
               {(activeTab == 'Cricket' ||
                 activeTab == 'Soccer' ||
                 activeTab == 'Tennis') && (
@@ -391,7 +397,7 @@ function ProfitAndLoss() {
                   />
                 </>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

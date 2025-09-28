@@ -8,8 +8,8 @@ import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { reactIcons } from '@/utils/icons';
 import { intToString } from '@/utils/margeData';
 import { BlueBtn, NewBetSlip, PinkBtn, SuspendedBtn } from '@/components';
-import { LoginModal } from '@/containers/pageListAsync';
 import { updatePlacedBetCalculation } from '@/utils/helper';
+import { openModal } from '@/redux/Slices/modalSlice';
 const MobileFootballInnerMarkets = ({
   heading,
   data,
@@ -18,7 +18,7 @@ const MobileFootballInnerMarkets = ({
   competition_name,
 }) => {
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const inplay = data?.inplay;
   const betData = useSelector((state) => state.bet.selectedBet);
@@ -51,40 +51,44 @@ const MobileFootballInnerMarkets = ({
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(_marketData?.market_id),
-        eventId: Number(eventId),
-        gameId: 1,
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: data?.name,
-        market: _marketData?.market_name,
-        gameType: _marketData?.market_name,
-        nation: betDetails,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: data?.name,
-        percent: 100,
-        selection: betDetails,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-        _marketData,
-      },
-    ]);
-    if (!isMobile) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(_marketData?.market_id),
+          eventId: Number(eventId),
+          gameId: 1,
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: data?.name,
+          market: _marketData?.market_name,
+          gameType: _marketData?.market_name,
+          nation: betDetails,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: data?.name,
+          percent: 100,
+          selection: betDetails,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+          _marketData,
+        },
+      ]);
+      if (!isMobile) {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+    } else {
+      dispatch(openModal('login'));
     }
   };
   let minLimitOdds, maxLimitOdds;
@@ -160,24 +164,19 @@ const MobileFootballInnerMarkets = ({
                           <div className="grid grid-cols-2">
                             <BlueBtn
                               onClick={async () => {
-                                if (isLogin) {
-                                  await addToBetPlace(
-                                    data?.eventid || data?.matchId,
-                                    items?.selectionId,
-                                    items?.runnerName,
-                                    'Soccer',
-                                    items?.backPrice1 ||
-                                      items?.back?.[0]?.price,
-                                    data?.market_name,
-                                    'BACK',
-                                    data,
-                                    type,
-                                    minLimitOdds,
-                                    maxLimitOdds,
-                                  );
-                                } else {
-                                  setOpenModal(true);
-                                }
+                                await addToBetPlace(
+                                  data?.eventid || data?.matchId,
+                                  items?.selectionId,
+                                  items?.runnerName,
+                                  'Soccer',
+                                  items?.backPrice1 || items?.back?.[0]?.price,
+                                  data?.market_name,
+                                  'BACK',
+                                  data,
+                                  type,
+                                  minLimitOdds,
+                                  maxLimitOdds,
+                                );
                               }}
                               text={items?.backPrice1 || '-'}
                               size={
@@ -196,23 +195,19 @@ const MobileFootballInnerMarkets = ({
                                   : ''
                               }
                               onClick={async () => {
-                                if (isLogin) {
-                                  await addToBetPlace(
-                                    data?.eventid || data?.matchId,
-                                    items?.selectionId,
-                                    items?.runnerName,
-                                    'Soccer',
-                                    items?.layPrice1 || items?.lay?.[0]?.price,
-                                    data?.market_name,
-                                    'LAY',
-                                    data,
-                                    type,
-                                    minLimitOdds,
-                                    maxLimitOdds,
-                                  );
-                                } else {
-                                  setOpenModal(true);
-                                }
+                                await addToBetPlace(
+                                  data?.eventid || data?.matchId,
+                                  items?.selectionId,
+                                  items?.runnerName,
+                                  'Soccer',
+                                  items?.layPrice1 || items?.lay?.[0]?.price,
+                                  data?.market_name,
+                                  'LAY',
+                                  data,
+                                  type,
+                                  minLimitOdds,
+                                  maxLimitOdds,
+                                );
                               }}
                               disabled={items?.layPrice1 ? false : true}
                               css="w-[65px] mx-auto"
@@ -252,7 +247,6 @@ const MobileFootballInnerMarkets = ({
           )}
         </div>
       )}
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </>
   );
 };

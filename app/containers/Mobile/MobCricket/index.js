@@ -27,6 +27,7 @@ import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import InnerHeading from '../InnerHeading';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const MobCricket = () => {
   const [matchOdd, setMatchOdd] = useState(false);
@@ -51,7 +52,7 @@ const MobCricket = () => {
   const islogin = isLoggedIn();
   const userType = useSelector((state) => state?.user?.userType);
   const [isPlacedBetStatsCalc, setPlacedBetStatsCalc] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const betsFancy = useSelector((state) => state.bet.selectedBet);
@@ -227,45 +228,49 @@ const MobCricket = () => {
     minBetLimit,
     maxBetLimit,
   ) => {
-    if (OddsPrice > 1) {
-      setBets([
-        {
-          marketId: String(oddsData?.market_id),
-          eventId: Number(eventId),
-          gameId: Number(oddsData?.sportId),
-          selectionId: String(selectionId),
-          betOn: selectType,
-          price: parseFloat(OddsPrice),
-          stake: '',
-          eventType: game,
-          competition: matchData?.competition_name,
-          event: oddsData?.name,
-          market:
-            _marketData.market_name ||
-            (_marketData.marketName == 'Bookmaker'
-              ? 'bookmaker'
-              : _marketData.marketName),
-          gameType:
-            _marketData.market_name ||
-            (_marketData.marketName == 'Bookmaker'
-              ? 'bookmaker'
-              : _marketData.marketName),
-          nation: betDetails,
-          type: selectType,
-          calcFact: 0,
-          bettingOn: betType == 'Bookmaker' ? 'bookmaker' : betType,
-          runners: 2,
-          row: 1,
-          matchName: oddsData?.name,
-          percent: 100,
-          selection: betDetails,
-          minimumBet: minBetLimit,
-          maximumBet: maxBetLimit,
-          _marketData,
-        },
-      ]);
+    if (isLogin) {
+      if (OddsPrice > 1) {
+        setBets([
+          {
+            marketId: String(oddsData?.market_id),
+            eventId: Number(eventId),
+            gameId: Number(oddsData?.sportId),
+            selectionId: String(selectionId),
+            betOn: selectType,
+            price: parseFloat(OddsPrice),
+            stake: '',
+            eventType: game,
+            competition: matchData?.competition_name,
+            event: oddsData?.name,
+            market:
+              _marketData.market_name ||
+              (_marketData.marketName == 'Bookmaker'
+                ? 'bookmaker'
+                : _marketData.marketName),
+            gameType:
+              _marketData.market_name ||
+              (_marketData.marketName == 'Bookmaker'
+                ? 'bookmaker'
+                : _marketData.marketName),
+            nation: betDetails,
+            type: selectType,
+            calcFact: 0,
+            bettingOn: betType == 'Bookmaker' ? 'bookmaker' : betType,
+            runners: 2,
+            row: 1,
+            matchName: oddsData?.name,
+            percent: 100,
+            selection: betDetails,
+            minimumBet: minBetLimit,
+            maximumBet: maxBetLimit,
+            _marketData,
+          },
+        ]);
+      } else {
+        toast.error('Market not available');
+      }
     } else {
-      toast.error('Market not available');
+      dispatch(openModal('login'));
     }
   };
 
@@ -282,37 +287,41 @@ const MobCricket = () => {
     minimumBet,
     maximumBet,
   ) => {
-    if (OddsPrice > 1) {
-      setBets([
-        {
-          marketId: String(oddsData?.market_id),
-          eventId: Number(eventId),
-          gameId: 4,
-          selectionId: String(selectionId),
-          betOn: selectType,
-          price: parseFloat(OddsPrice),
-          stake: '',
-          eventType: game,
-          competition: matchData?.competition_name,
-          event: matchData?.name,
-          market: 'bookmaker',
-          gameType: 'bookmaker',
-          nation: betDetails,
-          type: selectType,
-          calcFact: 0,
-          bettingOn: 'bookmaker',
-          runners: 2,
-          row: 1,
-          matchName: matchData?.name,
-          percent: 100,
-          selection: betDetails,
-          minimumBet: minimumBet,
-          maximumBet: maximumBet,
-          _marketData,
-        },
-      ]);
+    if (isLogin) {
+      if (OddsPrice > 1) {
+        setBets([
+          {
+            marketId: String(oddsData?.market_id),
+            eventId: Number(eventId),
+            gameId: 4,
+            selectionId: String(selectionId),
+            betOn: selectType,
+            price: parseFloat(OddsPrice),
+            stake: '',
+            eventType: game,
+            competition: matchData?.competition_name,
+            event: matchData?.name,
+            market: 'bookmaker',
+            gameType: 'bookmaker',
+            nation: betDetails,
+            type: selectType,
+            calcFact: 0,
+            bettingOn: 'bookmaker',
+            runners: 2,
+            row: 1,
+            matchName: matchData?.name,
+            percent: 100,
+            selection: betDetails,
+            minimumBet: minimumBet,
+            maximumBet: maximumBet,
+            _marketData,
+          },
+        ]);
+      } else {
+        toast.error('Market not available');
+      }
     } else {
-      toast.error('Market not available');
+      dispatch(openModal('login'));
     }
   };
 
@@ -329,45 +338,49 @@ const MobCricket = () => {
     minimumBet,
     maximumBet,
   ) => {
-    dispatch(
-      fetchBetDetailsAction([
-        {
-          marketId: String(particularMatchData?.marketId),
-          eventId: Number(fancy?.eventId),
-          gameId: 4,
-          selectionId: String(item.SelectionId),
-          betOn: betType,
-          price: parseFloat(price),
-          stake: '',
-          eventType: 'Cricket',
-          competition: matchData?.competition_name,
-          event: particularMatchData?.eventName,
-          market: fancy.market,
-          gameType: betOn,
-          nation: nationName,
-          type: betType,
-          runners: 2,
-          row: index,
-          calcFact: betOn === 'fancy' ? 0 : 1,
-          bettingOn: betOn,
-          matchName: matchName,
-          percent: parseFloat(percent),
-          selection: item.RunnerName,
-          minimumBet: minimumBet,
-          maximumBet: maximumBet,
-          _marketData: fancy,
-        },
-      ]),
-    );
-    dispatch(setActiveBetSlipIndex(Number(item.SelectionId)));
+    if (isLogin) {
+      dispatch(
+        fetchBetDetailsAction([
+          {
+            marketId: String(particularMatchData?.marketId),
+            eventId: Number(fancy?.eventId),
+            gameId: 4,
+            selectionId: String(item.SelectionId),
+            betOn: betType,
+            price: parseFloat(price),
+            stake: '',
+            eventType: 'Cricket',
+            competition: matchData?.competition_name,
+            event: particularMatchData?.eventName,
+            market: fancy.market,
+            gameType: betOn,
+            nation: nationName,
+            type: betType,
+            runners: 2,
+            row: index,
+            calcFact: betOn === 'fancy' ? 0 : 1,
+            bettingOn: betOn,
+            matchName: matchName,
+            percent: parseFloat(percent),
+            selection: item.RunnerName,
+            minimumBet: minimumBet,
+            maximumBet: maximumBet,
+            _marketData: fancy,
+          },
+        ]),
+      );
+      dispatch(setActiveBetSlipIndex(Number(item.SelectionId)));
 
-    // if (!isMobile) {
-    //   window.scrollTo({
-    //     top: 0,
-    //     left: 0,
-    //     behavior: 'smooth',
-    //   });
-    // }
+      // if (!isMobile) {
+      //   window.scrollTo({
+      //     top: 0,
+      //     left: 0,
+      //     behavior: 'smooth',
+      //   });
+      // }
+    } else {
+      dispatch(openModal('login'));
+    }
   };
 
   const handleShowSessionRisk = (session) => {
@@ -536,23 +549,18 @@ const MobCricket = () => {
                           <div className="w-[132px] grid grid-cols-2">
                             <BlueBtn
                               onClick={async () => {
-                                if (isLogin) {
-                                  await addToBetPlace(
-                                    oddsData?.eventid || oddsData?.matchId,
-                                    items?.selectionId,
-                                    items?.runnerName,
-                                    'Cricket',
-                                    items?.backPrice1 ||
-                                      items?.back?.[0]?.price,
-                                    oddsData?.market_name,
-                                    'BACK',
-                                    oddsData,
-                                    minLimitOdds,
-                                    maxLimitOdds,
-                                  );
-                                } else {
-                                  setOpenModal(true);
-                                }
+                                await addToBetPlace(
+                                  oddsData?.eventid || oddsData?.matchId,
+                                  items?.selectionId,
+                                  items?.runnerName,
+                                  'Cricket',
+                                  items?.backPrice1 || items?.back?.[0]?.price,
+                                  oddsData?.market_name,
+                                  'BACK',
+                                  oddsData,
+                                  minLimitOdds,
+                                  maxLimitOdds,
+                                );
                               }}
                               text={items?.backPrice1 || '-'}
                               size={
@@ -565,22 +573,18 @@ const MobCricket = () => {
                             />
                             <PinkBtn
                               onClick={async () => {
-                                if (isLogin) {
-                                  await addToBetPlace(
-                                    oddsData?.eventid || oddsData?.matchId,
-                                    items?.selectionId,
-                                    items?.runnerName,
-                                    'Cricket',
-                                    items?.layPrice1 || items?.lay?.[0]?.price,
-                                    oddsData?.market_name,
-                                    'LAY',
-                                    oddsData,
-                                    minLimitOdds,
-                                    maxLimitOdds,
-                                  );
-                                } else {
-                                  setOpenModal(true);
-                                }
+                                await addToBetPlace(
+                                  oddsData?.eventid || oddsData?.matchId,
+                                  items?.selectionId,
+                                  items?.runnerName,
+                                  'Cricket',
+                                  items?.layPrice1 || items?.lay?.[0]?.price,
+                                  oddsData?.market_name,
+                                  'LAY',
+                                  oddsData,
+                                  minLimitOdds,
+                                  maxLimitOdds,
+                                );
                               }}
                               text={items?.layPrice1 || '-'}
                               size={
@@ -937,7 +941,6 @@ const MobCricket = () => {
             singleRowData={singleRowData}
           />
         )}
-        {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </>
   );

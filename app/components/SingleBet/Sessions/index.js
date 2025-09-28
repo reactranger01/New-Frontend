@@ -16,6 +16,7 @@ import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const Sessions = ({
   sessionBooksetClcuData,
@@ -27,7 +28,7 @@ const Sessions = ({
 }) => {
   const dispatch = useDispatch();
   // eslint-disable-next-line
-  const [openModal, setOpenModal] = useState(false);
+
   const isLogin = isLoggedIn();
   const inplay = oddsData?.inplay;
   const [isOpen, setIsOpen] = useState(false);
@@ -55,43 +56,47 @@ const Sessions = ({
     minimumBet,
     maximumBet,
   ) => {
-    dispatch(
-      fetchBetDetailsAction([
-        {
-          marketId: String(particularMatchData?.marketId),
-          eventId: Number(fancy?.eventId),
-          gameId: 4,
-          selectionId: String(item.SelectionId),
-          betOn: betType,
-          price: parseFloat(price),
-          stake: '',
-          eventType: 'Cricket',
-          competition: competition_name,
-          event: particularMatchData?.eventName,
-          market: fancy.market,
-          gameType: betOn,
-          nation: nationName,
-          type: betType,
-          runners: 2,
-          row: index,
-          calcFact: betOn === 'fancy' ? 0 : 1,
-          bettingOn: betOn,
-          matchName: matchName,
-          percent: parseFloat(percent),
-          selection: item.RunnerName,
-          minimumBet: minimumBet,
-          maximumBet: maximumBet,
-          _marketData: fancy,
-        },
-      ]),
-    );
-    dispatch(setActiveBetSlipIndex(Number(item.SelectionId)));
-    if (!isMobile) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
+    if (isLogin) {
+      dispatch(
+        fetchBetDetailsAction([
+          {
+            marketId: String(particularMatchData?.marketId),
+            eventId: Number(fancy?.eventId),
+            gameId: 4,
+            selectionId: String(item.SelectionId),
+            betOn: betType,
+            price: parseFloat(price),
+            stake: '',
+            eventType: 'Cricket',
+            competition: competition_name,
+            event: particularMatchData?.eventName,
+            market: fancy.market,
+            gameType: betOn,
+            nation: nationName,
+            type: betType,
+            runners: 2,
+            row: index,
+            calcFact: betOn === 'fancy' ? 0 : 1,
+            bettingOn: betOn,
+            matchName: matchName,
+            percent: parseFloat(percent),
+            selection: item.RunnerName,
+            minimumBet: minimumBet,
+            maximumBet: maximumBet,
+            _marketData: fancy,
+          },
+        ]),
+      );
+      dispatch(setActiveBetSlipIndex(Number(item.SelectionId)));
+      if (!isMobile) {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+    } else {
+      dispatch(openModal('login'));
     }
   };
 
@@ -234,23 +239,19 @@ const Sessions = ({
                             <PinkBtn disabled={true} />
                             <PinkBtn
                               onClick={async () => {
-                                if (isLogin) {
-                                  await addToNormalBetPlace(
-                                    items,
-                                    'LAY',
-                                    index,
-                                    items.LayPrice1,
-                                    data.market,
-                                    matchName,
-                                    items.LaySize1,
-                                    items.RunnerName,
-                                    data,
-                                    minLimitsession,
-                                    maxLimitsession,
-                                  );
-                                } else {
-                                  setOpenModal(true);
-                                }
+                                await addToNormalBetPlace(
+                                  items,
+                                  'LAY',
+                                  index,
+                                  items.LayPrice1,
+                                  data.market,
+                                  matchName,
+                                  items.LaySize1,
+                                  items.RunnerName,
+                                  data,
+                                  minLimitsession,
+                                  maxLimitsession,
+                                );
                               }}
                               text={items?.LayPrice1 || '0'}
                               size={
@@ -262,23 +263,19 @@ const Sessions = ({
                             />
                             <BlueBtn
                               onClick={async () => {
-                                if (isLogin) {
-                                  await addToNormalBetPlace(
-                                    items,
-                                    'BACK',
-                                    index,
-                                    items.BackPrice1,
-                                    data.market,
-                                    matchName,
-                                    items.BackSize1,
-                                    items.RunnerName,
-                                    data,
-                                    minLimitsession,
-                                    maxLimitsession,
-                                  );
-                                } else {
-                                  setOpenModal(true);
-                                }
+                                await addToNormalBetPlace(
+                                  items,
+                                  'BACK',
+                                  index,
+                                  items.BackPrice1,
+                                  data.market,
+                                  matchName,
+                                  items.BackSize1,
+                                  items.RunnerName,
+                                  data,
+                                  minLimitsession,
+                                  maxLimitsession,
+                                );
                               }}
                               text={items?.BackPrice1 || '0'}
                               size={

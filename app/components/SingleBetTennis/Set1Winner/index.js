@@ -21,6 +21,7 @@ import { LoginModal } from '@/containers/pageListAsync';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { useMediaQuery } from '@mui/material';
 import { updatePlacedBetCalculation } from '@/utils/helper';
+import { openModal } from '@/redux/Slices/modalSlice';
 const Set1Winner = ({
   heading,
   data,
@@ -29,7 +30,7 @@ const Set1Winner = ({
   allMarketData,
 }) => {
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const inplay = data?.inplay;
@@ -52,40 +53,44 @@ const Set1Winner = ({
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(_marketData?.market_id),
-        eventId: Number(eventId),
-        gameId: 1,
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: data?.name,
-        market: _marketData?.market_name,
-        gameType: _marketData?.market_name,
-        nation: betDetails,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: data?.name,
-        percent: 100,
-        selection: betDetails,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-        _marketData,
-      },
-    ]);
-    if (!isMobile) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(_marketData?.market_id),
+          eventId: Number(eventId),
+          gameId: 1,
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: data?.name,
+          market: _marketData?.market_name,
+          gameType: _marketData?.market_name,
+          nation: betDetails,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: data?.name,
+          percent: 100,
+          selection: betDetails,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+          _marketData,
+        },
+      ]);
+      if (!isMobile) {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+    } else {
+      dispatch(openModal('login'));
     }
   };
   useEffect(() => {
@@ -280,7 +285,6 @@ const Set1Winner = ({
           </>
         )}
       </div>
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

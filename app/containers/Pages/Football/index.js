@@ -3,22 +3,19 @@ import DesktopGameHeader from '@/components/Desktop/DesktopGameHeader';
 import DesktopMarketAll from '@/components/DesktopMarketAll';
 import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
 import MostPopular from '@/components/MostPopular';
-import { LoginModal } from '@/containers/pageListAsync';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureData } from '@/utils/helper';
 import { useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 const Football = () => {
   const isLogin = isLoggedIn();
   const [isLoading, setisLoading] = useState(false);
   const [loaderOneTime, setLoaderOneTime] = useState(false);
-  const betData = useSelector((state) => state.bet.selectedBet);
   const isMobile = useMediaQuery('(max-width:660px)');
-  const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const [inplayTrue, setInplayTrue] = useState([]);
@@ -118,12 +115,6 @@ const Football = () => {
               gameNameS="football"
               gameNameB="Soccer"
               addToBetPlace={addToBetPlace}
-              setOpenModal={setOpenModal}
-              // isLogin={isLogin}
-              activeBetSlip={activeBetSlip}
-              isMobile={isMobile}
-              bets={bets}
-              betData={betData}
             />
           )}
 
@@ -135,19 +126,11 @@ const Football = () => {
                 inplayData={inplayFalse}
                 gameNameS="football"
                 gameNameB="Soccer"
-                setOpenModal={setOpenModal}
                 addToBetPlace={addToBetPlace}
-                isLogin={isLogin}
-                activeBetSlip={activeBetSlip}
-                isMobile={isMobile}
-                bets={bets}
-                betData={betData}
               />
             )
           )}
         </div>
-
-        {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </>
   );

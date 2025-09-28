@@ -8,14 +8,14 @@ import {
   SuspendedBtn,
 } from '@/components';
 import { reactIcons } from '@/utils/icons';
-import React, { useState } from 'react';
+import React from 'react';
 import { PropTypes } from 'prop-types';
 import { intToString } from '@/utils/margeData';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { useDispatch } from 'react-redux';
-import { LoginModal } from '@/containers/pageListAsync';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { isMobile } from 'react-device-detect';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const Fancy = ({
   data,
@@ -26,7 +26,6 @@ const Fancy = ({
   competition_name,
 }) => {
   const dispatch = useDispatch();
-  const [openModal, setOpenModal] = useState(false);
   const isLogin = isLoggedIn();
 
   const addToNormalBetPlace = async (
@@ -40,40 +39,44 @@ const Fancy = ({
     nationName,
     fancy,
   ) => {
-    dispatch(
-      fetchBetDetailsAction([
-        {
-          marketId: String(marketId),
-          eventId: Number(fancy?.eventId),
-          gameId: 4,
-          selectionId: String(item.SelectionId),
-          betOn: betType,
-          price: parseFloat(price),
-          stake: '',
-          eventType: 'Cricket',
-          competition: competition_name,
-          event: `${fixtureEventName?.[0]?.['runners']?.[0]?.runnerName} v ${fixtureEventName?.[0]?.['runners']?.[1]?.runnerName}`,
-          market: fancy.market,
-          gameType: betOn,
-          nation: nationName,
-          type: betType,
-          runners: 2,
-          row: index,
-          calcFact: betOn === 'fancy' ? 0 : 1,
-          bettingOn: betOn,
-          matchName: matchName,
-          percent: parseFloat(percent),
-          selection: item.RunnerName,
-          _marketData: fancy,
-        },
-      ]),
-    );
-    if (!isMobile) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
+    if (isLogin) {
+      dispatch(
+        fetchBetDetailsAction([
+          {
+            marketId: String(marketId),
+            eventId: Number(fancy?.eventId),
+            gameId: 4,
+            selectionId: String(item.SelectionId),
+            betOn: betType,
+            price: parseFloat(price),
+            stake: '',
+            eventType: 'Cricket',
+            competition: competition_name,
+            event: `${fixtureEventName?.[0]?.['runners']?.[0]?.runnerName} v ${fixtureEventName?.[0]?.['runners']?.[1]?.runnerName}`,
+            market: fancy.market,
+            gameType: betOn,
+            nation: nationName,
+            type: betType,
+            runners: 2,
+            row: index,
+            calcFact: betOn === 'fancy' ? 0 : 1,
+            bettingOn: betOn,
+            matchName: matchName,
+            percent: parseFloat(percent),
+            selection: item.RunnerName,
+            _marketData: fancy,
+          },
+        ]),
+      );
+      if (!isMobile) {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+    } else {
+      dispatch(openModal('login'));
     }
   };
   return (
@@ -154,21 +157,17 @@ const Fancy = ({
                         <PinkBtn disabled={true} />
                         <PinkBtn
                           onClick={async () => {
-                            if (isLogin) {
-                              await addToNormalBetPlace(
-                                items,
-                                'BACK',
-                                index,
-                                items.LayPrice1,
-                                data.market,
-                                matchName,
-                                items.LaySize1,
-                                items.RunnerName,
-                                data,
-                              );
-                            } else {
-                              setOpenModal(true);
-                            }
+                            await addToNormalBetPlace(
+                              items,
+                              'BACK',
+                              index,
+                              items.LayPrice1,
+                              data.market,
+                              matchName,
+                              items.LaySize1,
+                              items.RunnerName,
+                              data,
+                            );
                           }}
                           text={items?.LayPrice1 || '-'}
                           size={
@@ -180,21 +179,17 @@ const Fancy = ({
                         />
                         <BlueBtn
                           onClick={async () => {
-                            if (isLogin) {
-                              await addToNormalBetPlace(
-                                items,
-                                'BACK',
-                                index,
-                                items.BackPrice1,
-                                data.market,
-                                matchName,
-                                items.BackSize1,
-                                items.RunnerName,
-                                data,
-                              );
-                            } else {
-                              setOpenModal(true);
-                            }
+                            await addToNormalBetPlace(
+                              items,
+                              'BACK',
+                              index,
+                              items.BackPrice1,
+                              data.market,
+                              matchName,
+                              items.BackSize1,
+                              items.RunnerName,
+                              data,
+                            );
                           }}
                           text={items?.BackPrice1 || '-'}
                           size={
@@ -227,7 +222,6 @@ const Fancy = ({
           </>
         )}
       </div>
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

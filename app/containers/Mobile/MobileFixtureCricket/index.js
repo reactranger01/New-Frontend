@@ -11,15 +11,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { isToday } from '@/utils/constants';
 import moment from 'moment';
-import { LoginModal, MobileGameHeader } from '@/containers/pageListAsync';
+import { MobileGameHeader } from '@/containers/pageListAsync';
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const MobileFixtureCricket = ({ type, fixtureData, isLoading }) => {
   const isLogin = isLoggedIn();
   /* eslint-disable */
-  const [openModal, setOpenModal] = useState(false);
+
   const navigate = useNavigate();
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
@@ -49,34 +50,38 @@ const MobileFixtureCricket = ({ type, fixtureData, isLoading }) => {
     minBetLimit,
     maxBetLimit,
   ) => {
-    setBets([
-      {
-        marketId: String(market_id),
-        eventId: Number(eventId),
-        gameId: Number(sportId),
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: name,
-        market: betType,
-        gameType: betType,
-        nation: betDetails?.runnerName,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: name,
-        percent: 100,
-        selection: betDetails?.runnerName,
-        _marketData,
-        minimumBet: minBetLimit,
-        maximumBet: maxBetLimit,
-      },
-    ]);
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(market_id),
+          eventId: Number(eventId),
+          gameId: Number(sportId),
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: name,
+          market: betType,
+          gameType: betType,
+          nation: betDetails?.runnerName,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: name,
+          percent: 100,
+          selection: betDetails?.runnerName,
+          _marketData,
+          minimumBet: minBetLimit,
+          maximumBet: maxBetLimit,
+        },
+      ]);
+    } else {
+      dispatch(openModal('login'));
+    }
   };
 
   const sortedInplayFalseMatches = fixtureData?.sort((a, b) => {
@@ -699,7 +704,6 @@ const MobileFixtureCricket = ({ type, fixtureData, isLoading }) => {
           )}
         </>
       )}
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

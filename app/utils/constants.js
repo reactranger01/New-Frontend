@@ -192,47 +192,56 @@ export const linksRight = [
     title: 'Open Bets',
     path: '/my-bets',
     icon: '/images/rightDrawer/settings.svg',
+    type: 'link',
   },
   {
     title: 'Bet History',
     path: '/my-bets',
     icon: '/images/rightDrawer/betHistory.svg',
+    type: 'link',
   },
 
   {
     title: 'Betting Profit and Loss',
     path: '/profit-loss',
     icon: '/images/rightDrawer/bettingPL.svg',
+    type: 'link',
   },
   {
     title: 'Account Statement',
     path: '/account-statement',
     icon: '/images/rightDrawer/accountS.svg',
+    type: 'link',
   },
   {
     title: 'Transactions',
     path: '/account-statement',
     icon: '/images/rightDrawer/transactions.svg',
+    type: 'link',
   },
   {
     title: 'Change Password',
     path: '/settings',
     icon: '/images/rightDrawer/lock.svg',
+    type: 'link',
   },
   {
     title: 'Notifications',
     path: '/notifications',
     icon: '/images/rightDrawer/notification.svg',
+    type: 'link',
   },
   {
     title: 'Rules & Regulation',
     path: '/rules-regulation',
     icon: '/images/rightDrawer/betHistory.svg',
+    type: 'rules',
   },
   {
     title: 'Settings',
     path: '/settings-stake',
     icon: '/images/rightDrawer/settings1.svg',
+    type: 'link',
   },
   // {
   //   title: 'Deposit',

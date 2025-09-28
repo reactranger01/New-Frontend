@@ -4,18 +4,17 @@ import 'swiper/css';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBetDetailsAction } from '@/redux/actions';
-import { LoginModal } from '@/containers/pageListAsync';
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import DesktopMarketAll from '@/components/DesktopMarketAll';
 import DesktopGameHeader from '../DesktopGameHeader';
 import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
   const isLogin = isLoggedIn();
   /* eslint-disable */
-  const [openModal, setOpenModal] = useState(false);
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const betData = useSelector((state) => state.bet.selectedBet);
@@ -44,34 +43,38 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
     minBetLimit,
     maxBetLimit,
   ) => {
-    setBets([
-      {
-        marketId: String(market_id),
-        eventId: Number(eventId),
-        gameId: Number(sportId),
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: name,
-        market: betType,
-        gameType: betType,
-        nation: betDetails?.runnerName,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: name,
-        percent: 100,
-        selection: betDetails?.runnerName,
-        _marketData,
-        minimumBet: minBetLimit,
-        maximumBet: maxBetLimit,
-      },
-    ]);
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(market_id),
+          eventId: Number(eventId),
+          gameId: Number(sportId),
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: name,
+          market: betType,
+          gameType: betType,
+          nation: betDetails?.runnerName,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: name,
+          percent: 100,
+          selection: betDetails?.runnerName,
+          _marketData,
+          minimumBet: minBetLimit,
+          maximumBet: maxBetLimit,
+        },
+      ]);
+    } else {
+      dispatch(openModal('login'));
+    }
   };
 
   const sortedInplayFalseMatches = fixtureData?.sort((a, b) => {
@@ -123,13 +126,7 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
                   inplayData={fixtureData}
                   gameNameS="cricket"
                   gameNameB="Cricket"
-                  setOpenModal={setOpenModal}
                   addToBetPlace={addToBetPlace}
-                  isLogin={isLogin}
-                  activeBetSlip={activeBetSlip}
-                  // isMobile={isMobile}
-                  bets={bets}
-                  betData={betData}
                   showStar={false}
                 />
               )}
@@ -156,13 +153,7 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
                   inplayData={sortedInplayFalseMatches}
                   gameNameS="cricket"
                   gameNameB="Cricket"
-                  setOpenModal={setOpenModal}
                   addToBetPlace={addToBetPlace}
-                  isLogin={isLogin}
-                  activeBetSlip={activeBetSlip}
-                  // isMobile={isMobile}
-                  bets={bets}
-                  betData={betData}
                   showStar={false}
                 />
               )}
@@ -170,7 +161,6 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
           )}
         </>
       )}
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

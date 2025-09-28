@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import 'swiper/css';
-import { isLoggedIn } from '@/utils/apiHandlers';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchBetDetailsAction } from '@/redux/actions';
-import { LoginModal } from '@/containers/pageListAsync';
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
@@ -12,12 +10,8 @@ import DesktopGameHeader from '../DesktopGameHeader';
 import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
 
 const DesktopFixtureTennis = ({ type, fixtureData, isLoading }) => {
-  const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
   const [bets, setBets] = useState([]);
-  const betData = useSelector((state) => state.bet.selectedBet);
   const isMobile = useMediaQuery('(max-width:660px)');
-  const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
 
   const dispatch = useDispatch();
 
@@ -100,13 +94,7 @@ const DesktopFixtureTennis = ({ type, fixtureData, isLoading }) => {
                   inplayData={fixtureData}
                   gameNameS="tennis"
                   gameNameB="Tennis"
-                  setOpenModal={setOpenModal}
                   addToBetPlace={addToBetPlace}
-                  isLogin={isLogin}
-                  activeBetSlip={activeBetSlip}
-                  // isMobile={isMobile}
-                  bets={bets}
-                  betData={betData}
                   showStar={false}
                 />
               )}
@@ -133,13 +121,7 @@ const DesktopFixtureTennis = ({ type, fixtureData, isLoading }) => {
                   inplayData={sortedInplayFalseMatches}
                   gameNameS="tennis"
                   gameNameB="Tennis"
-                  setOpenModal={setOpenModal}
                   addToBetPlace={addToBetPlace}
-                  isLogin={isLogin}
-                  activeBetSlip={activeBetSlip}
-                  // isMobile={isMobile}
-                  bets={bets}
-                  betData={betData}
                   showStar={false}
                 />
               )}
@@ -147,7 +129,6 @@ const DesktopFixtureTennis = ({ type, fixtureData, isLoading }) => {
           )}
         </>
       )}
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

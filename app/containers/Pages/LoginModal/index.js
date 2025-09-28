@@ -18,6 +18,7 @@ const style = {
   outline: 'none',
   p: 0,
   borderRadius: '10px',
+  overflowY: 'auto',
 };
 
 export default function LoginModal({ isOpen, handleClose }) {

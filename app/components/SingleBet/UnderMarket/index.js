@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { intToString } from '@/utils/margeData';
 import { isLoggedIn } from '@/utils/apiHandlers';
-import { LoginModal } from '@/containers/pageListAsync';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { useMediaQuery } from '@mui/material';
 import { updatePlacedBetCalculation } from '@/utils/helper';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const UnderMarket = ({
   heading,
@@ -19,7 +19,7 @@ const UnderMarket = ({
   competition_name,
 }) => {
   const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
+
   const [bets, setBets] = useState([]);
   const inplay = data.inplay;
   const betData = useSelector((state) => state.bet.selectedBet);
@@ -54,40 +54,44 @@ const UnderMarket = ({
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(_marketData?.market_id),
-        eventId: Number(eventId),
-        gameId: 1,
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: data?.name,
-        market: _marketData?.market_name,
-        gameType: _marketData?.market_name,
-        nation: betDetails,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: data?.name,
-        percent: 100,
-        selection: betDetails,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-        _marketData,
-      },
-    ]);
-    if (!isMobile) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(_marketData?.market_id),
+          eventId: Number(eventId),
+          gameId: 1,
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: data?.name,
+          market: _marketData?.market_name,
+          gameType: _marketData?.market_name,
+          nation: betDetails,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: data?.name,
+          percent: 100,
+          selection: betDetails,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+          _marketData,
+        },
+      ]);
+      if (!isMobile) {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+    } else {
+      dispatch(openModal('login'));
     }
   };
   let minLimitOdds, maxLimitOdds;
@@ -176,23 +180,19 @@ const UnderMarket = ({
                           <BlueBtn disabled={true} />
                           <BlueBtn
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.backPrice1 || items?.back?.[0]?.price,
-                                  data?.market_name,
-                                  'BACK',
-                                  data,
-                                  type,
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.backPrice1 || items?.back?.[0]?.price,
+                                data?.market_name,
+                                'BACK',
+                                data,
+                                type,
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             text={items?.backPrice1 || '0'}
                             size={
@@ -211,23 +211,19 @@ const UnderMarket = ({
                                 : ''
                             }
                             onClick={async () => {
-                              if (isLogin) {
-                                await addToBetPlace(
-                                  data?.eventid || data?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Soccer',
-                                  items?.layPrice1 || items?.lay?.[0]?.price,
-                                  data?.market_name,
-                                  'LAY',
-                                  data,
-                                  type,
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              } else {
-                                setOpenModal(true);
-                              }
+                              await addToBetPlace(
+                                data?.eventid || data?.matchId,
+                                items?.selectionId,
+                                items?.runnerName,
+                                'Soccer',
+                                items?.layPrice1 || items?.lay?.[0]?.price,
+                                data?.market_name,
+                                'LAY',
+                                data,
+                                type,
+                                minLimitOdds,
+                                maxLimitOdds,
+                              );
                             }}
                             disabled={items?.layPrice1 ? false : true}
                           />
@@ -254,7 +250,6 @@ const UnderMarket = ({
           </>
         )}
       </div>
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

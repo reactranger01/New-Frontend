@@ -9,22 +9,19 @@ import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureData } from '@/utils/helper';
 import { useMediaQuery } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const Cricket = () => {
   const isLogin = isLoggedIn();
   // eslint-disable-next-line
   const [isLoading, setisLoading] = useState(false);
   const [loaderOneTime, setLoaderOneTime] = useState(false);
-  const betData = useSelector((state) => state.bet.selectedBet);
   const [inplayTrue, setInplayTrue] = useState([]);
   const [inplayFalse, setInplayFalse] = useState([]);
   // eslint-disable-next-line
-  const [openModal, setOpenModal] = useState(false);
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery('(max-width:660px)');
-  const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
   useEffect(() => {
     if (bets?.length > 0) {
       dispatch(fetchBetDetailsAction(bets));
@@ -121,12 +118,6 @@ const Cricket = () => {
               gameNameS="cricket"
               gameNameB="Cricket"
               addToBetPlace={addToBetPlace}
-              setOpenModal={setOpenModal}
-              isLogin={isLogin}
-              activeBetSlip={activeBetSlip}
-              // isMobile={isMobile}
-              bets={bets}
-              betData={betData}
             />
           )}
 
@@ -138,13 +129,7 @@ const Cricket = () => {
                 inplayData={inplayFalse}
                 gameNameS="cricket"
                 gameNameB="Cricket"
-                setOpenModal={setOpenModal}
                 addToBetPlace={addToBetPlace}
-                isLogin={isLogin}
-                activeBetSlip={activeBetSlip}
-                // isMobile={isMobile}
-                bets={bets}
-                betData={betData}
               />
             )
           )}

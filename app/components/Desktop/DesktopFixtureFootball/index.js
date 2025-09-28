@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import 'swiper/css';
-import { useDispatch, useSelector } from 'react-redux';
-import { isLoggedIn } from '@/utils/apiHandlers';
+import { useDispatch } from 'react-redux';
 import { fetchBetDetailsAction } from '@/redux/actions';
-import { LoginModal } from '@/containers/pageListAsync';
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import DesktopMarketAll from '@/components/DesktopMarketAll';
 import DesktopGameHeader from '../DesktopGameHeader';
 import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
+import { openModal } from '@/redux/Slices/modalSlice';
+import { isLoggedIn } from '@/utils/apiHandlers';
 
 const DesktopFixtureFootball = ({ type, fixtureData, isLoading }) => {
-  const isLogin = isLoggedIn();
-  const [openModal, setOpenModal] = useState(false);
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
-  const betData = useSelector((state) => state.bet.selectedBet);
   const isMobile = useMediaQuery('(max-width:660px)');
-  const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
+  const isLogin = isLoggedIn();
 
   const sortedInplayFalseMatches = fixtureData.sort((a, b) => {
     return new Date(a.matchDateTime) - new Date(b.matchDateTime);
@@ -40,34 +37,38 @@ const DesktopFixtureFootball = ({ type, fixtureData, isLoading }) => {
     minimumBet,
     maximumBet,
   ) => {
-    setBets([
-      {
-        marketId: String(market_id),
-        eventId: Number(eventId),
-        gameId: Number(sportId),
-        selectionId: String(selectionId),
-        betOn: selectType,
-        price: parseFloat(OddsPrice),
-        stake: '',
-        eventType: game,
-        competition: competition_name,
-        event: name,
-        market: betType,
-        gameType: betType,
-        nation: betDetails?.runnerName,
-        type: selectType,
-        calcFact: 0,
-        bettingOn: betType,
-        runners: 2,
-        row: 1,
-        matchName: name,
-        percent: 100,
-        selection: betDetails?.runnerName,
-        minimumBet: minimumBet || '',
-        maximumBet: maximumBet || '',
-        _marketData,
-      },
-    ]);
+    if (isLogin) {
+      setBets([
+        {
+          marketId: String(market_id),
+          eventId: Number(eventId),
+          gameId: Number(sportId),
+          selectionId: String(selectionId),
+          betOn: selectType,
+          price: parseFloat(OddsPrice),
+          stake: '',
+          eventType: game,
+          competition: competition_name,
+          event: name,
+          market: betType,
+          gameType: betType,
+          nation: betDetails?.runnerName,
+          type: selectType,
+          calcFact: 0,
+          bettingOn: betType,
+          runners: 2,
+          row: 1,
+          matchName: name,
+          percent: 100,
+          selection: betDetails?.runnerName,
+          minimumBet: minimumBet || '',
+          maximumBet: maximumBet || '',
+          _marketData,
+        },
+      ]);
+    } else {
+      dispatch(openModal('login'));
+    }
   };
 
   useEffect(() => {
@@ -103,13 +104,7 @@ const DesktopFixtureFootball = ({ type, fixtureData, isLoading }) => {
                   inplayData={fixtureData}
                   gameNameS="football"
                   gameNameB="Soccer"
-                  setOpenModal={setOpenModal}
                   addToBetPlace={addToBetPlace}
-                  isLogin={isLogin}
-                  activeBetSlip={activeBetSlip}
-                  // isMobile={isMobile}
-                  bets={bets}
-                  betData={betData}
                   showStar={false}
                 />
               )}
@@ -136,13 +131,7 @@ const DesktopFixtureFootball = ({ type, fixtureData, isLoading }) => {
                   inplayData={sortedInplayFalseMatches}
                   gameNameS="football"
                   gameNameB="Soccer"
-                  setOpenModal={setOpenModal}
                   addToBetPlace={addToBetPlace}
-                  isLogin={isLogin}
-                  activeBetSlip={activeBetSlip}
-                  isMobile={isMobile}
-                  bets={bets}
-                  betData={betData}
                   showStar={false}
                 />
               )}
@@ -150,7 +139,6 @@ const DesktopFixtureFootball = ({ type, fixtureData, isLoading }) => {
           )}
         </>
       )}
-      {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
     </div>
   );
 };

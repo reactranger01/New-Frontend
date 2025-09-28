@@ -31,7 +31,7 @@ const MobFootball = () => {
   const { eventId } = useParams();
   const [isLiveTv, setIsLiveTV] = useState(false);
   const [isLiveMobile, setIsLiveMobile] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+
   const [isLoading, setLoading] = useState(false);
   const [loaderOneTime, setLoaderOneTime] = useState(false);
   const stateUpdate = useSelector(
@@ -201,7 +201,6 @@ const MobFootball = () => {
               />
             ),
           )}
-        {openModal && <LoginModal open={openModal} setOpen={setOpenModal} />}
       </div>
     </>
   );
