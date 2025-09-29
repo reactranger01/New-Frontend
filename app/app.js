@@ -43,6 +43,7 @@ import PrivateRoute from './containers/auth/PrivateRoute';
 import { useMediaQuery } from '@mui/material';
 import DesktopHome from './containers/DesktopHome';
 import ModalManager from './components/ModalManager';
+import NotificationPage from './containers/NotificationPage';
 
 const sagaMiddleware = createSagaMiddleware();
 const reducer = createReducer();
@@ -131,6 +132,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Settings />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <PrivateRoute>
+                  <NotificationPage />
                 </PrivateRoute>
               }
             />
