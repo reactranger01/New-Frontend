@@ -1,8 +1,10 @@
 import GradientHeading from '@/components/GradientHeading';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
+import { getQueryString } from '@/utils/formatter';
 import { reactIcons } from '@/utils/icons';
 import dayjs from 'dayjs';
+import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,61 +12,64 @@ import 'react-datepicker/dist/react-datepicker.css';
 function OpenBets() {
   const startDatePickerRef = useRef(null);
   const endDatePickerRef = useRef(null);
+
   const [page, setPage] = useState(1);
-  const take = 2;
+  const take = 10; // Number of items per page
+  const today = new Date();
 
   const [startDate, setStartDate] = useState(() => {
-    const today = new Date();
     today.setDate(today.getDate() - 2);
     return today;
   });
   const [endDate, setEndDate] = useState(new Date());
   const [selectedSport, setSelectedSport] = useState('cricket');
-  // eslint-disable-next-line
-  const [betsData, setBetsData] = useState({});
+  const [betsData, setBetsData] = useState({ bets: [], totalCount: 0 });
+
   const getAllBets = async () => {
     const islogin = isLoggedIn();
     if (islogin) {
       try {
-        const response = await getAuthData(
-          `/bet/get-past-currentbets?status=current&limit=1000&offset=0&startDate=${dayjs(
-            startDate,
-          )
-            .startOf('day')
-            .toISOString()}&endDate=${dayjs(endDate)
-            .endOf('day')
-            .toISOString()}`,
-        );
+        const params = getQueryString({
+          offset: (page - 1) * take,
+          limit: take,
+          startDate: moment(startDate).startOf('day').toISOString(),
+          endDate: moment(endDate).endOf('day').toISOString(),
+          status: 'current',
+          sportId:
+            selectedSport === 'cricket'
+              ? 4
+              : selectedSport === 'soccer'
+              ? 1
+              : selectedSport === 'tennis'
+              ? 2
+              : '',
+        });
+
+        const response = await getAuthData(`/user/GetAllEventsBets?${params}`);
         if (response?.status === 200) {
-          setBetsData(response?.data);
-          setPage(1);
+          setBetsData({
+            bets: response?.data?.data || [],
+            totalCount: response?.data?.total || 0,
+          });
         }
-        return null;
       } catch (e) {
         console.error(e);
-        return null;
       }
     }
   };
+
   useEffect(() => {
     getAllBets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [startDate, endDate]);
+  }, [page, startDate, endDate, selectedSport]);
 
-  const filteredBets =
-    betsData?.bets?.filter(
-      (bet) => bet?.event_type?.toLowerCase() === selectedSport.toLowerCase(),
-    ) || [];
-
-  const filteredTotalCount = filteredBets.length;
-
-  // slice filtered bets for current page
-  const pagedBets = filteredBets.slice((page - 1) * take, page * take);
   return (
     <div className="min-h-screen mx-1 md:mx-0">
       <div className="pb-2 md:py-2">
         <GradientHeading heading={'Open Bets'} />
       </div>
+
+      {/* Filters */}
       <div className="flex gap-[5px] items-center w-full mb-2">
         <div className="w-full">
           <p className="text-14">From Date</p>
@@ -73,7 +78,10 @@ function OpenBets() {
               ref={startDatePickerRef}
               className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
               selected={startDate}
-              onChange={(date) => setStartDate(date)}
+              onChange={(date) => {
+                setStartDate(date);
+                setPage(1);
+              }}
               popperPlacement="bottom-start"
               dateFormat="dd-MM-yyyy"
             />
@@ -92,7 +100,10 @@ function OpenBets() {
               ref={endDatePickerRef}
               className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
               selected={endDate}
-              onChange={(date) => setEndDate(date)}
+              onChange={(date) => {
+                setEndDate(date);
+                setPage(1);
+              }}
               popperPlacement="bottom-start"
               dateFormat="dd-MM-yyyy"
             />
@@ -105,15 +116,17 @@ function OpenBets() {
           </div>
         </div>
       </div>
+
       <div className="flex gap-[5px] items-center w-full">
         <div className="w-full">
           <p className="text-14">Type</p>
           <select
             value={selectedSport}
-            onChange={(e) => setSelectedSport(e.target.value)}
+            onChange={(e) => {
+              setSelectedSport(e.target.value);
+              setPage(1);
+            }}
             className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
-            name="selectedSport"
-            id=""
           >
             <option value="cricket">Cricket</option>
             <option value="soccer">Soccer</option>
@@ -122,15 +135,19 @@ function OpenBets() {
         </div>
         <div className="w-full">
           <div className="text-14 h-6"></div>
-          <button className="bg-primary-1300 text-16  h-10 flex-center rounded-[4px] w-full text-white">
+          <button
+            onClick={() => setPage(1)}
+            className="bg-primary-1300 text-16 h-10 flex-center rounded-[4px] w-full text-white"
+          >
             APPLY
           </button>
         </div>
       </div>
-      {/* Div of all bets */}
+
+      {/* Bets List */}
       <div className="my-4">
-        {pagedBets.length > 0 ? (
-          pagedBets.map((item, index) => (
+        {betsData.bets.length > 0 ? (
+          betsData.bets.map((item, index) => (
             <div
               key={index}
               className="bg-white px-[10px] py-2 rounded-[5px] mb-2 flex justify-between gap-2 shadow-[0_1px_10px_rgba(0,0,0,0.2)]"
@@ -149,7 +166,7 @@ function OpenBets() {
                 </div>
               </div>
               <div className="bg-primary-1300 px-3 text-white font-semibold h-7 flex-center text-10 rounded-sm">
-                1
+                {item?.bet_count}
               </div>
             </div>
           ))
@@ -158,9 +175,11 @@ function OpenBets() {
             No Event Found
           </div>
         )}
-        {filteredTotalCount > 0 && (
+
+        {/* Pagination */}
+        {betsData?.totalCount > 0 && (
           <Pagination
-            pageCount={filteredTotalCount}
+            pageCount={betsData?.totalCount}
             setPageNumber={setPage}
             take={take}
           />

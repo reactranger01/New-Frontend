@@ -1,7 +1,6 @@
 import { isYupError, parseYupError } from '@/utils/Yup';
-import { postData, setAuthCookie } from '@/utils/apiHandlers';
-import { loginValidation } from '@/utils/validation';
-import Cookies from 'js-cookie';
+import { postData } from '@/utils/apiHandlers';
+import { otpValidationSchema, registerValidation } from '@/utils/validation';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
@@ -49,57 +48,124 @@ const style = {
 
 const RegisterModal = ({ isOpen, handleClose }) => {
   const dispatch = useDispatch();
-  const [otpSent, setOtpSent] = useState(false);
+  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(false);
   const [useUserId, setUseUserID] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isConfirmPassword, setIsConfirmPassword] = useState(false);
   const [form, setForm] = useState({
     username: '',
     password: '',
+    mobile: '',
+    dialCode: '91',
+    otp: '',
   });
-  const [formError, setFormError] = useState({
-    username: '',
-    password: '',
-  });
+  const [formError, setFormError] = useState({});
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+
+    if (name === 'mobile') {
+      value = value.replace(/\D/g, '');
+    }
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
+
     setFormError({
       ...formError,
       [name]: '',
     });
   };
+  const handleSendOtp = async () => {
+    try {
+      // Validate payload first
+      const validationPayload = {
+        mobile: form?.mobile,
+      };
+
+      await otpValidationSchema.validate(validationPayload, {
+        abortEarly: false,
+      });
+      const toastId = toast.loading('Sending OTP...');
+      setIsOtpButtonDisabled(true);
+      try {
+        const payload = {
+          mobile: form?.dialCode + form?.mobile,
+        };
+        const response = await postData(
+          '/user/send-verification-code',
+          payload,
+        );
+
+        if (response?.status) {
+          // setResetOtpTimer(true);
+          setIsOtpSent(true);
+          toast.success(response?.data?.message);
+        } else {
+          toast.error(
+            response?.error?.message ||
+              response?.error?.error ||
+              'Internal Server Error',
+          );
+        }
+      } catch (apiError) {
+        console.error('API Error:', apiError);
+        toast.error('Something went wrong. Please try again.');
+      } finally {
+        setIsOtpButtonDisabled(false);
+        toast.dismiss(toastId);
+      }
+    } catch (validationError) {
+      // Handle Yup validation errors
+      if (isYupError(validationError)) {
+        setFormError(parseYupError(validationError));
+      } else {
+        toast.dismiss();
+        toast.error(validationError?.message || 'Unauthorized');
+      }
+    }
+  };
+
+  console.log(form);
+  console.log(formError);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setFormError({});
-      await loginValidation.validate(form, {
+      const verifyPayload = {
+        username: form?.username,
+        password: form?.password,
+        mobile: form?.mobile,
+        otp: form?.otp,
+        confirmPassword: form?.confirmPassword,
+      };
+      await registerValidation.validate(verifyPayload, {
         abortEarly: false,
       });
-      const response = await postData('/user/signin', form);
-      if (response?.status === 200 && response?.data?.data?.ut === 'USER') {
-        setAuthCookie();
-        Cookies.set('__users__isLoggedIn', response?.data?.data?.token);
-        localStorage.setItem(
-          '__users__isLoggedIn',
-          response?.data?.data?.token,
-        );
-        toast.success('Login Successfully');
+      const payload = {
+        username: form?.username,
+        password: form?.password,
+        phoneNumber: form?.dialCode + form?.mobile,
+        otp: form?.otp,
+        status: true,
+        confirmPassword: form?.confirmPassword,
+      };
+      const response = await postData('/user/register', payload);
+      if (response?.status === 200) {
+        toast.success('Registered Successfully');
         window.location.reload();
 
         handleClose();
-      } else if (
-        response?.status === 200 &&
-        response?.data?.data?.ut !== 'USER'
-      ) {
-        toast.error('User not found');
       } else {
         toast.dismiss();
         toast.error(response?.data?.error || 'Something went wrong');
       }
     } catch (error) {
+      console.log(error);
       if (isYupError(error)) {
         setFormError(parseYupError(error));
       } else {
@@ -133,7 +199,7 @@ const RegisterModal = ({ isOpen, handleClose }) => {
               <div className="mx-auto">
                 <img src="/images/lotusLogo.jpg" className="h-[30px]" alt="" />
               </div>
-              <h1 className="text-center text-20 font-bold text-white ">
+              <h1 className="text-center text-20 font-bold text-white mb-4 ">
                 Register
               </h1>
 
@@ -142,47 +208,50 @@ const RegisterModal = ({ isOpen, handleClose }) => {
                   <div className="border-b-2 border-[#f4d821] pb-1">
                     <select
                       onChange={handleChange}
-                      value={form?.username}
+                      value={form?.dialCode}
                       name="dialCode"
-                      placeholder="Enter User Id*"
                       className="text-16 font-medium text-white bg-transparent placeholder:text-white outline-none"
                     >
-                      <option className="text-black" value="+91">
+                      <option className="text-black" value="91">
                         +91
                       </option>
-                      <option className="text-black" value="+880">
+                      <option className="text-black" value="880">
                         +880
                       </option>
-                      <option className="text-black" value="+971">
+                      <option className="text-black" value="971">
                         +971
                       </option>
-                      <option className="text-black" value="+977">
+                      <option className="text-black" value="977">
                         +977
                       </option>
-                      <option className="text-black" value="+92">
+                      <option className="text-black" value="92">
                         +92
                       </option>
                     </select>
                   </div>
                   <div className="border-b-2 border-[#f4d821] pb-1 w-full relative">
                     <input
-                      type="number"
+                      type="text"
                       onChange={handleChange}
-                      value={form?.username}
-                      name="username"
+                      value={form?.mobile}
+                      name="mobile"
+                      maxLength={10}
                       placeholder="Enter Mobile Number*"
                       className="text-16 font-medium text-white bg-transparent placeholder:text-white outline-none w-full"
                     />
-                    <span
-                      onClick={() => setOtpSent(true)}
-                      className="absolute bottom-2 right-[10px] flex items-center justify-center py-1 px-3 rounded-md bg-[#F4D821] text-black text-14"
-                    >
-                      GET OTP
-                    </span>
+                    {!isOtpSent && (
+                      <span
+                        onClick={handleSendOtp}
+                        disabled={isOtpButtonDisabled}
+                        className="absolute bottom-2 right-[10px] flex items-center justify-center py-1 px-3 rounded-md bg-[#F4D821] text-black text-14"
+                      >
+                        GET OTP
+                      </span>
+                    )}
                   </div>
                 </div>
                 {formError?.mobile && (
-                  <p className="text-red-600 text-12">{formError?.mobile}</p>
+                  <p className="text-red-500 text-12">{formError?.mobile}</p>
                 )}
                 {!useUserId && (
                   <div className="flex justify-end items-center">
@@ -197,24 +266,29 @@ const RegisterModal = ({ isOpen, handleClose }) => {
                     </button>
                   </div>
                 )}
-                {otpSent && (
-                  <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
-                    <input
-                      type="number"
-                      onChange={handleChange}
-                      value={form?.otp}
-                      name="otp"
-                      placeholder="Enter OTP*"
-                      className="text-16 font-medium text-white pl-6 bg-transparent placeholder:text-white outline-none"
-                    />
-                    <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
-                      {reactIcons.key}
-                    </span>
-                  </div>
+                {isOtpSent && (
+                  <>
+                    <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
+                      <input
+                        type="number"
+                        onChange={handleChange}
+                        value={form?.otp}
+                        name="otp"
+                        placeholder="Enter OTP*"
+                        className="text-16 font-medium text-white pl-6 bg-transparent placeholder:text-white outline-none"
+                      />
+                      <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
+                        {reactIcons.key}
+                      </span>
+                    </div>
+                    {formError?.otp && (
+                      <p className="text-red-500 text-12">{formError?.otp}</p>
+                    )}
+                  </>
                 )}
                 {useUserId && (
                   <>
-                    <div className="border-b-2 border-[#f4d821] pb-1 relative">
+                    <div className="border-b-2 border-[#f4d821] pb-1 mt-2 relative">
                       <input
                         type="text"
                         onChange={handleChange}
@@ -228,7 +302,7 @@ const RegisterModal = ({ isOpen, handleClose }) => {
                       </span>
                     </div>
                     {formError?.username && (
-                      <p className="text-red-600 text-12">
+                      <p className="text-red-500 text-12">
                         {formError?.username}
                       </p>
                     )}
@@ -254,6 +328,9 @@ const RegisterModal = ({ isOpen, handleClose }) => {
                     {isPassword ? reactIcons.eye : reactIcons.eyeSlash}
                   </span>
                 </div>
+                {formError?.password && (
+                  <p className="text-red-500 text-12">{formError?.password}</p>
+                )}
                 <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
                   <input
                     type={!isConfirmPassword ? 'password' : 'text'}
@@ -273,21 +350,27 @@ const RegisterModal = ({ isOpen, handleClose }) => {
                     {isConfirmPassword ? reactIcons.eye : reactIcons.eyeSlash}
                   </span>
                 </div>
+                {formError?.confirmPassword && (
+                  <p className="text-red-500 text-12">
+                    {formError?.confirmPassword}
+                  </p>
+                )}
                 <div className="flex justify-end items-center">
-                  <button
+                  {/* <button
                     // onClick={(e) => {
                     //   setUseUserID(true);
                     // }}
                     className="ml-auto underline text-12 my-1 text-right text-white"
                   >
                     Have a referral code?
-                  </button>
+                  </button> */}
                 </div>
 
                 <button
                   type="submit"
+                  disabled={!isOtpSent}
                   onClick={handleSubmit}
-                  className="flex items-center mt-4 w-full justify-center py-2 rounded-md bg-[#F4D821] text-black text-14 font-medium"
+                  className="flex items-center mt-4 w-full justify-center py-2 rounded-md bg-[#F4D821] text-black text-14 font-medium disabled:opacity-50"
                 >
                   Register
                 </button>

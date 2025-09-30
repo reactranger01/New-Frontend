@@ -25,11 +25,13 @@ export const useFetchMyBetsData = ({
       startDate: moment(today).startOf('day').toISOString(),
       endDate: moment(today).endOf('day').toISOString(),
       eventId: eventId,
+      status: 'current',
     });
 
     try {
       const response = await getAuthData(
-        `/bet/get-past-currentbets?status=current&${params}`,
+        `/bet/get-past-currentbets?${params}`,
+        // `/user/GetAllEventsBets?${params}`,
       );
 
       if (response?.status === 200) {

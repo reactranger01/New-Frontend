@@ -17,6 +17,7 @@ import InnerHeading from '../InnerHeading';
 
 const MobTennis = () => {
   const [innerHeadTab, setInnerHeadTab] = useState(1);
+  const [openBetCount, setOpenBetCount] = useState(0);
   const isLogin = isLoggedIn();
   const { eventId } = useParams();
   const [fixtureEventName, setFixtureEventName] = useState([]);
@@ -160,6 +161,7 @@ const MobTennis = () => {
           <InnerHeading
             activeTab={innerHeadTab}
             setActiveTab={setInnerHeadTab}
+            openBetCount={openBetCount}
           />
         </div>
         {innerHeadTab === 1 ? (
@@ -196,7 +198,11 @@ const MobTennis = () => {
               ),
             )
         ) : innerHeadTab === 2 ? (
-          <MobOpenBets eventId={eventId} sport={'tennis'} />
+          <MobOpenBets
+            eventId={eventId}
+            sport={'tennis'}
+            setOpenBetCount={setOpenBetCount}
+          />
         ) : (
           ''
         )}

@@ -32,6 +32,7 @@ import MobOpenBets from '@/components/MobOpenBets';
 
 const MobCricket = () => {
   const [innerHeadTab, setInnerHeadTab] = useState(1);
+  const [openBetCount, setOpenBetCount] = useState(0);
 
   const [matchOdd, setMatchOdd] = useState(false);
   const [isLiveMobile, setIsLiveMobile] = useState(false);
@@ -442,7 +443,7 @@ const MobCricket = () => {
   return (
     <>
       {isLoading && !loaderOneTime && <Loading />}
-      <div className="min-h-[550px]">
+      <div className="min-h-[550px] ">
         <div
           className={`w-full md:p-1 p-0 md:mt-2 mt-0 shadow-md ${
             isLiveMobile ? '' : 'hidden'
@@ -482,6 +483,7 @@ const MobCricket = () => {
           <InnerHeading
             activeTab={innerHeadTab}
             setActiveTab={setInnerHeadTab}
+            openBetCount={openBetCount}
           />
         </div>
         {innerHeadTab === 1 ? (
@@ -967,7 +969,12 @@ const MobCricket = () => {
             )}
           </>
         ) : innerHeadTab === 2 ? (
-          <MobOpenBets eventId={eventId} sport={'cricket'} />
+          <MobOpenBets
+            eventId={eventId}
+            sport={'cricket'}
+            openBetCount={openBetCount}
+            setOpenBetCount={setOpenBetCount}
+          />
         ) : (
           ''
         )}

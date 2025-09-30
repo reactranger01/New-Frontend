@@ -7,9 +7,53 @@ export const loginValidationSchema = Yup.object({
     .required('Email is required'),
   password: Yup.string().required('Password is required'),
 });
+
 export const loginValidation = Yup.object().shape({
   username: Yup.string().required('Please enter username'),
   password: Yup.string().required('Please enter password'),
+});
+export const otpValidationSchema = Yup.object().shape({
+  // username: Yup.string()
+  //   // .required('Username is required')
+  //   .min(3, 'Username must be at least 3 characters long'),
+
+  // password: Yup.string()
+  //   .required('Password is required')
+  //   .min(6, 'Password must be at least 6 characters long'),
+
+  mobile: Yup.string()
+    .required('Phone number is required')
+    .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
+});
+
+// Register Validation Schema
+export const registerValidation = Yup.object().shape({
+  username: Yup.string(),
+  // .required('Username is required')
+  // .min(3, 'Username must be at least 3 characters long'),
+
+  password: Yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters long'),
+
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
+
+  mobile: Yup.string()
+    .required('Phone number is required')
+    .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
+
+  otp: Yup.string()
+    .required('OTP is required')
+    .matches(/^[0-9]{4,6}$/, 'OTP must be 4 to 6 digits'),
+});
+
+// Optional: Referral Code Validation
+export const referralCodeValidation = Yup.object().shape({
+  referralCode: Yup.string()
+    .optional()
+    .min(4, 'Referral code must be at least 4 characters long'),
 });
 export const resetPasswordValidation = Yup.object().shape({
   oldpassword: Yup.string().required('Please enter your old password'),

@@ -1,9 +1,9 @@
 import { useFetchMyBetsData } from '@/hooks/useFetchMyBetsData';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
-const MobOpenBets = ({ eventId }) => {
+const MobOpenBets = ({ eventId, setOpenBetCount }) => {
   const [activeTab, setActiveTab] = useState(1);
   const { betsData, loading } = useFetchMyBetsData({
     take: 100,
@@ -26,6 +26,10 @@ const MobOpenBets = ({ eventId }) => {
       : activeTab === 2
       ? bookmakerData
       : fancyData;
+
+  useEffect(() => {
+    setOpenBetCount(filteredBets?.length || 0);
+  }, [betsData, activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (
@@ -103,7 +107,7 @@ const MobOpenBets = ({ eventId }) => {
               </div>
             ))
           ) : (
-            <div className="w-full my-4 text-center text-sm bg-[#DEE2E6] rounded-sm text-[#01af70] font-poppins">
+            <div className="w-full my-4 py-2 text-center text-sm bg-[#DEE2E6] rounded-sm text-[#01af70] font-poppins">
               No bets available
             </div>
           )}
@@ -114,5 +118,7 @@ const MobOpenBets = ({ eventId }) => {
 };
 MobOpenBets.propTypes = {
   eventId: PropTypes.string,
+  setOpenBetCount: PropTypes.func,
+  openBetCount: PropTypes.any,
 };
 export default MobOpenBets;

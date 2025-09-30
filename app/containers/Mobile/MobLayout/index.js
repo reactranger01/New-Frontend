@@ -44,10 +44,10 @@ function MobLayout() {
             login && showMarquee
               ? 'mt-[70px]'
               : login && !showMarquee
-              ? 'mt-[56px]'
+              ? 'mt-[66px]'
               : !login && !showMarquee
-              ? 'mt-[56px]'
-              : 'mt-[56px]'
+              ? 'mt-[66px]'
+              : 'mt-[66px]'
           } mb-[56px] px-2 lg:px-0`}
         >
           <Outlet />

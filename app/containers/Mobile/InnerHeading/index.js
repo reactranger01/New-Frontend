@@ -2,7 +2,7 @@ import { reactIcons } from '@/utils/icons';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const InnerHeading = ({ activeTab = 1, setActiveTab }) => {
+const InnerHeading = ({ activeTab = 1, setActiveTab, openBetCount }) => {
   return (
     <div className="grid grid-cols-3 bg-[#1E8067]">
       <div
@@ -19,7 +19,7 @@ const InnerHeading = ({ activeTab = 1, setActiveTab }) => {
           activeTab === 2 && 'border-b-[3px] border-[#f4d821]'
         } text-10 md:text-12 font-bold text-white py-[5px] text-center`}
       >
-        Open Bets (0)
+        Open Bets ({openBetCount})
       </div>
       <div
         onClick={() => setActiveTab(3)}
@@ -36,6 +36,7 @@ const InnerHeading = ({ activeTab = 1, setActiveTab }) => {
 InnerHeading.propTypes = {
   activeTab: PropTypes.bool,
   setActiveTab: PropTypes.func,
+  openBetCount: PropTypes.string,
 };
 
 export default InnerHeading;

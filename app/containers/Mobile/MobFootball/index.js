@@ -23,6 +23,7 @@ const MobFootball = () => {
   const isLogin = isLoggedIn();
 
   const [innerHeadTab, setInnerHeadTab] = useState(1);
+  const [openBetCount, setOpenBetCount] = useState(0);
 
   const location = useLocation();
   const userType = useSelector((state) => state?.user?.userType);
@@ -176,6 +177,7 @@ const MobFootball = () => {
           <InnerHeading
             activeTab={innerHeadTab}
             setActiveTab={setInnerHeadTab}
+            openBetCount={openBetCount}
           />
         </div>
         {innerHeadTab === 1 ? (
@@ -210,7 +212,11 @@ const MobFootball = () => {
               ),
             )
         ) : innerHeadTab === 2 ? (
-          <MobOpenBets eventId={eventId} sport={'football'} />
+          <MobOpenBets
+            eventId={eventId}
+            sport={'football'}
+            setOpenBetCount={setOpenBetCount}
+          />
         ) : (
           ''
         )}
