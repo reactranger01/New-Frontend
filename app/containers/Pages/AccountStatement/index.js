@@ -2,16 +2,22 @@
 import GradientHeading from '@/components/GradientHeading';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
+import { reactIcons } from '@/utils/icons';
 import { numberWithCommas } from '@/utils/numberWithCommas';
-import { Empty } from 'antd';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useSelector } from 'react-redux';
 
 function AccountStatement() {
-  const [startDate, setStartDate] = useState(new Date());
+  const startDatePickerRef = useRef(null);
+  const endDatePickerRef = useRef(null);
+  const [startDate, setStartDate] = useState(() => {
+    const today = new Date();
+    today.setDate(today.getDate() - 2);
+    return today;
+  });
   const { id } = useSelector((state) => state.user || { id: null });
   const [endDate, setEndDate] = useState(new Date());
   const [statementData, setStatementData] = useState([]);
@@ -52,7 +58,7 @@ function AccountStatement() {
   };
   return (
     <div className="min-h-screen mx-1 md:mx-0">
-      <div className=" py-2 mt-3">
+      <div className=" pb-2 md:py-2">
         <h1 className="text-18 md:text-24 font-bold mt-4 md:mt-0">
           <GradientHeading heading={'Account Statement'} />
         </h1>
@@ -61,21 +67,41 @@ function AccountStatement() {
       <div className="flex gap-[5px] items-center w-full mb-2">
         <div className="w-full">
           <p className="text-14">From Date</p>
-          <DatePicker
-            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            popperPlacement="bottom-start"
-          />
+          <div className="relative">
+            <DatePicker
+              ref={startDatePickerRef}
+              className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              popperPlacement="bottom-start"
+              dateFormat="dd-MM-yyyy"
+            />
+            <span
+              onClick={() => startDatePickerRef.current.setFocus()}
+              className="ay-center z-0 right-2 cursor-pointer"
+            >
+              {reactIcons.calendar}
+            </span>
+          </div>
         </div>
         <div className="w-full">
           <p className="text-14">To Date</p>
-          <DatePicker
-            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            popperPlacement="bottom-start"
-          />
+          <div className="relative">
+            <DatePicker
+              ref={endDatePickerRef}
+              className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              popperPlacement="bottom-start"
+              dateFormat="dd-MM-yyyy"
+            />
+            <span
+              onClick={() => endDatePickerRef.current.setFocus()}
+              className="ay-center z-0 right-2 cursor-pointer"
+            >
+              {reactIcons.calendar}
+            </span>
+          </div>
         </div>
       </div>
       <div className="flex gap-[5px] items-center w-full mb-3">
@@ -86,6 +112,8 @@ function AccountStatement() {
             name=""
             id=""
           >
+            <option value="">All</option>
+            <option value="deposit-withdrawal">Deposit/Withdrawal</option>
             <option value="cricket">Cricket</option>
             <option value="soccer">Soccer</option>
             <option value="tennis">Tennis</option>
@@ -111,7 +139,8 @@ function AccountStatement() {
       <div className="data-table overflow-x-auto">
         <table className="overflow-x-auto">
           <thead className="">
-            <tr className="bg-gray-400">
+            <tr className="bg-[#8F8F8F] text-white font-bold">
+              <th>#</th>
               <th>Date & Time</th>
               <th>Description</th>
               <th>Credit</th>
@@ -121,10 +150,10 @@ function AccountStatement() {
           </thead>
           <tbody>
             {statementData.length === 0 ? (
-              <tr className="h-[42px] w-full">
-                <td colSpan={5}>
-                  <div className="text-center flex-center h-[140px]">
-                    <Empty />
+              <tr className=" w-full">
+                <td colSpan={6} className="!p-0">
+                  <div className="p-1 text-center text-14 bg-[#DAE1DF] border border-[#aaa] cursor-pointer">
+                    No Event Found
                   </div>
                 </td>
               </tr>
@@ -134,6 +163,7 @@ function AccountStatement() {
                 {statementData &&
                   statementData.map((_item, index) => (
                     <tr key={index} className="text-center">
+                      <td className="">{index + 1}</td>
                       <td className="">
                         {moment(_item?.createdAt).format(
                           'MMMM Do YYYY, h:mm:ss a',

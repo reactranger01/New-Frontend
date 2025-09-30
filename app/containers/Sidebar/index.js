@@ -16,9 +16,7 @@ const Sidebar = () => {
             <Outlet />
           </div>
           <div className="!w-[290px] mt-[15px] hidden lg:block flex-shrink-0">
-            {!['/change-password', '/my-bets'].includes(location.pathname) && (
-              <BetSlip />
-            )}
+            <BetSlip />
           </div>
         </div>
       </section>

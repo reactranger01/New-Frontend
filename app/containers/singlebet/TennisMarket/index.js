@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const TennisMarket = () => {
+  const [innerHeadTab, setInnerHeadTab] = useState(1);
+
   const isLogin = isLoggedIn();
   const { eventId } = useParams();
   const [allMarketData, setAllMarketData] = useState([]);
@@ -243,7 +245,10 @@ const TennisMarket = () => {
           </div> */}
           </div>
           <div className="my-2">
-            <InnerHeading />
+            <InnerHeading
+              activeTab={innerHeadTab}
+              setActiveTab={setInnerHeadTab}
+            />
           </div>
           {[...allMarketData]
             .sort((a, b) =>

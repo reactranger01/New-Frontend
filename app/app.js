@@ -35,7 +35,6 @@ import {
   Sidebar,
   Tennis,
   TennisMarket,
-  UpdateModal,
   Withdraw,
 } from './containers/pageListAsync';
 import { ImageUpload, NoMarketAvailable } from './components';
@@ -44,6 +43,9 @@ import { useMediaQuery } from '@mui/material';
 import DesktopHome from './containers/DesktopHome';
 import ModalManager from './components/ModalManager';
 import NotificationPage from './containers/NotificationPage';
+import LayoutTwo from './containers/LayoutTwo';
+import OpenBets from './containers/Pages/OpenBets';
+import TransactionsPage from './containers/Pages/TransactionsPage';
 
 const sagaMiddleware = createSagaMiddleware();
 const reducer = createReducer();
@@ -74,12 +76,8 @@ function App() {
           </Route>
           {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/" element={isMobile ? <MobLayout /> : <Sidebar />}>
-            {/* <Route index element={isMobile ? <MobHome /> : <Home />} />
-            <Route path="rules-regulation" element={<RulesRegulation />} /> */}
-            {/* <Route index element={<Casino />} /> */}
             <Route index element={<DesktopHome />} />
             <Route path="/cricket" element={<Cricket />} />
-            <Route path="change-password-first" element={<UpdateModal />} />
             <Route
               path="/cricket/market/:eventId"
               element={isMobile ? <MobCricket /> : <CricketMarket />}
@@ -95,63 +93,31 @@ function App() {
               element={isMobile ? <MobFootball /> : <FootballMarket />}
             />
             <Route path="no-market" element={<NoMarketAvailable />} />
-            <Route
-              path="/my-bets"
-              element={
-                <PrivateRoute>
-                  <MyBets />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="settings-stake"
-              element={
-                <PrivateRoute>
-                  <SettingsMobile />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="account-statement"
-              element={
-                <PrivateRoute>
-                  <AccountStatement />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="profit-loss"
-              element={
-                <PrivateRoute>
-                  <ProfitAndLoss />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/change-password"
-              element={
-                <PrivateRoute>
-                  <Settings />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/notifications"
-              element={
-                <PrivateRoute>
-                  <NotificationPage />
-                </PrivateRoute>
-              }
-            />
+          </Route>
+
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <LayoutTwo />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<MyBets />} />
+            <Route path="bets/1" element={<OpenBets />} />
+            <Route path="bets/2" element={<MyBets />} />
+            <Route path="transactions" element={<TransactionsPage />} />
+            <Route path="account-statement" element={<AccountStatement />} />
+            <Route path="profit-loss" element={<ProfitAndLoss />} />
+            <Route path="settings-stake" element={<SettingsMobile />} />
+            <Route path="change-password" element={<Settings />} />
+            <Route path="notifications" element={<NotificationPage />} />
             <Route path="deposit" element={<Deposit />} />
             <Route path="withdraw" element={<Withdraw />} />
-            <Route path="dashboard/bank-details" element={<BankDetails />} />
+            <Route path="bank-details" element={<BankDetails />} />
+            <Route path="bank-details/add-account" element={<AddAccount />} />
             <Route
-              path="dasboard/bank-details/add-account"
-              element={<AddAccount />}
-            />
-            <Route
-              path="dashboard/bank-details/edit-bank-account-details"
+              path="bank-details/edit-bank-account-details"
               element={<EditBankAccountDetails />}
             />
           </Route>

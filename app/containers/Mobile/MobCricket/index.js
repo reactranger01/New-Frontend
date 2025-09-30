@@ -28,8 +28,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import InnerHeading from '../InnerHeading';
 import { openModal } from '@/redux/Slices/modalSlice';
+import MobOpenBets from '@/components/MobOpenBets';
 
 const MobCricket = () => {
+  const [innerHeadTab, setInnerHeadTab] = useState(1);
+
   const [matchOdd, setMatchOdd] = useState(false);
   const [isLiveMobile, setIsLiveMobile] = useState(false);
   const [singleRowData, setSingleRowData] = useState({});
@@ -476,157 +479,166 @@ const MobCricket = () => {
           ></iframe>
         </div>
         <div className="my-2">
-          <InnerHeading />
+          <InnerHeading
+            activeTab={innerHeadTab}
+            setActiveTab={setInnerHeadTab}
+          />
         </div>
-        {oddsData?.runners?.length > 0 ? (
-          <div className="matchodds    rounded-lg mb-3 ">
-            <div className="bg-[#eceaea]  flex items-center justify-between py-1">
-              <div className="font-bold flex items-center gap-1 text-12 pl-1">
-                <span className="text-sm text-black">{reactIcons.star}</span>{' '}
-                Match Odds
-              </div>
-              <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
-                <p className="mx-auto">BACK</p>
-                <p className="mx-auto">LAY</p>
-              </div>
-            </div>
-            {oddsData === null || oddsData?.runners?.length === 0 ? (
-              <div className="flex justify-center items-center w-full h-11 border-b border-gray-200  bg-white">
-                <span className="text-12">
-                  Odds data is currently unavailable for this match.
-                </span>
-              </div>
-            ) : (
-              <>
-                {oddsData &&
-                  oddsData?.runners &&
-                  oddsData?.runners?.map((items, index) => {
-                    const matchOddsExposer =
-                      updatedCalculationMatchOdds?.type == 'odds' &&
-                      updatedCalculationMatchOdds?.exposer != ''
-                        ? updatedCalculationMatchOdds?.exposer?.find(
-                            (odd) => odd?.id == items?.selectionId,
-                          )
-                        : '';
-                    let minLimitOdds, maxLimitOdds;
-                    if (oddsData.inplay) {
-                      minLimitOdds = oddsData?.inPlayMinLimit;
-                      maxLimitOdds = oddsData?.inPlayMaxLimit;
-                    } else {
-                      minLimitOdds = oddsData?.offPlayMinLimit;
-                      maxLimitOdds = oddsData?.offPlayMaxLimit;
-                    }
-                    return (
-                      <>
-                        <div
-                          key={index}
-                          className="flex bg-white items-center justify-between border-b border-gray-100"
-                        >
-                          <div className="">
-                            <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
-                              {items?.runnerName}
-                            </div>
-                            <div
-                              className={`flex items-center gap-1 justify-start  font-semibold pl-2 text-14 ${
-                                matchOddsExposer &&
-                                matchOddsExposer?.type == 'profit'
-                                  ? 'text-green-700'
-                                  : 'text-[#CE2C16]'
-                              }`}
-                            >
-                              {matchOddsExposer ? (
-                                <>
-                                  {reactIcons?.doubleArrowR}{' '}
-                                  {Number(matchOddsExposer?.data || 0).toFixed(
-                                    2,
-                                  )}
-                                </>
-                              ) : (
-                                ''
-                              )}
-                            </div>
-                          </div>
-                          <div className="w-[132px] grid grid-cols-2">
-                            <BlueBtn
-                              onClick={async () => {
-                                await addToBetPlace(
-                                  oddsData?.eventid || oddsData?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Cricket',
-                                  items?.backPrice1 || items?.back?.[0]?.price,
-                                  oddsData?.market_name,
-                                  'BACK',
-                                  oddsData,
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              }}
-                              text={items?.backPrice1 || '-'}
-                              size={
-                                items?.backsize1 && items?.backPrice1
-                                  ? intToString(items?.backsize1 || 0)
-                                  : ''
-                              }
-                              disabled={items?.backPrice1 ? false : true}
-                              css="w-[65px] mx-auto"
-                            />
-                            <PinkBtn
-                              onClick={async () => {
-                                await addToBetPlace(
-                                  oddsData?.eventid || oddsData?.matchId,
-                                  items?.selectionId,
-                                  items?.runnerName,
-                                  'Cricket',
-                                  items?.layPrice1 || items?.lay?.[0]?.price,
-                                  oddsData?.market_name,
-                                  'LAY',
-                                  oddsData,
-                                  minLimitOdds,
-                                  maxLimitOdds,
-                                );
-                              }}
-                              text={items?.layPrice1 || '-'}
-                              size={
-                                items?.laysize1 && items?.layPrice1
-                                  ? intToString(items?.laysize1 || 0)
-                                  : ''
-                              }
-                              disabled={items?.layPrice1 ? false : true}
-                              css="w-[65px] mx-auto"
-                            />
-                          </div>
-                        </div>
-
-                        {activeBetSlip == Number(items?.selectionId) &&
-                          Number(items?.selectionId) ==
-                            Number(bets[0]?.selectionId) &&
-                          isLoggedIn() &&
-                          betData?.length > 0 &&
-                          isMobile && <NewBetSlip />}
-                      </>
-                    );
-                  })}
-                <div className="flex justify-between">
-                  <div></div>
-                  <div className="w-[138px] relative overflow-hidden">
-                    <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
-                      <div className="text-right pr-1">
-                        Min : {oddsData?.inPlayMinLimit}
-                      </div>
-                      <div className="border-l pl-1 border-black ">
-                        Min : {oddsData?.inPlayMaxLimit}
-                      </div>
-                    </div>
+        {innerHeadTab === 1 ? (
+          <>
+            {oddsData?.runners?.length > 0 ? (
+              <div className="matchodds    rounded-lg mb-3 ">
+                <div className="bg-[#eceaea]  flex items-center justify-between py-1">
+                  <div className="font-bold flex items-center gap-1 text-12 pl-1">
+                    <span className="text-sm text-black">
+                      {reactIcons.star}
+                    </span>{' '}
+                    Match Odds
+                  </div>
+                  <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+                    <p className="mx-auto">BACK</p>
+                    <p className="mx-auto">LAY</p>
                   </div>
                 </div>
-              </>
+                {oddsData === null || oddsData?.runners?.length === 0 ? (
+                  <div className="flex justify-center items-center w-full h-11 border-b border-gray-200  bg-white">
+                    <span className="text-12">
+                      Odds data is currently unavailable for this match.
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    {oddsData &&
+                      oddsData?.runners &&
+                      oddsData?.runners?.map((items, index) => {
+                        const matchOddsExposer =
+                          updatedCalculationMatchOdds?.type == 'odds' &&
+                          updatedCalculationMatchOdds?.exposer != ''
+                            ? updatedCalculationMatchOdds?.exposer?.find(
+                                (odd) => odd?.id == items?.selectionId,
+                              )
+                            : '';
+                        let minLimitOdds, maxLimitOdds;
+                        if (oddsData.inplay) {
+                          minLimitOdds = oddsData?.inPlayMinLimit;
+                          maxLimitOdds = oddsData?.inPlayMaxLimit;
+                        } else {
+                          minLimitOdds = oddsData?.offPlayMinLimit;
+                          maxLimitOdds = oddsData?.offPlayMaxLimit;
+                        }
+                        return (
+                          <>
+                            <div
+                              key={index}
+                              className="flex bg-white items-center justify-between border-b border-gray-100"
+                            >
+                              <div className="">
+                                <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
+                                  {items?.runnerName}
+                                </div>
+                                <div
+                                  className={`flex items-center gap-1 justify-start  font-semibold pl-2 text-14 ${
+                                    matchOddsExposer &&
+                                    matchOddsExposer?.type == 'profit'
+                                      ? 'text-green-700'
+                                      : 'text-[#CE2C16]'
+                                  }`}
+                                >
+                                  {matchOddsExposer ? (
+                                    <>
+                                      {reactIcons?.doubleArrowR}{' '}
+                                      {Number(
+                                        matchOddsExposer?.data || 0,
+                                      ).toFixed(2)}
+                                    </>
+                                  ) : (
+                                    ''
+                                  )}
+                                </div>
+                              </div>
+                              <div className="w-[132px] grid grid-cols-2">
+                                <BlueBtn
+                                  onClick={async () => {
+                                    await addToBetPlace(
+                                      oddsData?.eventid || oddsData?.matchId,
+                                      items?.selectionId,
+                                      items?.runnerName,
+                                      'Cricket',
+                                      items?.backPrice1 ||
+                                        items?.back?.[0]?.price,
+                                      oddsData?.market_name,
+                                      'BACK',
+                                      oddsData,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
+                                  }}
+                                  text={items?.backPrice1 || '-'}
+                                  size={
+                                    items?.backsize1 && items?.backPrice1
+                                      ? intToString(items?.backsize1 || 0)
+                                      : ''
+                                  }
+                                  disabled={items?.backPrice1 ? false : true}
+                                  css="w-[65px] mx-auto"
+                                />
+                                <PinkBtn
+                                  onClick={async () => {
+                                    await addToBetPlace(
+                                      oddsData?.eventid || oddsData?.matchId,
+                                      items?.selectionId,
+                                      items?.runnerName,
+                                      'Cricket',
+                                      items?.layPrice1 ||
+                                        items?.lay?.[0]?.price,
+                                      oddsData?.market_name,
+                                      'LAY',
+                                      oddsData,
+                                      minLimitOdds,
+                                      maxLimitOdds,
+                                    );
+                                  }}
+                                  text={items?.layPrice1 || '-'}
+                                  size={
+                                    items?.laysize1 && items?.layPrice1
+                                      ? intToString(items?.laysize1 || 0)
+                                      : ''
+                                  }
+                                  disabled={items?.layPrice1 ? false : true}
+                                  css="w-[65px] mx-auto"
+                                />
+                              </div>
+                            </div>
+
+                            {activeBetSlip == Number(items?.selectionId) &&
+                              Number(items?.selectionId) ==
+                                Number(bets[0]?.selectionId) &&
+                              isLoggedIn() &&
+                              betData?.length > 0 &&
+                              isMobile && <NewBetSlip />}
+                          </>
+                        );
+                      })}
+                    <div className="flex justify-between">
+                      <div></div>
+                      <div className="w-[138px] relative overflow-hidden">
+                        <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                          <div className="text-right pr-1">
+                            Min : {oddsData?.inPlayMinLimit}
+                          </div>
+                          <div className="border-l pl-1 border-black ">
+                            Min : {oddsData?.inPlayMaxLimit}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              ''
             )}
-          </div>
-        ) : (
-          ''
-        )}
-        {/* {bookmakerTransformData?.[0]?.runners?.length > 0 ? (
+            {/* {bookmakerTransformData?.[0]?.runners?.length > 0 ? (
           <div className="matchoddsbookmaker bg-white rounded-lg mb-3">
             <div className="bg-[#eceaea] flex items-center justify-between py-1">
               <div className="font-bold  text-12 pl-1">
@@ -775,171 +787,189 @@ const MobCricket = () => {
           ''
         )} */}
 
-        {sessionData?.catalogue?.[0]?.runners?.length > 0 && (
-          <div>
-            <div className="bg-[#eceaea] flex items-center justify-between py-1">
-              <div className="font-bold  text-12 pl-1">Fancy</div>
-              <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
-                <p className="mx-auto">BACK</p>
-                <p className="mx-auto">LAY</p>
-              </div>
-            </div>
-            {sessionData === null ||
-            sessionData?.catalogue?.[0]?.runners?.length === 0 ? (
-              <div className="flex mb-16 justify-center items-center w-full h-11 border-b border-gray-200  bg-white">
-                <span className="text-12">
-                  Sessions data is currently unavailable for this match.
-                </span>
-              </div>
-            ) : (
-              <>
-                {sessionData &&
-                  sessionData?.catalogue?.[0] &&
-                  sessionData?.catalogue?.[0]?.runners?.map((items, index) => {
-                    const profitLoss = Array.isArray(sessionBooksetClcuData)
-                      ? sessionBooksetClcuData.find(
-                          (fancy) =>
-                            Number(fancy.selection_id) ===
-                            Number(items?.SelectionId),
-                        )
-                      : null;
+            {sessionData?.catalogue?.[0]?.runners?.length > 0 && (
+              <div>
+                <div className="bg-[#eceaea] flex items-center justify-between py-1">
+                  <div className="font-bold  text-12 pl-1">Fancy</div>
+                  <div className="w-[132px]  grid grid-cols-2 text-12 font-[900] text-black">
+                    <p className="mx-auto">BACK</p>
+                    <p className="mx-auto">LAY</p>
+                  </div>
+                </div>
+                {sessionData === null ||
+                sessionData?.catalogue?.[0]?.runners?.length === 0 ? (
+                  <div className="flex mb-16 justify-center items-center w-full h-11 border-b border-gray-200  bg-white">
+                    <span className="text-12">
+                      Sessions data is currently unavailable for this match.
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    {sessionData &&
+                      sessionData?.catalogue?.[0] &&
+                      sessionData?.catalogue?.[0]?.runners?.map(
+                        (items, index) => {
+                          const profitLoss = Array.isArray(
+                            sessionBooksetClcuData,
+                          )
+                            ? sessionBooksetClcuData.find(
+                                (fancy) =>
+                                  Number(fancy.selection_id) ===
+                                  Number(items?.SelectionId),
+                              )
+                            : null;
 
-                    return (
-                      <>
-                        <div
-                          key={index}
-                          className={`flex items-center justify-between border-b border-gray-100 bg-white  my-1 ${
-                            index == index - 1 && 'mb-16'
-                          }`}
-                        >
-                          <div className="leading-1 w-[55%] ">
-                            <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
-                              {items?.RunnerName}
-                            </div>
-                            <div className="flex gap-[2px] ">
-                              {profitLoss?.max_loss && (
-                                <span className="text-12 text-black">
-                                  Max Exposure:
-                                </span>
-                              )}
-                              <span
-                                className={`text-12  font-semibold ${
-                                  profitLoss?.max_loss > 0
-                                    ? 'text-green-500'
-                                    : 'text-red-500'
+                          return (
+                            <>
+                              <div
+                                key={index}
+                                className={`flex items-center justify-between border-b border-gray-100 bg-white  my-1 ${
+                                  index == index - 1 && 'mb-16'
                                 }`}
                               >
-                                {profitLoss?.max_loss.toFixed(2)}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex">
-                            {isLogin && (
-                              <div
-                                onClick={() => {
-                                  if (profitLoss) {
-                                    handleShowSessionRisk(items);
-                                  }
-                                }}
-                                className={` ${
-                                  profitLoss ? 'text-black' : '!text-[#7c7979]'
-                                } text-15 flex justify-center items-center`}
-                              >
-                                {reactIcons?.dladder}
-                              </div>
-                            )}
-
-                            <div className=" relative w-[132px]">
-                              <div className="grid grid-cols-2">
-                                <PinkBtn
-                                  onClick={async () => {
-                                    if (isLogin) {
-                                      await addToNormalBetPlace(
-                                        items,
-                                        'LAY',
-                                        index,
-                                        items.LayPrice1,
-                                        sessionData.market,
-                                        matchData?.name,
-                                        items.LaySize1,
-                                        items.RunnerName,
-                                        sessionData,
-                                        minLimitsession,
-                                        maxLimitsession,
-                                      );
-                                    } else {
-                                      setOpenModal(true);
-                                    }
-                                  }}
-                                  text={items?.LayPrice1 || '0'}
-                                  size={
-                                    items?.LaySize1 && items?.LayPrice1
-                                      ? intToString(items?.LaySize1)
-                                      : '0'
-                                  }
-                                  disabled={items?.LayPrice1 ? false : true}
-                                  css="w-[65px] mx-auto"
-                                />
-                                <BlueBtn
-                                  onClick={async () => {
-                                    if (isLogin) {
-                                      await addToNormalBetPlace(
-                                        items,
-                                        'BACK',
-                                        index,
-                                        items.BackPrice1,
-                                        sessionData.market,
-                                        matchData?.name,
-                                        items.BackSize1,
-                                        items.RunnerName,
-                                        sessionData,
-                                        minLimitsession,
-                                        maxLimitsession,
-                                      );
-                                    } else {
-                                      setOpenModal(true);
-                                    }
-                                  }}
-                                  text={items?.BackPrice1 || '0'}
-                                  size={
-                                    items?.BackSize1 && items?.BackPrice1
-                                      ? intToString(items?.BackSize1)
-                                      : '0'
-                                  }
-                                  disabled={items?.BackPrice1 ? false : true}
-                                  css="w-[65px] mx-auto"
-                                />
-                              </div>
-                              {items?.GameStatus !== '' &&
-                                items?.GameStatus !== 'ACTIVE' && (
-                                  <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
-                                    <SuspendedBtn status={items?.GameStatus} />
+                                <div className="leading-1 w-[55%] ">
+                                  <div className="flex-1 text-black pl-2 text-12 font-lato font-bold">
+                                    {items?.RunnerName}
                                   </div>
-                                )}
-                            </div>
-                          </div>
-                        </div>
+                                  <div className="flex gap-[2px] ">
+                                    {profitLoss?.max_loss && (
+                                      <span className="text-12 text-black">
+                                        Max Exposure:
+                                      </span>
+                                    )}
+                                    <span
+                                      className={`text-12  font-semibold ${
+                                        profitLoss?.max_loss > 0
+                                          ? 'text-green-500'
+                                          : 'text-red-500'
+                                      }`}
+                                    >
+                                      {profitLoss?.max_loss.toFixed(2)}
+                                    </span>
+                                  </div>
+                                </div>
 
-                        {activeBetSlip == items?.SelectionId &&
-                          Number(items?.SelectionId) ==
-                            Number(betsFancy[0]?.selectionId) &&
-                          isLoggedIn() &&
-                          betData?.length > 0 &&
-                          isMobile && <NewBetSlip />}
-                      </>
-                    );
-                  })}
-              </>
+                                <div className="flex">
+                                  {isLogin && (
+                                    <div
+                                      onClick={() => {
+                                        if (profitLoss) {
+                                          handleShowSessionRisk(items);
+                                        }
+                                      }}
+                                      className={` ${
+                                        profitLoss
+                                          ? 'text-black'
+                                          : '!text-[#7c7979]'
+                                      } text-15 flex justify-center items-center`}
+                                    >
+                                      {reactIcons?.dladder}
+                                    </div>
+                                  )}
+
+                                  <div className=" relative w-[132px]">
+                                    <div className="grid grid-cols-2">
+                                      <PinkBtn
+                                        onClick={async () => {
+                                          if (isLogin) {
+                                            await addToNormalBetPlace(
+                                              items,
+                                              'LAY',
+                                              index,
+                                              items.LayPrice1,
+                                              sessionData.market,
+                                              matchData?.name,
+                                              items.LaySize1,
+                                              items.RunnerName,
+                                              sessionData,
+                                              minLimitsession,
+                                              maxLimitsession,
+                                            );
+                                          } else {
+                                            setOpenModal(true);
+                                          }
+                                        }}
+                                        text={items?.LayPrice1 || '0'}
+                                        size={
+                                          items?.LaySize1 && items?.LayPrice1
+                                            ? intToString(items?.LaySize1)
+                                            : '0'
+                                        }
+                                        disabled={
+                                          items?.LayPrice1 ? false : true
+                                        }
+                                        css="w-[65px] mx-auto"
+                                      />
+                                      <BlueBtn
+                                        onClick={async () => {
+                                          if (isLogin) {
+                                            await addToNormalBetPlace(
+                                              items,
+                                              'BACK',
+                                              index,
+                                              items.BackPrice1,
+                                              sessionData.market,
+                                              matchData?.name,
+                                              items.BackSize1,
+                                              items.RunnerName,
+                                              sessionData,
+                                              minLimitsession,
+                                              maxLimitsession,
+                                            );
+                                          } else {
+                                            setOpenModal(true);
+                                          }
+                                        }}
+                                        text={items?.BackPrice1 || '0'}
+                                        size={
+                                          items?.BackSize1 && items?.BackPrice1
+                                            ? intToString(items?.BackSize1)
+                                            : '0'
+                                        }
+                                        disabled={
+                                          items?.BackPrice1 ? false : true
+                                        }
+                                        css="w-[65px] mx-auto"
+                                      />
+                                    </div>
+                                    {items?.GameStatus !== '' &&
+                                      items?.GameStatus !== 'ACTIVE' && (
+                                        <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                                          <SuspendedBtn
+                                            status={items?.GameStatus}
+                                          />
+                                        </div>
+                                      )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {activeBetSlip == items?.SelectionId &&
+                                Number(items?.SelectionId) ==
+                                  Number(betsFancy[0]?.selectionId) &&
+                                isLoggedIn() &&
+                                betData?.length > 0 &&
+                                isMobile && <NewBetSlip />}
+                            </>
+                          );
+                        },
+                      )}
+                  </>
+                )}
+              </div>
             )}
-          </div>
-        )}
-        {singleRowData && (
-          <MobileSessionBetRisk
-            isOpen={isOpen}
-            closeModal={closeModal}
-            singleRowData={singleRowData}
-          />
+            {singleRowData && (
+              <MobileSessionBetRisk
+                isOpen={isOpen}
+                closeModal={closeModal}
+                singleRowData={singleRowData}
+              />
+            )}
+          </>
+        ) : innerHeadTab === 2 ? (
+          <MobOpenBets eventId={eventId} sport={'cricket'} />
+        ) : (
+          ''
         )}
       </div>
     </>

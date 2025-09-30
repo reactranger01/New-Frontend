@@ -244,39 +244,37 @@ body {
 }
 
 .data-table th {
-  background-color: #ddd;
+  background-color: #8f8f8f;
+  color: white;
+  font-weight: bold;
 }
 
 .pagination-item-style a,
 .disabled-item a {
-  @apply w-full h-full flex-center px-4 py-1 bg-[#040B1D] text-gray-500 border border-gray-300;
+  @apply w-full h-full flex-center px-4 py-1 bg-white text-gray-500;
 }
 
 .pagination-item-style.active a {
-  @apply text-white hover:text-white;
-}
-
-.pagination-item-style.active a {
-  @apply bg-gray-400 text-white;
+  @apply bg-white text-black font-bold;
 }
 
 .pagination-item-style a:hover {
-  @apply bg-gray-400 text-white;
+  @apply bg-white text-black;
 }
 
 .pagination-item-style.prev a {
-  @apply rounded-l-md;
+  @apply rounded-l-md text-black;
 }
 
 .pagination-item-style.prev a:hover {
-  @apply bg-gray-400 text-white;
+  @apply bg-white text-black;
 }
 .pagination-item-style.next a:hover {
-  @apply bg-gray-400 text-white;
+  @apply bg-white text-black;
 }
 
 .pagination-item-style.next a {
-  @apply rounded-r-md text-white;
+  @apply rounded-r-md text-black;
 }
 
 .pagination-item-style.prev.disabled-item {

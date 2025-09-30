@@ -12,6 +12,8 @@ import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const FootballMarket = () => {
+  const [innerHeadTab, setInnerHeadTab] = useState(1);
+
   const isLogin = isLoggedIn();
   const [allMarketData, setAllMarketData] = useState([]);
   const [odds] = useState([]);
@@ -164,7 +166,10 @@ const FootballMarket = () => {
             ></iframe>
           </div>
           <div className="my-2">
-            <InnerHeading />
+            <InnerHeading
+              activeTab={innerHeadTab}
+              setActiveTab={setInnerHeadTab}
+            />
           </div>
           {[...allMarketData]
             .sort((a, b) =>

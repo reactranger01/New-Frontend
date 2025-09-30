@@ -112,7 +112,7 @@ const MobHome = () => {
             <div
               onClick={() => {
                 if (login) {
-                  navigate('/my-bets');
+                  navigate('/dashboard/bets/1');
                 }
               }}
               className="flex items-center gap-1"

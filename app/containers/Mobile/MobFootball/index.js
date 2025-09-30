@@ -17,9 +17,13 @@ import MobileFootballInnerOdds from './MobileFootballInnerOdds';
 import MobileFootballInnerMarkets from './MobileFootballInnerMarkets';
 import { Loading } from '@/components';
 import InnerHeading from '../InnerHeading';
+import MobOpenBets from '@/components/MobOpenBets';
 
 const MobFootball = () => {
   const isLogin = isLoggedIn();
+
+  const [innerHeadTab, setInnerHeadTab] = useState(1);
+
   const location = useLocation();
   const userType = useSelector((state) => state?.user?.userType);
   const [fixtureEventName, setFixtureEventName] = useState([]);
@@ -169,38 +173,47 @@ const MobFootball = () => {
           ></iframe>
         </div>
         <div className="my-2">
-          <InnerHeading />
+          <InnerHeading
+            activeTab={innerHeadTab}
+            setActiveTab={setInnerHeadTab}
+          />
         </div>
-        {[...allMarketData]
-          .sort((a, b) =>
-            a?.market_name === 'Match Odds'
-              ? -1
-              : b?.market_name === 'Match Odds'
-              ? 1
-              : 0,
-          )
-          .map((market, index) =>
-            market?.market_name === 'Match Odds' ? (
-              <MobileFootballInnerOdds
-                key={index}
-                heading="Match Odds "
-                data={market}
-                fixtureEventName={fixtureEventName}
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-              />
-            ) : (
-              <MobileFootballInnerMarkets
-                key={index}
-                heading={market?.market_name?.toUpperCase()}
-                data={market}
-                fixtureEventName={fixtureEventName}
-                type="under15"
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-              />
-            ),
-          )}
+        {innerHeadTab === 1 ? (
+          [...allMarketData]
+            .sort((a, b) =>
+              a?.market_name === 'Match Odds'
+                ? -1
+                : b?.market_name === 'Match Odds'
+                ? 1
+                : 0,
+            )
+            .map((market, index) =>
+              market?.market_name === 'Match Odds' ? (
+                <MobileFootballInnerOdds
+                  key={index}
+                  heading="Match Odds "
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                />
+              ) : (
+                <MobileFootballInnerMarkets
+                  key={index}
+                  heading={market?.market_name?.toUpperCase()}
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  type="under15"
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                />
+              ),
+            )
+        ) : innerHeadTab === 2 ? (
+          <MobOpenBets eventId={eventId} sport={'football'} />
+        ) : (
+          ''
+        )}
       </div>
     </>
   );

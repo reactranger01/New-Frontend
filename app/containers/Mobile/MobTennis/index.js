@@ -12,8 +12,11 @@ import { useLocation, useParams } from 'react-router-dom';
 import TennisOddsInner from './TennisOddsInner';
 import TennisOtherMarkets from './TennisOtherMarkets';
 import { Loading } from '@/components';
+import MobOpenBets from '@/components/MobOpenBets';
+import InnerHeading from '../InnerHeading';
 
 const MobTennis = () => {
+  const [innerHeadTab, setInnerHeadTab] = useState(1);
   const isLogin = isLoggedIn();
   const { eventId } = useParams();
   const [fixtureEventName, setFixtureEventName] = useState([]);
@@ -153,38 +156,50 @@ const MobTennis = () => {
             }}
           ></iframe>
         </div>
-        {[...allMarketData]
-          .sort((a, b) =>
-            a?.market_name === 'Match Odds'
-              ? -1
-              : b?.market_name === 'Match Odds'
-              ? 1
-              : 0,
-          )
-          .map((market, index) =>
-            market?.market_name === 'Match Odds' ? (
-              <TennisOddsInner
-                key={index}
-                heading="Match Odds "
-                data={market}
-                fixtureEventName={fixtureEventName}
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-                allMarketData={allMarketData[0]}
-              />
-            ) : (
-              <TennisOtherMarkets
-                key={index}
-                heading={market?.market_name?.toUpperCase()}
-                data={market}
-                fixtureEventName={fixtureEventName}
-                type="under15"
-                placedBetWinLossDatas={placedBetWinLossDatas}
-                competition_name={matchData?.competition_name}
-                allMarketData={allMarketData[0]}
-              />
-            ),
-          )}
+        <div className="my-2">
+          <InnerHeading
+            activeTab={innerHeadTab}
+            setActiveTab={setInnerHeadTab}
+          />
+        </div>
+        {innerHeadTab === 1 ? (
+          [...allMarketData]
+            .sort((a, b) =>
+              a?.market_name === 'Match Odds'
+                ? -1
+                : b?.market_name === 'Match Odds'
+                ? 1
+                : 0,
+            )
+            .map((market, index) =>
+              market?.market_name === 'Match Odds' ? (
+                <TennisOddsInner
+                  key={index}
+                  heading="Match Odds "
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                  allMarketData={allMarketData[0]}
+                />
+              ) : (
+                <TennisOtherMarkets
+                  key={index}
+                  heading={market?.market_name?.toUpperCase()}
+                  data={market}
+                  fixtureEventName={fixtureEventName}
+                  type="under15"
+                  placedBetWinLossDatas={placedBetWinLossDatas}
+                  competition_name={matchData?.competition_name}
+                  allMarketData={allMarketData[0]}
+                />
+              ),
+            )
+        ) : innerHeadTab === 2 ? (
+          <MobOpenBets eventId={eventId} sport={'tennis'} />
+        ) : (
+          ''
+        )}
       </div>
     </>
   );

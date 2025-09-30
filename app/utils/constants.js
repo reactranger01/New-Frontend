@@ -190,56 +190,56 @@ export const links = [
 export const linksRight = [
   {
     title: 'Open Bets',
-    path: '/my-bets',
+    path: '/dashboard/bets/1',
     icon: '/images/rightDrawer/settings.svg',
     type: 'link',
   },
   {
     title: 'Bet History',
-    path: '/my-bets',
+    path: '/dashboard/bets/2',
     icon: '/images/rightDrawer/betHistory.svg',
     type: 'link',
   },
 
   {
     title: 'Betting Profit and Loss',
-    path: '/profit-loss',
+    path: '/dashboard/profit-loss',
     icon: '/images/rightDrawer/bettingPL.svg',
     type: 'link',
   },
   {
     title: 'Account Statement',
-    path: '/account-statement',
+    path: '/dashboard/account-statement',
     icon: '/images/rightDrawer/accountS.svg',
     type: 'link',
   },
   {
     title: 'Transactions',
-    path: '/account-statement',
+    path: '/dashboard/transactions',
     icon: '/images/rightDrawer/transactions.svg',
     type: 'link',
   },
   {
     title: 'Change Password',
-    path: '/settings',
+    path: '/dashboard/settings',
     icon: '/images/rightDrawer/lock.svg',
     type: 'link',
   },
   {
     title: 'Notifications',
-    path: '/notifications',
+    path: '/dashboard/notifications',
     icon: '/images/rightDrawer/notification.svg',
     type: 'link',
   },
   {
     title: 'Rules & Regulation',
-    path: '/rules-regulation',
+    path: '/dashboard/rules-regulation',
     icon: '/images/rightDrawer/betHistory.svg',
     type: 'rules',
   },
   {
     title: 'Settings',
-    path: '/settings-stake',
+    path: '/dashboard/settings-stake',
     icon: '/images/rightDrawer/settings1.svg',
     type: 'link',
   },
@@ -302,28 +302,32 @@ export const navLinks = [
 ];
 export const dropNavLinks = [
   {
+    title: 'Open Bets',
+    path: '/dashboard/bets/1',
+  },
+  {
     title: 'My Bets',
-    path: '/my-bets',
+    path: '/dashboard/bets/2',
   },
   {
     title: 'Deposit',
-    path: '/deposit',
+    path: '/dashboard/deposit',
   },
   {
     title: 'Withdraw',
-    path: '/withdraw',
+    path: '/dashboard/withdraw',
   },
   {
     title: 'Settings',
-    path: '/settings',
+    path: '/dashboard/settings',
   },
   {
     title: 'Account Statement',
-    path: '/account-statement',
+    path: '/dashboard/account-statement',
   },
   {
     title: 'Betting Profit and Loss',
-    path: '/profit-loss',
+    path: '/dashboard/profit-loss',
   },
 
   // {

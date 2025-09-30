@@ -1,8 +1,8 @@
 import { reactIcons } from '@/utils/icons';
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const InnerHeading = () => {
-  const [activeTab, setActiveTab] = useState(1);
+const InnerHeading = ({ activeTab = 1, setActiveTab }) => {
   return (
     <div className="grid grid-cols-3 bg-[#1E8067]">
       <div
@@ -31,6 +31,11 @@ const InnerHeading = () => {
       </div>
     </div>
   );
+};
+
+InnerHeading.propTypes = {
+  activeTab: PropTypes.bool,
+  setActiveTab: PropTypes.func,
 };
 
 export default InnerHeading;

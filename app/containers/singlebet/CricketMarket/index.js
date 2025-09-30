@@ -15,6 +15,7 @@ import {
 } from '@/utils/helper';
 import InnerHeading from '@/containers/Mobile/InnerHeading';
 const CricketMarket = () => {
+  const [innerHeadTab, setInnerHeadTab] = useState(1);
   const isLogin = isLoggedIn();
   const location = useLocation();
   const { eventId } = useParams();
@@ -227,7 +228,10 @@ const CricketMarket = () => {
           ></iframe>
         </div>
         <div className="my-2">
-          <InnerHeading />
+          <InnerHeading
+            activeTab={innerHeadTab}
+            setActiveTab={setInnerHeadTab}
+          />
         </div>
         <MatchOdds
           heading="Match Odds"
