@@ -57,7 +57,7 @@ function AccountStatement() {
     }
   };
   return (
-    <div className="min-h-screen mx-1 md:mx-0">
+    <div className="min-h-screen mx-1 md:mx-0 w-full">
       <div className=" pb-2 md:py-2">
         <h1 className="text-18 md:text-24 font-bold mt-4 md:mt-0">
           <GradientHeading heading={'Account Statement'} />

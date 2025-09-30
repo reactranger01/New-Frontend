@@ -203,19 +203,19 @@ export const linksRight = [
 
   {
     title: 'Betting Profit and Loss',
-    path: '/dashboard/profit-loss',
+    path: '/account/profit-loss',
     icon: '/images/rightDrawer/bettingPL.svg',
     type: 'link',
   },
   {
     title: 'Account Statement',
-    path: '/dashboard/account-statement',
+    path: '/account/account-statement',
     icon: '/images/rightDrawer/accountS.svg',
     type: 'link',
   },
   {
     title: 'Transactions',
-    path: '/dashboard/transactions',
+    path: '/account/transactions',
     icon: '/images/rightDrawer/transactions.svg',
     type: 'link',
   },
@@ -310,6 +310,10 @@ export const dropNavLinks = [
     path: '/dashboard/bets/2',
   },
   {
+    title: 'Transactions',
+    path: '/account/transactions',
+  },
+  {
     title: 'Deposit',
     path: '/dashboard/deposit',
   },
@@ -323,11 +327,11 @@ export const dropNavLinks = [
   },
   {
     title: 'Account Statement',
-    path: '/dashboard/account-statement',
+    path: '/account/account-statement',
   },
   {
     title: 'Betting Profit and Loss',
-    path: '/dashboard/profit-loss',
+    path: '/account/profit-loss',
   },
 
   // {

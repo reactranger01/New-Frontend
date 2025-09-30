@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 /*eslint-disable */
-import { MobFooter, Navbar } from '@/components';
+import { Footer, MobFooter, Navbar } from '@/components';
 import { Outlet } from 'react-router-dom';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { useSelector } from 'react-redux';
@@ -52,6 +52,7 @@ function MobLayout() {
         >
           <Outlet />
         </div>
+        <Footer />
       </div>
     </>
   );

@@ -46,6 +46,7 @@ import NotificationPage from './containers/NotificationPage';
 import LayoutTwo from './containers/LayoutTwo';
 import OpenBets from './containers/Pages/OpenBets';
 import TransactionsPage from './containers/Pages/TransactionsPage';
+import LayoutThree from './containers/LayoutThree';
 
 const sagaMiddleware = createSagaMiddleware();
 const reducer = createReducer();
@@ -106,9 +107,6 @@ function App() {
             <Route index element={<MyBets />} />
             <Route path="bets/1" element={<OpenBets />} />
             <Route path="bets/2" element={<MyBets />} />
-            <Route path="transactions" element={<TransactionsPage />} />
-            <Route path="account-statement" element={<AccountStatement />} />
-            <Route path="profit-loss" element={<ProfitAndLoss />} />
             <Route path="settings-stake" element={<SettingsMobile />} />
             <Route path="change-password" element={<Settings />} />
             <Route path="notifications" element={<NotificationPage />} />
@@ -120,6 +118,19 @@ function App() {
               path="bank-details/edit-bank-account-details"
               element={<EditBankAccountDetails />}
             />
+          </Route>
+          <Route
+            path="/account"
+            element={
+              <PrivateRoute>
+                <LayoutThree />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<TransactionsPage />} />
+            <Route path="transactions" element={<TransactionsPage />} />
+            <Route path="account-statement" element={<AccountStatement />} />
+            <Route path="profit-loss" element={<ProfitAndLoss />} />
           </Route>
 
           <Route path="/*" element={<NotFound />} />

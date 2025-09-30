@@ -1,108 +1,128 @@
-import Exclusion from '@/components/FooterModals/Exclusion';
-import Kyc from '@/components/FooterModals/Kyc';
-import Responsible from '@/components/FooterModals/Responsible';
-import RulsRegulation from '@/components/FooterModals/RulsRegulation';
-import Underage from '@/components/FooterModals/Underage';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 
-function Footer() {
-  const [openRuls, setOpenRuls] = useState(false);
-  const [openKyc, setOpenKyc] = useState(false);
-  const [openExclusion, setExclusion] = useState(false);
-  const [openResponsible, setResponsible] = useState(false);
-  const [openUnderage, setOpenUnderage] = useState(false);
-  const Footerlist = [
+const footerAssets = {
+  downloadApp: '/images/footer/downloadApk.webp',
+  gcLogo: '/images/footer/gc.webp',
+  sponsors: [
+    '/images/footer/sponsor1.webp',
+    '/images/footer/sponsor2.webp',
+    '/images/footer/sponsor3.webp',
+    '/images/footer/sponsor4.webp',
+    '/images/footer/sponsor5.webp',
+    '/images/footer/sponsor6.webp',
+    '/images/footer/sponsor7.webp',
+    '/images/footer/sponsor8.webp',
+    '/images/footer/sponsor9.webp',
+    '/images/footer/sponsor10.webp',
+  ],
+  socialMedia: [
     {
-      title: 'Underage Gambling is an offence',
-      img: '/images/footer/2.png',
-    },
-    // {
-    //   title: 'Restricted territories',
-    //   img: '/images/footer/3.png',
-    // },
-    {
-      title: 'KYC',
-    },
-    {
-      title: 'Rules & Regulations',
-    },
-    {
-      title: 'Responsible Gambling',
+      img: '/images/footer/s1.webp',
+      path: 'https://www.whatsapp.com',
     },
     {
-      title: 'Exclusion Policy',
+      img: '/images/footer/s2.webp',
+      path: 'https://www.youtube.com',
     },
     {
-      title: '© 2016-2024',
+      img: '/images/footer/s3.webp',
+      path: 'https://www.telegram.com',
     },
-  ];
-  const handleClickModal = (title) => {
-    switch (title) {
-      case 'Underage Gambling is an offence':
-        setOpenUnderage(true);
-        break;
-      case 'Restricted territories':
-        // Add state logic here if needed
-        break;
-      case 'KYC':
-        setOpenKyc(true);
-        break;
-      case 'Rules & Regulations':
-        setOpenRuls(true);
-        break;
-      case 'Responsible Gambling':
-        setResponsible(true);
-        break;
-      case 'Exclusion Policy':
-        setExclusion(true);
-        break;
-      default:
-        console.warn('No matching modal found for title:', title);
-    }
-  };
+    {
+      img: '/images/footer/s4.webp',
+      path: 'https://www.instagram.com',
+    },
+    {
+      img: '/images/footer/s5.webp',
+      path: 'https://www.facebook.com',
+    },
+  ],
+};
+
+const footerLinks = [
+  { id: 1, label: 'How to Login' },
+  { id: 2, label: 'Introduction' },
+  { id: 3, label: 'How to Withdraw' },
+  { id: 4, label: 'How to Deposit English' },
+  { id: 5, label: 'How to Deposit Hindi' },
+];
+
+export default function Footer() {
   return (
-    <>
-      <footer className="w-full py-3  overflow-auto bg-[#0F2327] text-white flex items-center justify-center">
-        <div className="flex flex-wrap gap-x-8 gap-y-2 items-center justify-center container">
-          <Link to="/" className="h-9 w-9  ">
-            <img
-              src="/images/footer/1.png"
-              className="bg-white h-full w-full "
-              alt="gameCare"
-            />
-          </Link>
-          {Footerlist.map((item, index) => {
-            return (
-              <div key={index} className="text-12 flex-center gap-3">
-                {item?.img && (
-                  <img src={item.img} alt="" className="h-8 w-8 object-cover" />
-                )}
-                <div onClick={() => handleClickModal(item.title)}>
-                  {item.title}{' '}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        {openRuls && <RulsRegulation open={openRuls} setOpen={setOpenRuls} />}
-        {openKyc && <Kyc open={openKyc} setOpen={setOpenKyc} />}
-        {openExclusion && (
-          <Exclusion open={openExclusion} setOpen={setExclusion} />
-        )}
-        {openResponsible && (
-          <Responsible open={openResponsible} setOpen={setResponsible} />
-        )}
-        {openUnderage && (
-          <Underage
-            open={openUnderage}
-            setOpen={setOpenUnderage}
-            type={'desktop'}
+    <footer className="bg-black text-white py-10 ">
+      {/* Download App */}
+      <div className="border-b-[1px] border-[#282828] text-center   xl:container mx-auto xl:px-0 px-2 md:px-4 ">
+        <div className="flex justify-center mb-6">
+          <img
+            src={footerAssets.downloadApp}
+            alt="Download App"
+            className="h-12"
           />
-        )}
-      </footer>
-    </>
+        </div>
+
+        {/* Links */}
+        <div className="grid grid-cols-2 justify-self-center md:flex md:flex-wrap md:justify-center gap-2 md:gap-4 mb-8">
+          {footerLinks.map((link, index) => (
+            <button
+              key={link.id}
+              className={`bg-primary-1300 whitespace-nowrap md:px-4 py-2 rounded-md text-14 ${
+                index === footerLinks.length - 1
+                  ? 'col-span-2 justify-self-center'
+                  : ''
+              }`}
+            >
+              {link.id}. {link.label}
+            </button>
+          ))}
+        </div>
+
+        {/* GC Logo + Description */}
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+          <img
+            src={footerAssets.gcLogo}
+            alt="GC Gaming Curacao"
+            className="mx-auto h-12 mb-4"
+          />
+          <p className="text-white text-[13px] leading-4 font-medium">
+            LOTUS365 is a limited liability company incorporated under the laws
+            of Curacao. Players are requested not to contact any untrusted
+            sources for LOTUS365 accounts as this is an online site and they can
+            only register independently without any agents. Only deposit through
+            the account details generated by the system or provided by our
+            official support team.
+          </p>
+        </div>
+
+        {/* Sponsors */}
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          {footerAssets.sponsors.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`Sponsor ${i + 1}`}
+              className="h-[27px] w-20"
+            />
+          ))}
+        </div>
+      </div>
+      <div className="xl:container mx-auto xl:px-0 px-4">
+        {/* Social Media */}
+        <div className="flex justify-center gap-3 mt-4 mb-6">
+          {footerAssets.socialMedia.map((src, i) => (
+            <img
+              key={i}
+              src={src.img}
+              alt={`Social Media ${i + 1}`}
+              className="h-9 w-9 rounded-full overflow-hidden cursor-pointer hover:scale-110 transition"
+            />
+          ))}
+        </div>
+
+        {/* Copyright */}
+        <div className="text-gray-400 text-14 text-center">
+          Rules Regulations 2016-2025 v. 9.66
+        </div>
+      </div>
+    </footer>
   );
 }
-
-export default Footer;
