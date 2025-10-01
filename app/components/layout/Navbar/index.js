@@ -247,10 +247,16 @@ const Navbar = () => {
                       </span>
                     </div> */}
                     <div className="flex items-center ">
-                      <button className="text-[14px] mr-2 bg-[#026B4F] border-r-2 border-b-2 text-white hover:text-[#f4d821] hover:bg-[#1E8067] px-2 py-1 rounded-[3px] border-black/25">
+                      <button
+                        onClick={() => navigate('/account/deposit')}
+                        className="text-[14px] mr-2 bg-[#026B4F] border-r-2 border-b-2 text-white hover:text-[#f4d821] hover:bg-[#1E8067] px-2 py-1 rounded-[3px] border-black/25"
+                      >
                         Deposit
                       </button>
-                      <button className="text-[14px] bg-[#026B4F] border-r-2 border-b-2 text-white hover:text-[#f4d821] hover:bg-[#1E8067] px-2 py-1 rounded-[3px] border-black/25">
+                      <button
+                        onClick={() => navigate('/account/withdrawal')}
+                        className="text-[14px] bg-[#026B4F] border-r-2 border-b-2 text-white hover:text-[#f4d821] hover:bg-[#1E8067] px-2 py-1 rounded-[3px] border-black/25"
+                      >
                         Withdrawal
                       </button>
                       <DropDown />

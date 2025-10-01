@@ -221,7 +221,7 @@ export const linksRight = [
   },
   {
     title: 'Change Password',
-    path: '/dashboard/settings',
+    path: '/dashboard/change-password',
     icon: '/images/rightDrawer/lock.svg',
     type: 'link',
   },
@@ -319,11 +319,11 @@ export const dropNavLinks = [
   },
   {
     title: 'Withdraw',
-    path: '/dashboard/withdraw',
+    path: '/account/withdrawal',
   },
   {
-    title: 'Settings',
-    path: '/dashboard/settings',
+    title: 'Change Password',
+    path: '/dashboard/change-password',
   },
   {
     title: 'Account Statement',

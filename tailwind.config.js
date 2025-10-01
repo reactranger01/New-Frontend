@@ -7,6 +7,9 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      backgroundImage: {
+        paymentBg: "url('/public/images/deposit/depo.webp')",
+      },
       fontFamily: {
         josefin: ['Josefin', 'sans-serif'],
         roboto: ['Roboto', 'sans-serif'],

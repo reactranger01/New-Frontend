@@ -4,18 +4,25 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { reactIcons } from '@/utils/icons';
 import { getAuthData, isLoggedIn, postAuthData } from '@/utils/apiHandlers';
 import { isYupError, parseYupError } from '@/utils/Yup';
-import { depositValidation } from '@/utils/validation';
+import { amountValidation, depositValidation } from '@/utils/validation';
 import { useDispatch, useSelector } from 'react-redux';
 import { init } from '@/redux/actions';
-import moment from 'moment';
-import { numberWithCommas } from '@/utils/numberWithCommas';
-import { Empty } from 'antd';
 import toast from 'react-hot-toast';
-import Pagination from '@/containers/Pagination';
+import { Download, Share2, Maximize2 } from 'lucide-react';
 
+import { Link } from 'react-router-dom';
+const rules = [
+  '1. Deposit money only in the selected account to get the fastest credits and avoid possible delays.',
+  '2. Deposits made 45 minutes after the account removal from the site are valid & will be added to their wallets.',
+  '3. We is not responsible for money deposited to Old, Inactive or Closed accounts.',
+  '4. After deposit, add your UTR and amount to receive balance.',
+  '5. NEFT receiving time varies from 40 minutes to 2 hours.',
+];
 const Deposit = () => {
-  const [activeIndex, setActiveIndex] = useState();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [paymentStep, setPaymentStep] = useState(1);
   const [paymentType, setPaymentType] = useState('ACCOUNT');
+  // eslint-disable-next-line
   const [depositListData, setDepositListData] = useState([]);
   const [qrData, setQrData] = useState({});
   const [accountData, setAccountData] = useState({});
@@ -24,8 +31,10 @@ const Deposit = () => {
   const dispatch = useDispatch();
   const User = useSelector((state) => state.user);
   const login = isLoggedIn();
+  // eslint-disable-next-line
   const [page, setPage] = useState(1);
   const take = 15;
+  // eslint-disable-next-line
   const [pagination, setPagination] = useState({
     totalCount: 0,
   });
@@ -59,50 +68,22 @@ const Deposit = () => {
   });
 
   const stakebutton = [
+    { text: '100', value: 100 },
+    { text: '200', value: 200 },
     { text: '500', value: 500 },
     { text: '1000', value: 1000 },
-    { text: '5000', value: 5000 },
-    { text: '10000', value: 10000 },
-    { text: '50000', value: 50000 },
-    { text: '100000', value: 100000 },
-  ];
-
-  const rules = [
-    {
-      text: 'Deposit money only in the below available accounts to get the fastest credits and avoid possible delays.',
-    },
-    {
-      text: 'Deposits made 45 minutes after the account removal from the site are valid & will be added to their wallets.',
-    },
-    {
-      text: 'Site is not responsible for money deposited to Old, Inactive or Closed accounts.',
-    },
-    {
-      text: 'After deposit, add your UTR and amount to receive balance.',
-    },
-    {
-      text: 'NEFT receiving time varies from 40 minutes to 2 hours.',
-    },
-    {
-      text: 'In case of account modification: payment valid for 1 hour after changing account details in deposit page.',
-    },
   ];
 
   const paymentList = [
     {
-      text: 'ACCOUNT',
-      icon: '/images/payment/bank.svg',
+      text: 'Bank of Maharashtra',
+      icon: '/images/deposit/bankOfMaha.png',
       value: 'account',
     },
-    { text: 'PAYTM', icon: '/images/payment/paytm.svg', value: 'Paytm' },
-    { text: 'GPAY', icon: '/images/payment/gpay.svg', value: 'G-Pay' },
-    {
-      text: 'PHONEPE',
-      icon: '/images/payment/phonepe.svg',
-      value: 'Phone-Pay',
-    },
+    { text: 'Google Pay', icon: '/images/deposit/gpay.png', value: 'G-Pay' },
+    { text: 'Paytm', icon: '/images/deposit/paytm.png', value: 'Paytm' },
   ];
-
+  // eslint-disable-next-line
   const accountDetails =
     paymentType === 'ACCOUNT'
       ? accountData?.bankName &&
@@ -201,7 +182,7 @@ const Deposit = () => {
   };
 
   const copieBtn = async (e) => {
-    toast.success(e + ' Coppied!!');
+    toast.success(e + ' Copied!!');
   };
 
   const handleImageChange = async (event) => {
@@ -250,6 +231,21 @@ const Deposit = () => {
     setQrType(value);
   };
 
+  const handleAmountSubmit = async () => {
+    try {
+      await amountValidation.validate(form, {
+        abortEarly: false,
+      });
+      setPaymentStep(2);
+    } catch (error) {
+      if (isYupError(error)) {
+        setFormError(parseYupError(error));
+      } else {
+        toast.error(error?.message || 'Unauthorised');
+      }
+    }
+  };
+
   const handleDepositSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -288,329 +284,624 @@ const Deposit = () => {
     }
   };
 
+  const upiId = '8807316855@okbizaxis';
+  const accountHolder = 'NANJIBHAI TRADING CO';
+
   return (
     <>
-      <div className=" md:border-b border-black py-2 mt-3 mx-1 md:mx-0 mb-2 md:mb-0">
-        <h1 className="text-18 md:text-24 mt-4 md:mt-0">Deposit</h1>
-      </div>
-      <div className="border rounded-lg p-2 sm:p-5 -mt-2 md:mt-5 md:my-5 bg-white mx-1 md:mx-0">
-        <div className="my-5 mt-2 md:mt-5 border-y border-dashed p-5">
-          <ul className="flex flex-col gap-1 list-decimal list-outside">
-            {rules.map((item, index) => (
-              <li className=" text-14" key={index}>
-                {item.text}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="min-h-screen mx-1 md:mx-0">
+        {paymentStep === 1 ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 bg-white">
+            <div className="px-12 py-9 hidden lg:block shadow-sm lg:shadow-[-1px_1px_10px_#383838]">
+              <h1 className="hidden lg:flex text-[29px] font-bold text-black">
+                Deposit
+              </h1>
 
-        <div className="mt-5 flex flex-wrap items-center px-3 sm:px-6 py-3 gap-1 sm:gap-3 xl:gap-3 bg-white rounded-b-20 border-l border-l-primary-900/30 border-r border-r-primary-900/30  border-b-8 border-b-primary-900/30">
-          {paymentList.map((item, index) => (
-            <button
-              className={`rounded-xl h-[60px] md:h-[72px] w-[65px] sm:w-[85px] border border-[#B2E0FF] p-1 sm:p-2 flex justify-between items-center text-black ${
-                activeIndex === index
-                  ? 'bg-[#181E2C] text-white'
-                  : 'bg-primary-900/[.2]'
-              } flex-col md:gap-2`}
-              key={index}
-              onClick={() => {
-                handleButtonClick(index, item.text, item.value);
-                handleChange({
-                  target: { name: 'paymentMethod', value: item.value },
-                });
-              }}
-            >
-              <span className="xl:text-16 md:text-14 text-12">{item.text}</span>
-              <img src={item.icon} className="object-contain" alt="" />
-            </button>
-          ))}
-          {formError.paymentMethod && (
-            <div className="form-eror text-center xl:text-16 text-12">
-              {formError.paymentMethod}
+              <div className="flex flex-col max-w-[270px] p-5">
+                <h2 className="text-[#40424f] text-18 font-bold ">Notes</h2>
+                <img src="/images/deposit/1.png" alt="" />
+                <img src="/images/deposit/2.png" className="mb-4" alt="" />
+                <img src="/images/deposit/3.png" alt="" />
+              </div>
             </div>
-          )}{' '}
-        </div>
-
-        <div className="mt-5 bg-white text-black rounded-lg p-3 sm:p-6 relative">
-          <h1 className="capitalize underline xl:text-24 md:text-20 text-18 font-semibold text-center">
-            {paymentType}
-          </h1>
-
-          <div className="grid md:grid-cols-11 grid-cols-none gap-3 my-3 md:my-5">
-            <div className="col-span-5">
-              <div className="rounded-lg bg-primary-900/30 px-3 p-1 ">
-                {accountDetails.length !== 0 ? (
-                  <>
-                    {' '}
-                    {accountDetails.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center my-1 md:my-2 gap-2"
+            <div className="lg:px-12 lg:py-10 p-2 shadow-sm lg:shadow-[1px_1px_10px_#383838] ">
+              <div>
+                <div className=" flex flex-col gap-2">
+                  <div className="lg:hidden flex items-center justify-between">
+                    <h1 className=" text-14 md:text-16 font-bold text-black">
+                      Deposit Amount
+                    </h1>
+                    <div className="border-black border-2 p-1 rounded-md w-fit mt-2">
+                      <p className="text-12 font-semibold leading-none">
+                        Min: 100 | Max: 10000000
+                      </p>
+                    </div>
+                  </div>
+                  <label
+                    htmlFor="amount"
+                    className="text-18 font-bold lg:block hidden"
+                  >
+                    Amount*
+                  </label>
+                  <input
+                    type="number"
+                    name="amount"
+                    id="amount"
+                    value={form.amount}
+                    onChange={handleChange}
+                    className="border border-black rounded-md outline-none text-14 py-2 px-5"
+                  />
+                  {formError.amount && (
+                    <div className="form-eror xl:text-16 text-14">
+                      {formError.amount ==
+                      'amount must be a `number` type, but the final value was: `NaN` (cast from the value `""`).'
+                        ? 'Please Enter Amount'
+                        : formError.amount}
+                    </div>
+                  )}
+                </div>
+                <div className="hidden lg:block border-black border-2 p-1 rounded-md w-fit mt-2">
+                  <p className="text-12 font-semibold leading-none">
+                    Min: 100 | Max: 10000000
+                  </p>
+                </div>
+                <div className="grid grid-cols-4 lg:grid-cols-3 gap-2   p-[15px]">
+                  {stakebutton.map((item, index) => (
+                    <button
+                      key={index}
+                      className="col-span-1 font-bold text-black h-[26px] lg:w-[75px] shadow-[2px_2px_#00000040] rounded-md flex-center bg-[#70cfb6]  text-[11px]"
+                      onClick={() => {
+                        handleChange({
+                          target: { name: 'amount', value: item.value },
+                        });
+                      }}
+                    >
+                      + {item.text}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    // onClick={() => setPage(1)}
+                    className="bg-primary-1300 text-14 h-[35px] flex-center gap-1 rounded-[4px] w-full text-white shadow-[2px_2px_#00000040]"
+                  >
+                    <span>{reactIcons.editNew}</span>
+                    Edit Stake
+                  </button>
+                  <button
+                    onClick={handleAmountSubmit}
+                    className="bg-primary-1300 text-14 h-[35px] flex-center rounded-[4px] w-full text-white shadow-[2px_2px_#00000040]"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 bg-white">
+            <div className="hidden lg:block px-12 py-9 shadow-sm lg:shadow-[-1px_1px_10px_#383838]">
+              <h1 className="text-[29px] font-bold text-black mb-4">Deposit</h1>
+              {paymentType === 'ACCOUNT' ? (
+                <div className="p-5 border-2 border-dashed border-[#1e8067] rounded-[5px]">
+                  <div className="flex justify-between items-center my-1 md:my-2 gap-2">
+                    <div className="flex items-center font-semibold">
+                      <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
+                        Account Number
+                      </p>
+                      <p className=" text-black  text-12 whitespace-nowrap">
+                        : 60541130129
+                      </p>
+                    </div>
+                    <CopyToClipboard text={60541130129}>
+                      <span
+                        className="cursor-pointer"
+                        onClick={() => copieBtn(60541130129)}
                       >
-                        <p className="xl:text-16 text-14">{item.text}</p>
-                        <CopyToClipboard text={item.copy}>
+                        {reactIcons.copy}
+                      </span>
+                    </CopyToClipboard>
+                  </div>
+                  <div className="flex justify-between items-center my-1 md:my-2 gap-2">
+                    <div className="flex items-center font-semibold">
+                      <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
+                        IFSC Code
+                      </p>
+                      <p className=" text-black  text-12 whitespace-nowrap">
+                        : MAHB0000175
+                      </p>
+                    </div>
+                    <CopyToClipboard text={60541130129}>
+                      <span
+                        className="cursor-pointer"
+                        onClick={() => copieBtn(60541130129)}
+                      >
+                        {reactIcons.copy}
+                      </span>
+                    </CopyToClipboard>
+                  </div>
+                  <div className="flex justify-between items-center my-1 md:my-2 gap-2">
+                    <div className="flex items-center font-semibold">
+                      <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
+                        Account Holder Name
+                      </p>
+                      <p className="  text-black text-12 whitespace-nowrap">
+                        : YOGESH KATKE
+                      </p>
+                    </div>
+                    <CopyToClipboard text={60541130129}>
+                      <span
+                        className="cursor-pointer"
+                        onClick={() => copieBtn(60541130129)}
+                      >
+                        {reactIcons.copy}
+                      </span>
+                    </CopyToClipboard>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="border-2  border-dashed border-green-700 rounded-md p-4 w-full max-w-sm mx-auto bg-white shadow-sm">
+                    {/* QR Section */}
+                    <div className="flex">
+                      <div className="flex-1 flex justify-center">
+                        <img
+                          src="/images/qr-demo.png" // <-- put your QR image path
+                          alt="UPI QR Code"
+                          className="w-40 h-40 object-contain border rounded-md"
+                        />
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col spa ce-y-3 ml-3">
+                        <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
+                          <Maximize2 size={18} />
+                        </button>
+                        <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                          <Share2 size={18} />
+                        </button>
+                        <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                          <Download size={18} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* UPI ID */}
+                    <div className="mt-4 flex items-center text-sm">
+                      <span className="font-semibold">UPI ID:</span>
+                      <span className="ml-2 text-blue-700 font-semibold">
+                        {upiId}
+                      </span>
+                      <CopyToClipboard text={upiId}>
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => copieBtn(upiId)}
+                        >
+                          {reactIcons.copy}
+                        </span>
+                      </CopyToClipboard>
+                    </div>
+
+                    {/* Account Holder */}
+                    <div className="mt-2 flex items-center text-sm">
+                      <span className="font-semibold">
+                        Account Holder Name:
+                      </span>
+                      <span className="ml-2 font-bold">{accountHolder}</span>
+                      <CopyToClipboard text={accountHolder}>
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => copieBtn(accountHolder)}
+                        >
+                          {reactIcons.copy}
+                        </span>
+                      </CopyToClipboard>
+                    </div>
+                  </div>
+                  <div className="border-2  border-dashed border-green-700 rounded-md p-4 w-full max-w-sm mx-auto bg-white shadow-sm">
+                    {/* QR Section */}
+                    <div className="flex">
+                      <div className="flex-1 flex justify-center">
+                        <img
+                          src="/images/qr-demo.png" // <-- put your QR image path
+                          alt="UPI QR Code"
+                          className="w-40 h-40 object-contain border rounded-md"
+                        />
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-col spa ce-y-3 ml-3">
+                        <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
+                          <Maximize2 size={18} />
+                        </button>
+                        <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                          <Share2 size={18} />
+                        </button>
+                        <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                          <Download size={18} />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* UPI ID */}
+                    <div className="mt-4 flex items-center text-sm">
+                      <span className="font-semibold">UPI ID:</span>
+                      <span className="ml-2 text-blue-700 font-semibold">
+                        {upiId}
+                      </span>
+                      <CopyToClipboard text={upiId}>
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => copieBtn(upiId)}
+                        >
+                          {reactIcons.copy}
+                        </span>
+                      </CopyToClipboard>
+                    </div>
+
+                    {/* Account Holder */}
+                    <div className="mt-2 flex items-center text-sm">
+                      <span className="font-semibold">
+                        Account Holder Name:
+                      </span>
+                      <span className="ml-2 font-bold">{accountHolder}</span>
+                      <CopyToClipboard text={accountHolder}>
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => copieBtn(accountHolder)}
+                        >
+                          {reactIcons.copy}
+                        </span>
+                      </CopyToClipboard>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="lg:px-12 p-2 lg:py-10 shadow-sm lg:shadow-[1px_1px_10px_#383838] ">
+              <div>
+                <p className="lg:hidden text-14 font-bold">Payment Options</p>
+                <div className="mt-2 lg:mt-5 overflow-x-auto gap-2 flex items-center">
+                  {paymentList.map((item, index) => (
+                    <button
+                      className={`rounded-[10px] h-[78px] w-[133px] bg-cover bg-center border border-[#B2E0FF] p-1 flex  text-black ${
+                        activeIndex === index
+                          ? 'bg-[linear-gradient(108.08deg,hsla(0,0%,70%,.8)_50%,hsla(0,0%,100%,.8))] '
+                          : ' bg-paymentBg'
+                      } flex-col  `}
+                      key={index}
+                      onClick={() => {
+                        handleButtonClick(index, item.text, item.value);
+                        handleChange({
+                          target: { name: 'paymentMethod', value: item.value },
+                        });
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <img src={item.icon} className=" w-10" alt="" />
+                        {activeIndex !== index ? (
+                          <div className="h-5 w-5 rounded-full  bg-white border border-black"></div>
+                        ) : (
+                          <div className="h-5 w-5 rounded-full flex-center bg-primary-1300 text-white">
+                            {reactIcons.checkMark}
+                          </div>
+                        )}
+                      </div>
+                      <span className=" text-12">{item.text}</span>
+                    </button>
+                  ))}
+                </div>
+                {formError.paymentMethod && (
+                  <div className="form-eror text-center xl:text-16 text-12">
+                    {formError.paymentMethod}
+                  </div>
+                )}{' '}
+                <div className="mt-5 lg:hidden">
+                  {paymentType === 'ACCOUNT' ? (
+                    <div className="p-5 border-2 border-dashed border-[#1e8067] rounded-[5px]">
+                      <div className="flex justify-between items-center my-1 md:my-2 gap-2">
+                        <div className="flex items-center font-semibold">
+                          <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
+                            Account Number
+                          </p>
+                          <p className=" text-black  text-12 whitespace-nowrap">
+                            : 60541130129
+                          </p>
+                        </div>
+                        <CopyToClipboard text={60541130129}>
                           <span
                             className="cursor-pointer"
-                            onClick={() => copieBtn(item.copy)}
+                            onClick={() => copieBtn(60541130129)}
                           >
                             {reactIcons.copy}
                           </span>
                         </CopyToClipboard>
                       </div>
-                    ))}
-                    <p className="my-1 md:my-2 xl:text-16 text-14">
-                      Min Amount : 100 Rs.
-                    </p>
-                    <p className="my-1 md:my-2 xl:text-16 text-14">
-                      Max Amount : 200000 Rs.
-                    </p>
-                    {paymentType !== 'ACCOUNT' && (
-                      <div className="bg-white rounded-2xl p-2 relative mx-auto w-[150px] sm:w-[170px] aspect-square my-5">
-                        <p className="absolute bottom-12 -left-9 ml-1 -rotate-90 text-12">
-                          {qrData?.upi}
-                        </p>
-                        <img
-                          src={qrData?.image}
-                          className="sm:w-full w-[120px] mx-auto mt-2 sm:mt-0"
-                          alt=""
-                        />
+                      <div className="flex justify-between items-center my-1 md:my-2 gap-2">
+                        <div className="flex items-center font-semibold">
+                          <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
+                            IFSC Code
+                          </p>
+                          <p className=" text-black  text-12 whitespace-nowrap">
+                            : MAHB0000175
+                          </p>
+                        </div>
+                        <CopyToClipboard text={60541130129}>
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => copieBtn(60541130129)}
+                          >
+                            {reactIcons.copy}
+                          </span>
+                        </CopyToClipboard>
                       </div>
-                    )}{' '}
-                  </>
-                ) : (
-                  <div className="flex justify-center items-center h-[80px]">
-                    <p className="my-1 md:my-2 text-red-700 xl:text-16 text-14">
-                      Not Added Any Account Yet.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+                      <div className="flex justify-between items-center my-1 md:my-2 gap-2">
+                        <div className="flex items-center font-semibold">
+                          <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
+                            Account Holder Name
+                          </p>
+                          <p className="  text-black text-12 whitespace-nowrap">
+                            : YOGESH KATKE
+                          </p>
+                        </div>
+                        <CopyToClipboard text={60541130129}>
+                          <span
+                            className="cursor-pointer"
+                            onClick={() => copieBtn(60541130129)}
+                          >
+                            {reactIcons.copy}
+                          </span>
+                        </CopyToClipboard>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="border-2  border-dashed border-green-700 rounded-md p-4 w-full max-w-sm mx-auto bg-white shadow-sm">
+                        {/* QR Section */}
+                        <div className="flex">
+                          <div className="flex-1 flex justify-center">
+                            <img
+                              src="/images/qr-demo.png" // <-- put your QR image path
+                              alt="UPI QR Code"
+                              className="w-40 h-40 object-contain border rounded-md"
+                            />
+                          </div>
 
-            <div className="col-span-1 flex justify-center">
-              <div className="w-[1px] h-full bg-primary-900/20"></div>
-            </div>
-            <div className="col-span-5">
-              <div className="">
-                <label
-                  htmlFor="utr"
-                  className="text-primary-100 flex text-start xl:text-16 text-14"
-                >
-                  Unique Transaction Reference{' '}
-                  <span className="text-primary-red">*</span>
-                </label>
-                <div className="rounded-md overflow-hidden h-[48px] mt-1">
-                  <input
-                    name="utr"
-                    placeholder={'6 to 12 Digit UTR Number'}
-                    id="utr"
-                    value={form.utr}
-                    onChange={handleChange}
-                    className="placeholder:text-black w-full h-full bg-primary-900/30 rounded-md text-black outline-none px-4 xl:text-16 text-14"
-                  />
+                          {/* Action Buttons */}
+                          <div className="flex flex-col spa ce-y-3 ml-3">
+                            <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
+                              <Maximize2 size={18} />
+                            </button>
+                            <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                              <Share2 size={18} />
+                            </button>
+                            <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                              <Download size={18} />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* UPI ID */}
+                        <div className="mt-4 flex items-center text-sm">
+                          <span className="font-semibold">UPI ID:</span>
+                          <span className="ml-2 text-blue-700 font-semibold">
+                            {upiId}
+                          </span>
+                          <CopyToClipboard text={upiId}>
+                            <span
+                              className="cursor-pointer"
+                              onClick={() => copieBtn(upiId)}
+                            >
+                              {reactIcons.copy}
+                            </span>
+                          </CopyToClipboard>
+                        </div>
+
+                        {/* Account Holder */}
+                        <div className="mt-2 flex items-center text-sm">
+                          <span className="font-semibold">
+                            Account Holder Name:
+                          </span>
+                          <span className="ml-2 font-bold">
+                            {accountHolder}
+                          </span>
+                          <CopyToClipboard text={accountHolder}>
+                            <span
+                              className="cursor-pointer"
+                              onClick={() => copieBtn(accountHolder)}
+                            >
+                              {reactIcons.copy}
+                            </span>
+                          </CopyToClipboard>
+                        </div>
+                      </div>
+                      <div className="border-2  border-dashed border-green-700 rounded-md p-4 w-full max-w-sm mx-auto bg-white shadow-sm">
+                        {/* QR Section */}
+                        <div className="flex">
+                          <div className="flex-1 flex justify-center">
+                            <img
+                              src="/images/qr-demo.png" // <-- put your QR image path
+                              alt="UPI QR Code"
+                              className="w-40 h-40 object-contain border rounded-md"
+                            />
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex flex-col spa ce-y-3 ml-3">
+                            <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
+                              <Maximize2 size={18} />
+                            </button>
+                            <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                              <Share2 size={18} />
+                            </button>
+                            <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                              <Download size={18} />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* UPI ID */}
+                        <div className="mt-4 flex items-center text-sm">
+                          <span className="font-semibold">UPI ID:</span>
+                          <span className="ml-2 text-blue-700 font-semibold">
+                            {upiId}
+                          </span>
+                          <CopyToClipboard text={upiId}>
+                            <span
+                              className="cursor-pointer"
+                              onClick={() => copieBtn(upiId)}
+                            >
+                              {reactIcons.copy}
+                            </span>
+                          </CopyToClipboard>
+                        </div>
+
+                        {/* Account Holder */}
+                        <div className="mt-2 flex items-center text-sm">
+                          <span className="font-semibold">
+                            Account Holder Name:
+                          </span>
+                          <span className="ml-2 font-bold">
+                            {accountHolder}
+                          </span>
+                          <CopyToClipboard text={accountHolder}>
+                            <span
+                              className="cursor-pointer"
+                              onClick={() => copieBtn(accountHolder)}
+                            >
+                              {reactIcons.copy}
+                            </span>
+                          </CopyToClipboard>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
-                {formError.utr && (
-                  <div className="form-eror xl:text-16 text-14">
-                    {formError.utr}
-                  </div>
-                )}
-              </div>
-              <div className="my-3">
-                <label
-                  htmlFor="file"
-                  className="text-primary-100 flex text-start xl:text-16 text-14"
-                >
-                  Upload Your Payment Proof{' '}
-                </label>
-                <label className="block mt-2">
-                  <input
-                    id="file"
-                    type="file"
-                    onChange={handleImageChange}
-                    className="block w-[120px] xl:file:h-[42px] file:h-[35px] leading-5 text-black file:mr-4 file:py-2 file:px-4 file:rounded-lg file:bg-primary-700 file:text-white hover:file:bg-primary-700 file:border-0 xl:text-16 text-14"
-                  />
-                </label>
-                {selectedImage && (
-                  <div className="text-black truncate xl:text-14 text-12">
-                    {selectedImage?.name}
-                  </div>
-                )}
-                {formError.img && (
-                  <div className="form-eror xl:text-16 text-14">
-                    {formError.img}
-                  </div>
-                )}
-              </div>
-              <div className="">
-                <label
-                  htmlFor="amount"
-                  className="text-primary-100 flex text-start xl:text-16 text-14"
-                >
-                  Amount
-                  <span className="text-primary-red">*</span>
-                </label>
-                <div className="rounded-md overflow-hidden h-[48px] mt-1">
-                  <input
-                    type="number"
-                    name="amount"
-                    placeholder={'Enter amount'}
-                    id="amount"
-                    value={form.amount}
-                    onChange={handleChange}
-                    className="placeholder:text-black w-full h-full bg-primary-900/30 rounded-md text-black outline-none px-4 xl:text-16 text-14"
-                  />
-                </div>
-                {formError.amount && (
-                  <div className="form-eror xl:text-16 text-14">
-                    {formError.amount ==
-                    'amount must be a `number` type, but the final value was: `NaN` (cast from the value `""`).'
-                      ? 'Please Enter Amount'
-                      : formError.amount}
-                  </div>
-                )}
-              </div>
-              <div className="grid grid-cols-3 gap-2 mt-5">
-                {stakebutton.map((item, index) => (
-                  <button
-                    key={index}
-                    className="col-span-1  text-white xl:h-[42px] h-[35px] rounded-lg flex-center bg-[#4283ca] xl:text-16 text-14"
-                    onClick={() => {
-                      handleChange({
-                        target: { name: 'amount', value: item.value },
-                      });
-                    }}
+                <div className="my-3">
+                  <label
+                    htmlFor="file"
+                    className="text-primary-100 flex text-start text-16 font-bold"
                   >
-                    {item.text}
-                  </button>
-                ))}
-              </div>
-              <div className="flex items-start justify-start gap-2 mt-4">
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 accent-primary-red"
-                  name="condition"
-                  checked={form.condition}
-                  onChange={handleChange}
-                  id="odds"
-                />
-                <label htmlFor="odds" className="leading-5 xl:text-14 text-14">
-                  I have read and agree with terms of payment and withdrawal
-                  policy.
-                </label>
-              </div>
-              {formError.condition && (
-                <div className="form-eror xl:text-16   text-14">
-                  {formError.condition}
+                    Upload Your Photo Below
+                  </label>
+
+                  {/* Upload Box */}
+                  <label
+                    htmlFor="file"
+                    className="mt-2 flex cursor-pointer  border-2 border-dashed border-green-700 rounded-md p-2 text-center hover:bg-gray-50"
+                  >
+                    <div className="flex items-center space-x-2">
+                      {/* Icon */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-green-700"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12"
+                        />
+                      </svg>
+
+                      {/* Text */}
+                      <span className="text-black font-semibold text-14 underline ">
+                        Upload
+                      </span>
+                      <span className="text-gray-500 text-[10px]">
+                        or Drop a File Right Here
+                      </span>
+                    </div>
+
+                    <input
+                      id="file"
+                      type="file"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {/* Show Selected File */}
+                  {selectedImage && (
+                    <div className="mt-2 text-black truncate text-sm">
+                      {selectedImage?.name}
+                    </div>
+                  )}
+
+                  {/* Show Error */}
+                  {formError.img && (
+                    <div className="form-eror text-red-600 text-sm">
+                      {formError.img}
+                    </div>
+                  )}
                 </div>
-              )}
-              <button
-                onClick={handleDepositSubmit}
-                className="btn rounded-lg mt-5 bg-green-600 h-8 md:h-12 w-full text-14 font-medium"
-              >
-                SUBMIT
-              </button>
+                <div className=" w-full">
+                  <label
+                    htmlFor="utr"
+                    className="text-primary-100 flex text-start xl:text-16 text-14"
+                  >
+                    Enter UTR Number*
+                  </label>
+                  <div className="rounded-md overflow-hidden h-[48px] mt-1 w-full">
+                    <input
+                      name="utr"
+                      placeholder={'10 to 12 Digit UTR Number'}
+                      id="utr"
+                      value={form.utr}
+                      onChange={handleChange}
+                      className="border border-black rounded-md outline-none text-14 py-2 px-5  w-full"
+                    />
+                  </div>
+                  {formError.utr && (
+                    <div className="form-eror xl:text-16 text-14">
+                      {formError.utr}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-start justify-start gap-2 mt-4">
+                  <input
+                    type="checkbox"
+                    className="w-5 h-5 accent-primary-red"
+                    name="condition"
+                    checked={form.condition}
+                    onChange={handleChange}
+                    id="odds"
+                  />
+                  <label htmlFor="odds" className="leading-5 text-14 ">
+                    I have read and agree with{' '}
+                    <Link to="#" className="text-primary-1300 underline">
+                      the terms of payment and withdrawal policy.
+                    </Link>
+                  </label>
+                </div>
+                {formError.condition && (
+                  <div className="form-eror xl:text-16   text-14">
+                    {formError.condition}
+                  </div>
+                )}
+                <button
+                  onClick={handleDepositSubmit}
+                  className="bg-primary-1300 my-5 text-14 h-[35px] flex-center rounded-[4px] w-full text-white shadow-[2px_2px_#00000040]"
+                >
+                  Proceed
+                </button>
+              </div>
+              <ul className="lg:hidden block bg-white border border-black p-2 rounded-md ">
+                {rules.map((item, index) => (
+                  <li
+                    className=" text-[13px] leading-5 font-bold mb-2"
+                    key={index}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-        </div>
-
-        <div className="mt-5 overflow-x-auto theme-scroller">
-          <table className="w-full min-w-[650px] ">
-            <thead>
-              <tr className="bg-gray-200 text-black w-full border-b border-b-primary-200 divide-primary-600 xl:text-16 text-14">
-                <th className="rounded-tl-lg w-[70px] pl-4 pr-0">
-                  <div className="border-r border-r-black xl:text-16 text-14">
-                    SN.
-                  </div>
-                </th>{' '}
-                <th className="w-[130px] pl-4 pr-0">
-                  <div className="border-r border-r-black xl:text-14 text-14">
-                    Amount
-                  </div>
-                </th>
-                <th className="px-0 w-[130px]">
-                  <div className="border-r border-r-black xl:text-14 text-14">
-                    Status
-                  </div>
-                </th>
-                <th className="px-0 w-[180px]">
-                  <div className="border-r border-r-black xl:text-14 text-14">
-                    Date
-                  </div>
-                </th>
-                <th className="px-0">
-                  <div className="border-r border-r-black xl:text-14 text-14">
-                    Utr
-                  </div>
-                </th>
-                <th className="rounded-tr-lg pl-0">
-                  <div className="xl:text-14 text-14">Payment Method</div>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="max-h-[400px] overflow-y-auto theme-scroller">
-              {depositListData?.length === 0 ? (
-                <tr className="h-[42px] w-full">
-                  <td colSpan={6}>
-                    <div className="text-center flex-center h-[140px]">
-                      <Empty />
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                <>
-                  {' '}
-                  {depositListData &&
-                    depositListData?.map((items, index) => (
-                      <tr
-                        key={index}
-                        className=" bg-white text-black text-center"
-                      >
-                        <td className="w-[70px] text-center  text-12">
-                          {index + 1}
-                        </td>{' '}
-                        <td className="px-4 w-[130px]  text-12">
-                          {numberWithCommas(items?.amount || 0) || 0}
-                        </td>
-                        <td
-                          className={` w-[130px] text-12 ${
-                            items?.status === 'pending'
-                              ? 'text-yellow-700'
-                              : items?.status === 'Approved'
-                              ? 'text-green-700'
-                              : 'text-red-700'
-                          }`}
-                        >
-                          <span
-                            className={`p-1 rounded-[5px] ${
-                              items?.status === 'pending'
-                                ? 'bg-yellow-200'
-                                : items?.status === 'Approved'
-                                ? 'bg-green-200'
-                                : 'bg-red-100'
-                            }  font-semibold`}
-                          >
-                            {items?.status?.toUpperCase()}
-                          </span>
-                        </td>
-                        <td className=" w-[180px] text-12">
-                          {moment(items?.created_at).format('L')}
-                        </td>
-                        <td className=" text-12">{items?.utr}</td>
-                        <td className="truncate  text-12">
-                          {items?.paymentMethod}
-                        </td>
-                      </tr>
-                    ))}{' '}
-                </>
-              )}
-            </tbody>
-          </table>
-          <Pagination
-            pageCount={pagination.totalCount}
-            setPageNumber={setPage}
-            take={take}
-          />
-        </div>
+        )}
       </div>
     </>
   );

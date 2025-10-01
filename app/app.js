@@ -110,8 +110,7 @@ function App() {
             <Route path="settings-stake" element={<SettingsMobile />} />
             <Route path="change-password" element={<Settings />} />
             <Route path="notifications" element={<NotificationPage />} />
-            <Route path="deposit" element={<Deposit />} />
-            <Route path="withdraw" element={<Withdraw />} />
+
             <Route path="bank-details" element={<BankDetails />} />
             <Route path="bank-details/add-account" element={<AddAccount />} />
             <Route
@@ -131,6 +130,8 @@ function App() {
             <Route path="transactions" element={<TransactionsPage />} />
             <Route path="account-statement" element={<AccountStatement />} />
             <Route path="profit-loss" element={<ProfitAndLoss />} />
+            <Route path="deposit" element={<Deposit />} />
+            <Route path="withdrawal" element={<Withdraw />} />
           </Route>
 
           <Route path="/*" element={<NotFound />} />

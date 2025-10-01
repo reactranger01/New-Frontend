@@ -118,6 +118,14 @@ export const userChangePasswordValidation = Yup.object().shape({
     .oneOf([Yup.ref('newPassword')], 'Passwords not matched'),
 });
 
+export const amountValidation = yup.object().shape({
+  amount: yup
+    .number()
+    .required('Please enter amount')
+    .min(100, 'Amount should not be more than 100')
+    .max(200000, 'Amount should not be more than 2,00,000'),
+});
+
 export const depositValidation = yup.object().shape({
   paymentMethod: yup.string().required('Please select payment method'),
   utr: yup

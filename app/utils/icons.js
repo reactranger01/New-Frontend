@@ -63,10 +63,12 @@ import { FaBars } from 'react-icons/fa6';
 import { TbCopy } from 'react-icons/tb';
 import { MdModeEditOutline } from 'react-icons/md';
 import { FaRegCalendar } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 
 export const reactIcons = {
   whatsapp: <FaWhatsapp />,
   calendar: <FaRegCalendar />,
+  editNew: <FaEdit />,
   edit: <MdModeEditOutline />,
   newMenu: <FaBars />,
   copy: <TbCopy />,
