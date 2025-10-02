@@ -50,7 +50,7 @@ export const useFetchMyBetsData = ({
   useEffect(() => {
     getAllBets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [take]);
+  }, [take, bets]);
 
-  return { betsData, bets, loading, refetch: getAllBets };
+  return { betsData, loading, refetch: getAllBets };
 };

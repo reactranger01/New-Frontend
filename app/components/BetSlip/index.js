@@ -15,10 +15,24 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { betValidationSchema } from '@/utils/validation';
 import { isYupError, parseYupError } from '@/utils/Yup';
 import { calcCurrentBetStats } from '@/utils/helper';
-
-const amountArr = [100, 200, 300, 400, 500, 600, 700, 800];
+import BetProcessing from '../NewModals/BetProcessing';
+import BetEditStake from '../NewModals/BetEditStake';
+import MobOpenBets from '../MobOpenBets';
+import { useParams } from 'react-router-dom';
 
 const BetSlip = () => {
+  const { eventId } = useParams();
+  const [openEditStake, setOpenEditStake] = useState(false);
+  const [stakebutton, setStakeButton] = useState([
+    { text: '100', value: 100 },
+    { text: '200', value: 200 },
+    { text: '300', value: 300 },
+    { text: '400', value: 400 },
+    { text: '500', value: 500 },
+    { text: '600', value: 600 },
+    { text: '700', value: 700 },
+    { text: '800', value: 800 },
+  ]);
   const [activeTab, setActiveTab] = useState('betslip');
   const [betData, setBetData] = useState({});
   const [currentBetWinLossDatas, setCurrentBetWinLossData] = useState(null);
@@ -229,6 +243,15 @@ const BetSlip = () => {
     }
   }, [betData, bets]);
 
+  useEffect(() => {
+    const localStakeData = JSON.parse(
+      localStorage.getItem('localBetStakeData'),
+    );
+    if (localStakeData && Array.isArray(localStakeData)) {
+      setStakeButton(localStakeData);
+    }
+  }, [openEditStake]);
+
   return (
     <>
       <div className=" pb-2 text-12 ">
@@ -261,196 +284,219 @@ const BetSlip = () => {
               Open Bets
             </div>
           </div>
-          <div className="bg-[#1E8067] px-2 py-1 rounded text-white font-bold text-[13px]">
+          <div
+            onClick={() => setOpenEditStake(true)}
+            className="bg-[#1E8067] px-2 py-1 rounded text-white font-bold text-[13px]"
+          >
             Edit Stakes
           </div>
         </div>
         {/* main div */}
-        {betData && betData?.marketId && (
-          <div className="bg-white p-2">
-            <div className="flex items-center gap-1">
-              <div
-                className={`${
-                  bets?.[0]?.betOn === 'BACK' ? 'bg-[#a7d8fd]' : 'bg-[#f9c9d4]'
-                } w-3 h-3`}
-              ></div>
-              <p>{bets?.[0]?.betOn === 'BACK' ? 'back' : 'lay'}</p>
-            </div>
-            <p className=" text-[13px] font-bold text-black">
-              {bets?.[0]?.event}
-            </p>
-            <div
-              className={`relative p-2 ${
-                bets?.[0]?.betOn === 'BACK' ? 'bg-[#a7d8fd]' : 'bg-[#f9c9d4]'
-              } my-1`}
-            >
-              <div className="flex items-center justify-between text-12 font-lato ">
-                <p> {bets?.[0]?.selection}</p>
-                <p> Max Market: {betData?.maximumBet}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex flex-col gap-1">
-                  <div className="flex justify-between">
-                    <label htmlFor="" className="text-12 font-[200]  ">
-                      Odds
-                    </label>
-                  </div>
-                  <div className="relative rounded-md overflow-hidden bg-white">
-                    <input
-                      type="text"
-                      disabled
-                      value={
-                        betData?.market == 'bookmaker'
-                          ? parseFloat(
-                              (betData?.price / 100 + 1 || 0).toFixed(2),
-                            )
-                          : parseFloat((betData?.price || 0).toFixed(2))
-                      }
-                      className="outline-none   rounded-sm w-full h-[28px] max-w-[103px] px-8 py-2"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleDecrease}
-                      className="absolute ay-center rounded-sm cursor-pointer h-[22px] w-[22px] left-1 bg-[#051316] font-bold  flex-center text-white"
-                    >
-                      -
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleIncrease}
-                      className="absolute ay-center rounded-sm cursor-pointer h-[22px] w-[22px] right-1 bg-[#051316] font-bold flex-center text-white"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className=" font-[200] text-12">
-                    Stake
-                  </label>
-                  <div className="relative rounded-md overflow-hidden">
-                    <input
-                      type="number"
-                      onChange={handleChange}
-                      value={betData?.stake}
-                      placeholder="0"
-                      className="outline-none border border-gray-200 text-center  max-w-[90px] rounded-sm w-full h-[26px] "
-                    />
-                  </div>
-                </div>
-                <div className="">
-                  <p className="text-black font-[200]">
-                    {bets?.[0]?.betOn === 'BACK' ? 'Profit' : 'Liability'}
-                  </p>
-                  <p className="text-black text-12 font-bold">
-                    {bets?.[0]?.betOn === 'BACK'
-                      ? !isNaN(Number(currentBetWinLossDatas?.calculation?.win))
-                        ? Number(
-                            currentBetWinLossDatas?.calculation?.win,
-                          ).toFixed(0)
-                        : 0
-                      : !isNaN(
-                          Number(currentBetWinLossDatas?.calculation?.loss),
-                        )
-                      ? Number(
-                          currentBetWinLossDatas?.calculation?.loss,
-                        ).toFixed(0)
-                      : 0}
-                  </p>
-                </div>
+        <div className={activeTab === 'openBets' ? 'hidden' : ''}>
+          {betData && betData?.marketId && (
+            <div className="bg-white p-2">
+              <div className="flex items-center gap-1">
                 <div
-                  onClick={() => {
-                    handleRemoveBet(betData?.selectionId);
-                  }}
-                  className="bg-[#B2493E] text-white rounded-sm h-5 w-5 flex-center text-xl font-bold mt-auto mb-1"
-                >
-                  {reactIcons.close}
+                  className={`${
+                    bets?.[0]?.betOn === 'BACK'
+                      ? 'bg-[#a7d8fd]'
+                      : 'bg-[#f9c9d4]'
+                  } w-3 h-3`}
+                ></div>
+                <p>{bets?.[0]?.betOn === 'BACK' ? 'back' : 'lay'}</p>
+              </div>
+              <p className=" text-[13px] font-bold text-black">
+                {bets?.[0]?.event}
+              </p>
+              <div
+                className={`relative p-2 ${
+                  bets?.[0]?.betOn === 'BACK' ? 'bg-[#a7d8fd]' : 'bg-[#f9c9d4]'
+                } my-1`}
+              >
+                <div className="flex items-center justify-between text-12 font-lato ">
+                  <p> {bets?.[0]?.selection}</p>
+                  <p> Max Market: {betData?.maximumBet}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex justify-between">
+                      <label htmlFor="" className="text-12 font-[200]  ">
+                        Odds
+                      </label>
+                    </div>
+                    <div className="relative rounded-md overflow-hidden bg-white">
+                      <input
+                        type="text"
+                        disabled
+                        value={
+                          betData?.market == 'bookmaker'
+                            ? parseFloat(
+                                (betData?.price / 100 + 1 || 0).toFixed(2),
+                              )
+                            : parseFloat((betData?.price || 0).toFixed(2))
+                        }
+                        className="outline-none   rounded-sm w-full h-[28px] max-w-[103px] px-8 py-2"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleDecrease}
+                        className="absolute ay-center rounded-sm cursor-pointer h-[22px] w-[22px] left-1 bg-[#051316] font-bold  flex-center text-white"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleIncrease}
+                        className="absolute ay-center rounded-sm cursor-pointer h-[22px] w-[22px] right-1 bg-[#051316] font-bold flex-center text-white"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className=" font-[200] text-12">
+                      Stake
+                    </label>
+                    <div className="relative rounded-md overflow-hidden">
+                      <input
+                        type="number"
+                        onChange={handleChange}
+                        value={betData?.stake}
+                        placeholder="0"
+                        className="outline-none border border-gray-200 text-center  max-w-[90px] rounded-sm w-full h-[26px] "
+                      />
+                    </div>
+                  </div>
+                  <div className="">
+                    <p className="text-black font-[200]">
+                      {bets?.[0]?.betOn === 'BACK' ? 'Profit' : 'Liability'}
+                    </p>
+                    <p className="text-black text-12 font-bold">
+                      {bets?.[0]?.betOn === 'BACK'
+                        ? !isNaN(
+                            Number(currentBetWinLossDatas?.calculation?.win),
+                          )
+                          ? Number(
+                              currentBetWinLossDatas?.calculation?.win,
+                            ).toFixed(0)
+                          : 0
+                        : !isNaN(
+                            Number(currentBetWinLossDatas?.calculation?.loss),
+                          )
+                        ? Number(
+                            currentBetWinLossDatas?.calculation?.loss,
+                          ).toFixed(0)
+                        : 0}
+                    </p>
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleRemoveBet(betData?.selectionId);
+                    }}
+                    className="bg-[#B2493E] text-white rounded-sm h-5 w-5 flex-center text-xl font-bold mt-auto mb-1"
+                  >
+                    {reactIcons.close}
+                  </div>
+                </div>
+                <div className="bg-white p-3 grid grid-cols-3 gap-y-3  gap-x-2 mt-2">
+                  <button
+                    onClick={() => setBetData({ ...betData, stake: 100 })}
+                    className="border  bg-[#1E8067] h-[14px] text-white font-medium text-10 leading-none rounded-sm flex-center"
+                  >
+                    Min
+                  </button>
+
+                  {stakebutton &&
+                    stakebutton.map((item) => {
+                      return (
+                        <button
+                          key={item}
+                          onClick={() => {
+                            setBetData({
+                              ...betData,
+                              stake: item?.value,
+                            });
+                          }}
+                          className={`border  rounded-sm h-[14px] text-white font-medium text-10 leading-none flex-center ${
+                            item === betData?.stake
+                              ? 'bg-[#1E8067]'
+                              : 'bg-[#1E8067]'
+                          }`}
+                        >
+                          {item?.text}
+                        </button>
+                      );
+                    })}
+                  <button
+                    onClick={() => setBetData({ ...betData, stake: 25000 })}
+                    className="border text-10 h-[14px] leading-none text-white font-medium  bg-[#1E8067] rounded-sm flex-center"
+                  >
+                    Max
+                  </button>
+                  <button
+                    onClick={() => {
+                      setBetData({ ...betData, stake: '' });
+                    }}
+                    className="text-12 font-medium h-[14px] flex items-center"
+                  >
+                    Clear
+                  </button>
+                </div>
+                <div className="flex items-center justify-between gap-2  mt-2">
+                  <button
+                    onClick={() => {
+                      setBetData({ ...betData, stake: '' });
+                    }}
+                    // onClick={() => {
+                    //   handleRemoveBet(betData?.selectionId);
+                    // }}
+                    className="bg-[#B2493E] text-white px-4 py-1 text-12 font-semibold rounded-sm shadow-[inset_-2px_-2px_#8d3a31]"
+                  >
+                    Remove All
+                  </button>
+                  <button
+                    disabled={
+                      betData?.stake === '' || betData?.stake === 0 || loading
+                        ? true
+                        : false
+                    }
+                    onClick={(e) => placeBet(e)}
+                    className={`text-white px-4 flex gap-2 items-center text-12 font-semibold shadow-[inset_-2px_-2px_#1E8067] py-1 rounded-sm ${
+                      betData?.stake === '' || betData?.stake === 0
+                        ? 'bg-[#5c996f] '
+                        : 'bg-[#5C996F] '
+                    }`}
+                  >
+                    {loading && (
+                      <AiOutlineLoading3Quarters className="animate-spin text-14" />
+                    )}{' '}
+                    Place Order
+                  </button>
                 </div>
               </div>
-              <div className="bg-white p-3 grid grid-cols-3 gap-y-3  gap-x-2 mt-2">
-                <button
-                  onClick={() => setBetData({ ...betData, stake: 100 })}
-                  className="border  bg-[#1E8067] h-[14px] text-white font-medium text-10 leading-none rounded-sm flex-center"
-                >
-                  Min
-                </button>
-
-                {amountArr &&
-                  amountArr.map((item) => {
-                    return (
-                      <button
-                        key={item}
-                        onClick={() => {
-                          setBetData({
-                            ...betData,
-                            stake: item,
-                          });
-                        }}
-                        className={`border  rounded-sm h-[14px] text-white font-medium text-10 leading-none flex-center ${
-                          item === betData?.stake
-                            ? 'bg-[#1E8067]'
-                            : 'bg-[#1E8067]'
-                        }`}
-                      >
-                        {item}
-                      </button>
-                    );
-                  })}
-                <button
-                  onClick={() => setBetData({ ...betData, stake: 25000 })}
-                  className="border text-10 h-[14px] leading-none text-white font-medium  bg-[#1E8067] rounded-sm flex-center"
-                >
-                  Max
-                </button>
-                <button
-                  onClick={() => {
-                    setBetData({ ...betData, stake: '' });
-                  }}
-                  className="text-12 font-medium h-[14px] flex items-center"
-                >
-                  Clear
-                </button>
-              </div>
-              <div className="flex items-center justify-between gap-2  mt-2">
-                <button
-                  onClick={() => {
-                    setBetData({ ...betData, stake: '' });
-                  }}
-                  // onClick={() => {
-                  //   handleRemoveBet(betData?.selectionId);
-                  // }}
-                  className="bg-[#B2493E] text-white px-4 py-1 text-12 font-semibold rounded-sm shadow-[inset_-2px_-2px_#8d3a31]"
-                >
-                  Remove All
-                </button>
-                <button
-                  disabled={
-                    betData?.stake === '' || betData?.stake === 0 || loading
-                      ? true
-                      : false
-                  }
-                  onClick={(e) => placeBet(e)}
-                  className={`text-white px-4 flex gap-2 items-center text-12 font-semibold shadow-[inset_-2px_-2px_#1E8067] py-1 rounded-sm ${
-                    betData?.stake === '' || betData?.stake === 0
-                      ? 'bg-[#5c996f] '
-                      : 'bg-[#5C996F] '
-                  }`}
-                >
-                  {loading && (
-                    <AiOutlineLoading3Quarters className="animate-spin text-14" />
-                  )}{' '}
-                  Place Order
-                </button>
-              </div>
             </div>
-          </div>
-        )}
-        {!betData?.marketId && (
-          <div className="text-14 bg-white p-2">
-            Click on the odds to add selections to the betslip
-          </div>
-        )}
+          )}
+          {!betData?.marketId && (
+            <div className="text-14 bg-white p-2">
+              Click on the odds to add selections to the betslip
+            </div>
+          )}
+        </div>
+
+        <div className={`${activeTab === 'betslip' ? 'hidden' : ''}`}>
+          <MobOpenBets eventId={eventId} />
+        </div>
       </div>
+
+      {loading && <BetProcessing isOpen={loading} />}
+      {openEditStake && (
+        <BetEditStake
+          isOpen={openEditStake}
+          handleClose={() => setOpenEditStake(false)}
+          stakebutton={stakebutton}
+          setStakeButton={setStakeButton}
+        />
+      )}
     </>
   );
 };

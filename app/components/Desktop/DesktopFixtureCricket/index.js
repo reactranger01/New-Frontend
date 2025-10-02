@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import 'swiper/css';
 import { isLoggedIn } from '@/utils/apiHandlers';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
@@ -17,9 +17,7 @@ const DesktopFixtureCricket = ({ type, fixtureData, isLoading }) => {
   /* eslint-disable */
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
-  const betData = useSelector((state) => state.bet.selectedBet);
   const isMobile = useMediaQuery('(max-width:660px)');
-  const activeBetSlip = useSelector((state) => state.activeNewBet.activeIndex);
   useEffect(() => {
     if (bets?.length > 0) {
       dispatch(fetchBetDetailsAction(bets));

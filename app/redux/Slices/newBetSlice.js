@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   activeIndex: null,
+  activeType: '',
 };
 
 const activeIndexSlice = createSlice({
@@ -10,12 +11,18 @@ const activeIndexSlice = createSlice({
     setActiveBetSlipIndex: (state, action) => {
       state.activeIndex = action.payload;
     },
+    setActiveBetSlipType: (state, action) => {
+      state.activeType = action.payload;
+    },
     resetActiveBetSlipIndex: (state) => {
       state.activeIndex = null;
     },
   },
 });
 
-export const { setActiveBetSlipIndex, resetActiveBetSlipIndex } =
-  activeIndexSlice.actions;
+export const {
+  setActiveBetSlipIndex,
+  resetActiveBetSlipIndex,
+  setActiveBetSlipType,
+} = activeIndexSlice.actions;
 export default activeIndexSlice.reducer;

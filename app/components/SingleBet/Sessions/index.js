@@ -297,19 +297,7 @@ const Sessions = ({
                             )}
                         </div>
                       </div>
-                      <div className="flex justify-between">
-                        <div></div>
-                        <div className="w-[138px] relative overflow-hidden">
-                          <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
-                            <div className="text-right pr-1">
-                              Min : {minLimitsession}
-                            </div>
-                            <div className="border-l pl-1 border-black ">
-                              Min : {maxLimitsession}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+
                       <div>
                         {isOpen &&
                           singleRowData?.selectionId == items?.SelectionId && (
@@ -374,6 +362,19 @@ const Sessions = ({
                     </>
                   );
                 })}
+              <div className="flex justify-between">
+                <div></div>
+                <div className="w-[138px] relative overflow-hidden">
+                  <div className="grid grid-cols-2 my-1 leading-none text-12 font-medium whitespace-nowrap  ">
+                    <div className="text-right pr-1">
+                      Min : {oddsData?.inPlayFancyMinLimit}
+                    </div>
+                    <div className="border-l pl-1 border-black ">
+                      Min : {oddsData?.inPlayFancyMaxLimit}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>

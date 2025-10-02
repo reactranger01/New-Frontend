@@ -31,7 +31,6 @@ import {
   ProfitAndLoss,
   // RulesRegulation,
   Settings,
-  SettingsMobile,
   Sidebar,
   Tennis,
   TennisMarket,
@@ -47,6 +46,8 @@ import LayoutTwo from './containers/LayoutTwo';
 import OpenBets from './containers/Pages/OpenBets';
 import TransactionsPage from './containers/Pages/TransactionsPage';
 import LayoutThree from './containers/LayoutThree';
+import ScrollToTop from './components/ScrollToTop';
+import EditStakes from './containers/EditStakes';
 
 const sagaMiddleware = createSagaMiddleware();
 const reducer = createReducer();
@@ -68,6 +69,8 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <ModalManager />
+        <ScrollToTop />
+
         <Routes>
           <Route path="/mobile" element={<MobLayout />}>
             <Route index element={<MobHome />} />
@@ -107,7 +110,6 @@ function App() {
             <Route index element={<MyBets />} />
             <Route path="bets/1" element={<OpenBets />} />
             <Route path="bets/2" element={<MyBets />} />
-            <Route path="settings-stake" element={<SettingsMobile />} />
             <Route path="change-password" element={<Settings />} />
             <Route path="notifications" element={<NotificationPage />} />
 
@@ -132,6 +134,7 @@ function App() {
             <Route path="profit-loss" element={<ProfitAndLoss />} />
             <Route path="deposit" element={<Deposit />} />
             <Route path="withdrawal" element={<Withdraw />} />
+            <Route path="edit-stakes" element={<EditStakes />} />
           </Route>
 
           <Route path="/*" element={<NotFound />} />

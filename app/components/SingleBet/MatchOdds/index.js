@@ -12,12 +12,7 @@ import { useMediaQuery } from '@mui/material';
 import { updatePlacedBetCalculation } from '@/utils/helper';
 import { openModal } from '@/redux/Slices/modalSlice';
 
-const MatchOdds = ({
-  heading,
-  data,
-  placedBetWinLossDatas,
-  competition_name,
-}) => {
+const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
   const isLogin = isLoggedIn();
   const [bets, setBets] = useState([]);
   const dispatch = useDispatch();
@@ -64,7 +59,7 @@ const MatchOdds = ({
             price: parseFloat(OddsPrice),
             stake: '',
             eventType: game,
-            competition: competition_name,
+            competition: _marketData?.competition_name,
             event: data?.name,
             market: _marketData.market_name,
             gameType: _marketData.market_name,

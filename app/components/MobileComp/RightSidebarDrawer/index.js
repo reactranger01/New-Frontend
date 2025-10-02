@@ -48,6 +48,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             <div className=" px-2 grid grid-cols-2 gap-2 p-1 rounded-md bg-white">
               <Link
                 to="/account/deposit"
+                onClick={() => setOpen(false)}
                 className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg bg-[#1e8067] text-white"
               >
                 <img
@@ -59,6 +60,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               </Link>
               <Link
                 to="/account/withdrawal"
+                onClick={() => setOpen(false)}
                 className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg  text-white  bg-[#dc2626]"
               >
                 <img
@@ -92,7 +94,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             <div className="flex items-center justify-between">
               <div className="py-[5px] flex items-center  text-[13px] font-bold">
                 <p className="w-[85px]">Display Name</p>
-                <p>: {numberWithCommas(userInfo?.balance || 0)}</p>
+                <p>: {userInfo?.username}</p>
               </div>
               <div className="text-[#1e8067] font-bold">{reactIcons.edit}</div>
             </div>
@@ -112,9 +114,9 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             </div>
 
             <div>
-              <button className="text-14 my-2 py-2 flex-center border border-[#1e8067] bg-[#1e8067] text-white rounded-[30px] w-full">
+              {/* <button className="text-14 my-2 py-2 flex-center border border-[#1e8067] bg-[#1e8067] text-white rounded-[30px] w-full">
                 LOCKED BONUS 120.00
-              </button>
+              </button> */}
               <button className="text-14 my-2 py-2 flex-center rounded-[30px] text-white w-full bg-[linear-gradient(180deg,#1e8067,#1e8067_48.4%,#2f3332)]">
                 REFER & EARN
               </button>
@@ -126,7 +128,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
             <div
               onClick={() => dispatch(openModal('rules'))}
               key={index}
-              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-semibold gap-2 "
+              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-bold gap-2 "
             >
               <img
                 src={item.icon}
@@ -140,7 +142,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               to={item.path}
               onClick={() => setOpen(false)}
               key={index}
-              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-semibold gap-2 "
+              className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-bold gap-2 "
             >
               <img
                 src={item.icon}

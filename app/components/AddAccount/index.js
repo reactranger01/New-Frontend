@@ -59,7 +59,7 @@ const AddAccount = ({ setReftech }) => {
       [name]: '',
     });
   };
-
+  console.log(formError, 'formError');
   const handleAddAccountSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -67,6 +67,7 @@ const AddAccount = ({ setReftech }) => {
       await addAccountValidation.validate(form, {
         abortEarly: false,
       });
+      console.log(form, 'form');
       const response = await postAuthData('/user/add-user-bank-account', form);
       if (response?.status === 200 || response?.status === 201) {
         toast.success('Account Added Successfully');
@@ -75,7 +76,7 @@ const AddAccount = ({ setReftech }) => {
           bankName: '',
           accountNumber: '',
           ifscCode: '',
-          accountType: '',
+          withdrawPassword: '',
         });
       } else {
         toast.error(response?.data || 'Something went wrong');

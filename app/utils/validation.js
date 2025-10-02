@@ -160,12 +160,13 @@ export const addAccountValidation = yup.object().shape({
     .min(4, 'Ifsc Code must be at least 4 characters long')
     .max(20, 'Ifsc Code must be at most 20 characters long'),
 
-  accountType: yup.string().required('Please select type'),
+  // accountType: yup.string().required('Please select type'),
   accountNumber: yup
     .string()
     .required('Please enter account number')
     .min(4, 'Acount number must be at least 4 characters long')
     .max(20, 'Account number must be at most 20 characters long'),
+  withdrawPassword: Yup.string().required('Please enter withdraw password'),
 });
 export const addUpiValidation = yup.object().shape({
   upiName: yup

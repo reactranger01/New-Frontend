@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Loading, MatchOdds } from '@/components';
+import { BookMaker, Loading, MatchOdds } from '@/components';
 import Sessions from '@/components/SingleBet/Sessions';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import React, { useEffect, useRef, useState } from 'react';
@@ -239,7 +239,7 @@ const CricketMarket = () => {
           competition_name={matchData?.competition_name}
           placedBetWinLossDatas={placedBetWinLossDatas}
         />
-        {/* <BookMaker
+        <BookMaker
           heading="Bookmakers"
           data={{
             ...bookmakerTransformData,
@@ -250,7 +250,7 @@ const CricketMarket = () => {
           placedBetWinLossBookmakerData={placedBetWinLossBookmakerData}
           oddsData={oddsData}
           matchName={matchData?.name}
-        /> */}
+        />
         {/* <Fancy
             heading="Fancy"
             data={fancy}

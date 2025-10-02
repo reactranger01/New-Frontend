@@ -11,9 +11,10 @@ const MobOpenBets = ({ eventId, setOpenBetCount }) => {
     // endDate,
     eventId,
   });
+  console.log(betsData?.bets?.length, 'lennn');
   const matchOddsData =
     betsData?.bets?.filter(
-      (item) => item?.market !== 'bookmaker' || item?.market !== 'session',
+      (item) => item?.market !== 'bookmaker' && item?.market !== 'session',
     ) || [];
   const bookmakerData =
     betsData?.bets?.filter((item) => item?.market === 'bookmaker') || [];
@@ -28,8 +29,8 @@ const MobOpenBets = ({ eventId, setOpenBetCount }) => {
       : fancyData;
 
   useEffect(() => {
-    setOpenBetCount(filteredBets?.length || 0);
-  }, [betsData, activeTab]); // eslint-disable-line react-hooks/exhaustive-deps
+    setOpenBetCount && setOpenBetCount(betsData?.bets?.length || 0);
+  }, [betsData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return (

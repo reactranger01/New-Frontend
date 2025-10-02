@@ -474,19 +474,19 @@ const Withdraw = () => {
               </button>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="lg:hidden flex items-center justify-between">
               <h2 className="text-18 font-bold">Withdraw Funds</h2>
               {accountType === 'new' ? (
                 <button
                   onClick={() => setAccountType('prev')}
-                  className="bg-primary-1300 px-4 w-fit my-5 text-14 h-[35px] flex-center rounded-[4px]  text-white shadow-[2px_2px_#00000040]"
+                  className=" bg-primary-1300 px-4 w-fit my-5 text-14 h-[35px] flex-center rounded-[4px]  text-white shadow-[2px_2px_#00000040]"
                 >
                   Use Previous Account
                 </button>
               ) : (
                 <button
                   onClick={() => setAccountType('new')}
-                  className="bg-primary-1300 px-4 w-fit my-5 text-14 h-[35px] flex-center rounded-[4px]  text-white shadow-[2px_2px_#00000040]"
+                  className=" bg-primary-1300 px-4 w-fit my-5 text-14 h-[35px] flex-center rounded-[4px]  text-white shadow-[2px_2px_#00000040]"
                 >
                   Use New Account
                 </button>

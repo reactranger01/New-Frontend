@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import { Download, Share2, Maximize2 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
+import DepositEditStake from '@/components/NewModals/DepositEditStake';
 const rules = [
   '1. Deposit money only in the selected account to get the fastest credits and avoid possible delays.',
   '2. Deposits made 45 minutes after the account removal from the site are valid & will be added to their wallets.',
@@ -19,9 +20,14 @@ const rules = [
   '5. NEFT receiving time varies from 40 minutes to 2 hours.',
 ];
 const Deposit = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [openEditStake, setOpenEditStake] = useState(false);
+  const [stakebutton, setStakeButton] = useState([
+    { text: '100', value: 100 },
+    { text: '200', value: 200 },
+    { text: '500', value: 500 },
+    { text: '1000', value: 1000 },
+  ]);
   const [paymentStep, setPaymentStep] = useState(1);
-  const [paymentType, setPaymentType] = useState('ACCOUNT');
   // eslint-disable-next-line
   const [depositListData, setDepositListData] = useState([]);
   const [qrData, setQrData] = useState({});
@@ -52,7 +58,7 @@ const Deposit = () => {
   }, [User?.id, selectedImage]);
 
   const [form, setForm] = useState({
-    paymentMethod: '',
+    paymentMethod: 'account',
     utr: '',
     img: '',
     amount: '',
@@ -67,13 +73,6 @@ const Deposit = () => {
     condition: false,
   });
 
-  const stakebutton = [
-    { text: '100', value: 100 },
-    { text: '200', value: 200 },
-    { text: '500', value: 500 },
-    { text: '1000', value: 1000 },
-  ];
-
   const paymentList = [
     {
       text: 'Bank of Maharashtra',
@@ -85,7 +84,7 @@ const Deposit = () => {
   ];
   // eslint-disable-next-line
   const accountDetails =
-    paymentType === 'ACCOUNT'
+    form?.paymentMethod === 'account'
       ? accountData?.bankName &&
         accountData?.acountholdername &&
         accountData?.accountNumber &&
@@ -155,7 +154,7 @@ const Deposit = () => {
           }`,
         );
         if (response?.status === 201 || response?.status === 200) {
-          setQrData(response.data);
+          setQrData(response?.data?.data?.[0]);
         } else {
           setQrData({});
         }
@@ -172,7 +171,7 @@ const Deposit = () => {
       try {
         const response = await getAuthData('/user/get-account-true-status');
         if (response?.status === 201 || response?.status === 200) {
-          setAccountData(response.data);
+          setAccountData(response.data?.[0]);
         }
       } catch (e) {
         console.error(e);
@@ -186,29 +185,35 @@ const Deposit = () => {
   };
 
   const handleImageChange = async (event) => {
-    setSelectedImage(event.target.files[0]);
     const file = event.target.files[0];
+    setSelectedImage(file || null);
+
     if (file) {
       const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-      if (validImageTypes.includes(file?.type)) {
+      if (validImageTypes.includes(file.type)) {
         const data = new FormData();
-        data.append('image', event.target.files[0]);
+        data.append('image', file);
+
         const image = await postAuthData('/user/uploads', data);
+
         if (image?.status) {
           setForm({ ...form, img: image?.data?.imageUrl });
           setFormError({ ...formError, img: '' });
         } else {
           toast.error(image?.data || 'Something went wrong!');
-          setSelectedImage({});
+          setSelectedImage(null);
+          event.target.value = ''; // reset input
         }
       } else {
         toast.error(
           'Invalid file type. Please select a JPEG, PNG, or JPG image.',
         );
-        setSelectedImage({});
+        setSelectedImage(null);
+        event.target.value = ''; // reset input
       }
     }
   };
+
   const handleChange = (e) => {
     let { name, value, type, checked } = e.target;
     let updatedValue = type === 'checkbox' ? checked : value;
@@ -226,8 +231,6 @@ const Deposit = () => {
   };
 
   const handleButtonClick = (index, type, value) => {
-    setActiveIndex(index);
-    setPaymentType(type);
     setQrType(value);
   };
 
@@ -253,23 +256,25 @@ const Deposit = () => {
       await depositValidation.validate(form, {
         abortEarly: false,
       });
+
       if (form.condition) {
         const newData = { ...form };
         delete newData.condition;
+
         const response = await postAuthData('/user/create-deposit', newData);
         if (response?.status === 200 || response?.status === 201) {
           toast.success('Deposit Request Sent Successfully');
           setForm({
-            paymentMethod: '',
+            paymentMethod: 'account',
             utr: '',
             img: '',
             amount: '',
             condition: false,
           });
-          setActiveIndex();
-          setPaymentType('ACCOUNT');
+          setPaymentStep(1);
           getDepositList();
-          setSelectedImage({});
+          setSelectedImage(null);
+          document.getElementById('file').value = ''; // reset file input
         } else if (response?.status !== 200 && response?.status !== 201) {
           const errorMessage = response?.data?.error || 'Something went wrong';
           toast.error(errorMessage);
@@ -284,12 +289,16 @@ const Deposit = () => {
     }
   };
 
-  const upiId = '8807316855@okbizaxis';
-  const accountHolder = 'NANJIBHAI TRADING CO';
+  useEffect(() => {
+    const localStakeData = JSON.parse(localStorage.getItem('localStakeData'));
+    if (localStakeData && Array.isArray(localStakeData)) {
+      setStakeButton(localStakeData);
+    }
+  }, [openEditStake]);
 
   return (
     <>
-      <div className="min-h-screen mx-1 md:mx-0">
+      <div className="min-h-screen mx-1 md:mx-0 py-5">
         {paymentStep === 1 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 bg-white">
             <div className="px-12 py-9 hidden lg:block shadow-sm lg:shadow-[-1px_1px_10px_#383838]">
@@ -362,7 +371,7 @@ const Deposit = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    // onClick={() => setPage(1)}
+                    onClick={() => setOpenEditStake(true)}
                     className="bg-primary-1300 text-14 h-[35px] flex-center gap-1 rounded-[4px] w-full text-white shadow-[2px_2px_#00000040]"
                   >
                     <span>{reactIcons.editNew}</span>
@@ -382,21 +391,39 @@ const Deposit = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 bg-white">
             <div className="hidden lg:block px-12 py-9 shadow-sm lg:shadow-[-1px_1px_10px_#383838]">
               <h1 className="text-[29px] font-bold text-black mb-4">Deposit</h1>
-              {paymentType === 'ACCOUNT' ? (
+              {form?.paymentMethod === 'account' ? (
                 <div className="p-5 border-2 border-dashed border-[#1e8067] rounded-[5px]">
+                  <div className="flex justify-between items-center my-1 md:my-2 gap-2">
+                    <div className="flex items-center font-semibold">
+                      <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
+                        Bank Name
+                      </p>
+                      <p className=" text-black  text-12 whitespace-nowrap">
+                        : {accountData?.bankName}
+                      </p>
+                    </div>
+                    <CopyToClipboard text={accountData?.bankName}>
+                      <span
+                        className="cursor-pointer"
+                        onClick={() => copieBtn(accountData?.bankName)}
+                      >
+                        {reactIcons.copy}
+                      </span>
+                    </CopyToClipboard>
+                  </div>
                   <div className="flex justify-between items-center my-1 md:my-2 gap-2">
                     <div className="flex items-center font-semibold">
                       <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
                         Account Number
                       </p>
                       <p className=" text-black  text-12 whitespace-nowrap">
-                        : 60541130129
+                        : {accountData?.accountNumber}
                       </p>
                     </div>
-                    <CopyToClipboard text={60541130129}>
+                    <CopyToClipboard text={accountData?.accountNumber}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(60541130129)}
+                        onClick={() => copieBtn(accountData?.accountNumber)}
                       >
                         {reactIcons.copy}
                       </span>
@@ -408,31 +435,36 @@ const Deposit = () => {
                         IFSC Code
                       </p>
                       <p className=" text-black  text-12 whitespace-nowrap">
-                        : MAHB0000175
+                        : {accountData?.ifscCode}
                       </p>
                     </div>
-                    <CopyToClipboard text={60541130129}>
+                    <CopyToClipboard text={accountData?.ifscCode}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(60541130129)}
+                        onClick={() => copieBtn(accountData?.ifscCode)}
                       >
                         {reactIcons.copy}
                       </span>
                     </CopyToClipboard>
                   </div>
+                  {/* accountData?.bankName &&
+        accountData?.acountholdername &&
+        accountData?.accountNumber &&
+        accountData?.ifscCode &&
+        accountData?.accountType */}
                   <div className="flex justify-between items-center my-1 md:my-2 gap-2">
                     <div className="flex items-center font-semibold">
                       <p className=" w-[120px] text-[#4b4b4b] text-12 whitespace-nowrap">
                         Account Holder Name
                       </p>
                       <p className="  text-black text-12 whitespace-nowrap">
-                        : YOGESH KATKE
+                        : {accountData?.acountholdername}
                       </p>
                     </div>
-                    <CopyToClipboard text={60541130129}>
+                    <CopyToClipboard text={accountData?.acountholdername}>
                       <span
                         className="cursor-pointer"
-                        onClick={() => copieBtn(60541130129)}
+                        onClick={() => copieBtn(accountData?.acountholdername)}
                       >
                         {reactIcons.copy}
                       </span>
@@ -446,23 +478,36 @@ const Deposit = () => {
                     <div className="flex">
                       <div className="flex-1 flex justify-center">
                         <img
-                          src="/images/qr-demo.png" // <-- put your QR image path
+                          src={qrData?.image} // <-- put your QR image path
                           alt="UPI QR Code"
-                          className="w-40 h-40 object-contain border rounded-md"
+                          className="w-[200px] h-[200px] object-contain border rounded-md"
                         />
                       </div>
 
                       {/* Action Buttons */}
                       <div className="flex flex-col spa ce-y-3 ml-3">
-                        <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
-                          <Maximize2 size={18} />
-                        </button>
+                        <Link
+                          to={qrData?.image}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
+                            <Maximize2 size={18} />
+                          </button>
+                        </Link>
                         <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
                           <Share2 size={18} />
                         </button>
-                        <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
-                          <Download size={18} />
-                        </button>
+                        <a
+                          href={qrData?.image}
+                          download={qrData?.image}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                            <Download size={18} />
+                          </button>
+                        </a>
                       </div>
                     </div>
 
@@ -470,85 +515,12 @@ const Deposit = () => {
                     <div className="mt-4 flex items-center text-sm">
                       <span className="font-semibold">UPI ID:</span>
                       <span className="ml-2 text-blue-700 font-semibold">
-                        {upiId}
+                        {qrData?.upi}
                       </span>
-                      <CopyToClipboard text={upiId}>
+                      <CopyToClipboard text={qrData?.upi}>
                         <span
                           className="cursor-pointer"
-                          onClick={() => copieBtn(upiId)}
-                        >
-                          {reactIcons.copy}
-                        </span>
-                      </CopyToClipboard>
-                    </div>
-
-                    {/* Account Holder */}
-                    <div className="mt-2 flex items-center text-sm">
-                      <span className="font-semibold">
-                        Account Holder Name:
-                      </span>
-                      <span className="ml-2 font-bold">{accountHolder}</span>
-                      <CopyToClipboard text={accountHolder}>
-                        <span
-                          className="cursor-pointer"
-                          onClick={() => copieBtn(accountHolder)}
-                        >
-                          {reactIcons.copy}
-                        </span>
-                      </CopyToClipboard>
-                    </div>
-                  </div>
-                  <div className="border-2  border-dashed border-green-700 rounded-md p-4 w-full max-w-sm mx-auto bg-white shadow-sm">
-                    {/* QR Section */}
-                    <div className="flex">
-                      <div className="flex-1 flex justify-center">
-                        <img
-                          src="/images/qr-demo.png" // <-- put your QR image path
-                          alt="UPI QR Code"
-                          className="w-40 h-40 object-contain border rounded-md"
-                        />
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex flex-col spa ce-y-3 ml-3">
-                        <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
-                          <Maximize2 size={18} />
-                        </button>
-                        <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
-                          <Share2 size={18} />
-                        </button>
-                        <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
-                          <Download size={18} />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* UPI ID */}
-                    <div className="mt-4 flex items-center text-sm">
-                      <span className="font-semibold">UPI ID:</span>
-                      <span className="ml-2 text-blue-700 font-semibold">
-                        {upiId}
-                      </span>
-                      <CopyToClipboard text={upiId}>
-                        <span
-                          className="cursor-pointer"
-                          onClick={() => copieBtn(upiId)}
-                        >
-                          {reactIcons.copy}
-                        </span>
-                      </CopyToClipboard>
-                    </div>
-
-                    {/* Account Holder */}
-                    <div className="mt-2 flex items-center text-sm">
-                      <span className="font-semibold">
-                        Account Holder Name:
-                      </span>
-                      <span className="ml-2 font-bold">{accountHolder}</span>
-                      <CopyToClipboard text={accountHolder}>
-                        <span
-                          className="cursor-pointer"
-                          onClick={() => copieBtn(accountHolder)}
+                          onClick={() => copieBtn(qrData?.upi)}
                         >
                           {reactIcons.copy}
                         </span>
@@ -565,7 +537,7 @@ const Deposit = () => {
                   {paymentList.map((item, index) => (
                     <button
                       className={`rounded-[10px] h-[78px] w-[133px] bg-cover bg-center border border-[#B2E0FF] p-1 flex  text-black ${
-                        activeIndex === index
+                        form?.paymentMethod === item.value
                           ? 'bg-[linear-gradient(108.08deg,hsla(0,0%,70%,.8)_50%,hsla(0,0%,100%,.8))] '
                           : ' bg-paymentBg'
                       } flex-col  `}
@@ -579,7 +551,7 @@ const Deposit = () => {
                     >
                       <div className="flex items-center justify-between">
                         <img src={item.icon} className=" w-10" alt="" />
-                        {activeIndex !== index ? (
+                        {form?.paymentMethod !== item.value ? (
                           <div className="h-5 w-5 rounded-full  bg-white border border-black"></div>
                         ) : (
                           <div className="h-5 w-5 rounded-full flex-center bg-primary-1300 text-white">
@@ -597,7 +569,7 @@ const Deposit = () => {
                   </div>
                 )}{' '}
                 <div className="mt-5 lg:hidden">
-                  {paymentType === 'ACCOUNT' ? (
+                  {form?.paymentMethod === 'account' ? (
                     <div className="p-5 border-2 border-dashed border-[#1e8067] rounded-[5px]">
                       <div className="flex justify-between items-center my-1 md:my-2 gap-2">
                         <div className="flex items-center font-semibold">
@@ -605,13 +577,13 @@ const Deposit = () => {
                             Account Number
                           </p>
                           <p className=" text-black  text-12 whitespace-nowrap">
-                            : 60541130129
+                            : {accountData?.accountNumber}
                           </p>
                         </div>
-                        <CopyToClipboard text={60541130129}>
+                        <CopyToClipboard text={accountData?.accountNumber}>
                           <span
                             className="cursor-pointer"
-                            onClick={() => copieBtn(60541130129)}
+                            onClick={() => copieBtn(accountData?.accountNumber)}
                           >
                             {reactIcons.copy}
                           </span>
@@ -623,13 +595,13 @@ const Deposit = () => {
                             IFSC Code
                           </p>
                           <p className=" text-black  text-12 whitespace-nowrap">
-                            : MAHB0000175
+                            : {accountData?.ifscCode}
                           </p>
                         </div>
-                        <CopyToClipboard text={60541130129}>
+                        <CopyToClipboard text={accountData?.ifscCode}>
                           <span
                             className="cursor-pointer"
-                            onClick={() => copieBtn(60541130129)}
+                            onClick={() => copieBtn(accountData?.ifscCode)}
                           >
                             {reactIcons.copy}
                           </span>
@@ -641,13 +613,15 @@ const Deposit = () => {
                             Account Holder Name
                           </p>
                           <p className="  text-black text-12 whitespace-nowrap">
-                            : YOGESH KATKE
+                            : {accountData?.acountholdername}
                           </p>
                         </div>
-                        <CopyToClipboard text={60541130129}>
+                        <CopyToClipboard text={accountData?.acountholdername}>
                           <span
                             className="cursor-pointer"
-                            onClick={() => copieBtn(60541130129)}
+                            onClick={() =>
+                              copieBtn(accountData?.acountholdername)
+                            }
                           >
                             {reactIcons.copy}
                           </span>
@@ -661,23 +635,36 @@ const Deposit = () => {
                         <div className="flex">
                           <div className="flex-1 flex justify-center">
                             <img
-                              src="/images/qr-demo.png" // <-- put your QR image path
+                              src={qrData?.image} // <-- put your QR image path
                               alt="UPI QR Code"
-                              className="w-40 h-40 object-contain border rounded-md"
+                              className="w-[200px] h-[200px] object-contain border rounded-md"
                             />
                           </div>
 
                           {/* Action Buttons */}
                           <div className="flex flex-col spa ce-y-3 ml-3">
-                            <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
-                              <Maximize2 size={18} />
-                            </button>
+                            <Link
+                              to={qrData?.image}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
+                                <Maximize2 size={18} />
+                              </button>
+                            </Link>
                             <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
                               <Share2 size={18} />
                             </button>
-                            <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
-                              <Download size={18} />
-                            </button>
+                            <a
+                              href={qrData?.image}
+                              download={qrData?.image}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
+                                <Download size={18} />
+                              </button>
+                            </a>
                           </div>
                         </div>
 
@@ -685,89 +672,12 @@ const Deposit = () => {
                         <div className="mt-4 flex items-center text-sm">
                           <span className="font-semibold">UPI ID:</span>
                           <span className="ml-2 text-blue-700 font-semibold">
-                            {upiId}
+                            {qrData?.upi}
                           </span>
-                          <CopyToClipboard text={upiId}>
+                          <CopyToClipboard text={qrData?.upi}>
                             <span
                               className="cursor-pointer"
-                              onClick={() => copieBtn(upiId)}
-                            >
-                              {reactIcons.copy}
-                            </span>
-                          </CopyToClipboard>
-                        </div>
-
-                        {/* Account Holder */}
-                        <div className="mt-2 flex items-center text-sm">
-                          <span className="font-semibold">
-                            Account Holder Name:
-                          </span>
-                          <span className="ml-2 font-bold">
-                            {accountHolder}
-                          </span>
-                          <CopyToClipboard text={accountHolder}>
-                            <span
-                              className="cursor-pointer"
-                              onClick={() => copieBtn(accountHolder)}
-                            >
-                              {reactIcons.copy}
-                            </span>
-                          </CopyToClipboard>
-                        </div>
-                      </div>
-                      <div className="border-2  border-dashed border-green-700 rounded-md p-4 w-full max-w-sm mx-auto bg-white shadow-sm">
-                        {/* QR Section */}
-                        <div className="flex">
-                          <div className="flex-1 flex justify-center">
-                            <img
-                              src="/images/qr-demo.png" // <-- put your QR image path
-                              alt="UPI QR Code"
-                              className="w-40 h-40 object-contain border rounded-md"
-                            />
-                          </div>
-
-                          {/* Action Buttons */}
-                          <div className="flex flex-col spa ce-y-3 ml-3">
-                            <button className="p-2 border rounded hover:bg-gray-100 shadow-md mb-2">
-                              <Maximize2 size={18} />
-                            </button>
-                            <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
-                              <Share2 size={18} />
-                            </button>
-                            <button className="p-2 border rounded hover:bg-gray-100  shadow-md mb-2">
-                              <Download size={18} />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* UPI ID */}
-                        <div className="mt-4 flex items-center text-sm">
-                          <span className="font-semibold">UPI ID:</span>
-                          <span className="ml-2 text-blue-700 font-semibold">
-                            {upiId}
-                          </span>
-                          <CopyToClipboard text={upiId}>
-                            <span
-                              className="cursor-pointer"
-                              onClick={() => copieBtn(upiId)}
-                            >
-                              {reactIcons.copy}
-                            </span>
-                          </CopyToClipboard>
-                        </div>
-
-                        {/* Account Holder */}
-                        <div className="mt-2 flex items-center text-sm">
-                          <span className="font-semibold">
-                            Account Holder Name:
-                          </span>
-                          <span className="ml-2 font-bold">
-                            {accountHolder}
-                          </span>
-                          <CopyToClipboard text={accountHolder}>
-                            <span
-                              className="cursor-pointer"
-                              onClick={() => copieBtn(accountHolder)}
+                              onClick={() => copieBtn(qrData?.upi)}
                             >
                               {reactIcons.copy}
                             </span>
@@ -903,6 +813,15 @@ const Deposit = () => {
           </div>
         )}
       </div>
+
+      {openEditStake && (
+        <DepositEditStake
+          isOpen={openEditStake}
+          handleClose={() => setOpenEditStake(false)}
+          stakebutton={stakebutton}
+          setStakeButton={setStakeButton}
+        />
+      )}
     </>
   );
 };

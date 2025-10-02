@@ -2,6 +2,7 @@
 import GradientHeading from '@/components/GradientHeading';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
+import { getQueryString } from '@/utils/formatter';
 import { reactIcons } from '@/utils/icons';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 import moment from 'moment';
@@ -37,17 +38,18 @@ function AccountStatement() {
     const islogin = isLoggedIn();
     if (islogin) {
       try {
-        const response = await getAuthData(
-          `/user/get-transactions?filterUserId=${id}&limit=${take}&offset=${
-            (page - 1) * take
-          }&startdate=${moment(startDate).format(
-            'YYYY-MM-DD',
-          )}&enddate=${moment(endDate).add(1, 'day').format('YYYY-MM-DD')}`,
-        );
+        const params = getQueryString({
+          filterUserId: id,
+          offset: (page - 1) * take,
+          limit: take,
+          startDate: moment(startDate).startOf('day').toISOString(),
+          endDate: moment(endDate).endOf('day').toISOString(),
+        });
+        const response = await getAuthData(`/user/get-transactions?${params}`);
         if (response?.status === 201 || response?.status === 200) {
-          setStatementData(response?.data?.statements);
+          setStatementData(response?.data?.data?.statements);
           setPagination({
-            totalCount: response?.data.count,
+            totalCount: response?.data?.data?.count,
           });
         }
       } catch (e) {
@@ -137,21 +139,22 @@ function AccountStatement() {
       </div>
 
       <div className="data-table overflow-x-auto">
-        <table className="overflow-x-auto">
+        <table className="overflow-x-auto border-collapse whitespace-nowrap">
           <thead className="">
-            <tr className="bg-[#8F8F8F] text-white font-bold">
+            <tr className="bg-[#8F8F8F] text-white text-14 font-bold">
               <th>#</th>
-              <th>Date & Time</th>
-              <th>Description</th>
-              <th>Credit</th>
-              <th>Debit</th>
-              <th>Balance</th>
+              <th>Date</th>
+              <th>DESCRIPTION</th>
+              <th>CREDIT</th>
+              <th>DEBIT</th>
+              <th>BALANCE</th>
+              <th>REMARK</th>
             </tr>
           </thead>
           <tbody>
-            {statementData.length === 0 ? (
+            {statementData && statementData?.length === 0 ? (
               <tr className=" w-full">
-                <td colSpan={6} className="!p-0">
+                <td colSpan={7} className="!p-0">
                   <div className="p-1 text-center text-14 bg-[#DAE1DF] border border-[#aaa] cursor-pointer">
                     No Event Found
                   </div>
@@ -159,49 +162,52 @@ function AccountStatement() {
               </tr>
             ) : (
               <>
-                {' '}
-                {statementData &&
-                  statementData.map((_item, index) => (
-                    <tr key={index} className="text-center">
-                      <td className="">{index + 1}</td>
-                      <td className="">
-                        {moment(_item?.createdAt).format(
-                          'MMMM Do YYYY, h:mm:ss a',
-                        )}
-                      </td>
-                      <td className="">{_item?.remark}</td>
-                      <td className=" text-green-600">
-                        {_item.type == 'CREDIT' ||
-                        (_item.type == 'BALANCE' &&
-                          !_item.amount?.includes('-'))
-                          ? numberWithCommas(_item?.amount)
-                          : 0}
-                      </td>
-                      <td className=" text-red-600 ">
-                        {_item.type == 'WITHDRAW' ||
-                        (_item.type == 'BALANCE' && _item.amount?.includes('-'))
-                          ? numberWithCommas(_item?.amount)
-                          : _item.type == 'COMMISSION'
-                          ? numberWithCommas(_item?.amount)
-                          : 0}
-                      </td>
-                      <td className="">
-                        {_item.type == 'WITHDRAW' || _item.type == 'COMMISSION'
-                          ? numberWithCommas(_item?.senderBalance)
-                          : numberWithCommas(_item?.receiverBalance)}
-                      </td>
-                    </tr>
-                  ))}{' '}
+                {statementData.map((_item, index) => (
+                  <tr
+                    key={index}
+                    className={`${
+                      index % 2 === 0 ? 'bg-[#E9E9E9]' : 'bg-[#F5F5F5]'
+                    } text-center`}
+                  >
+                    <td className="">{index + 1}</td>
+                    <td className=" whitespace-nowrap">
+                      {moment(_item?.updatedAt).format('DD/MM/YYYY, hh:mm')}
+                    </td>
+                    <td className=" whitespace-nowrap">{_item?.remark}</td>
+                    <td className=" text-green-600">
+                      {_item.type == 'CREDIT' ||
+                      (_item.type == 'BALANCE' && !_item.amount?.includes('-'))
+                        ? numberWithCommas(_item?.amount)
+                        : 0}
+                    </td>
+                    <td className=" text-red-600 ">
+                      {_item.type == 'WITHDRAW' ||
+                      (_item.type == 'BALANCE' && _item.amount?.includes('-'))
+                        ? numberWithCommas(_item?.amount)
+                        : _item.type == 'COMMISSION'
+                        ? numberWithCommas(_item?.amount)
+                        : 0}
+                    </td>
+                    <td className="">
+                      {_item.type == 'WITHDRAW' || _item.type == 'COMMISSION'
+                        ? numberWithCommas(_item?.senderBalance)
+                        : numberWithCommas(_item?.receiverBalance)}
+                    </td>
+                    <td className="">-</td>
+                  </tr>
+                ))}
               </>
             )}
           </tbody>
         </table>
+      </div>
+      {statementData?.length > 0 && (
         <Pagination
           pageCount={pagination.totalCount}
           setPageNumber={setPage}
           take={take}
         />
-      </div>
+      )}
     </div>
   );
 }

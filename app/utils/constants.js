@@ -239,7 +239,7 @@ export const linksRight = [
   },
   {
     title: 'Settings',
-    path: '/dashboard/settings-stake',
+    path: '/account/edit-stakes',
     icon: '/images/rightDrawer/settings1.svg',
     type: 'link',
   },
@@ -257,11 +257,11 @@ export const linksRight = [
 export const navLinks = [
   {
     title: 'SPORTSBOOK',
-    path: '/',
+    path: '/no-market',
   },
   {
     title: 'ESPORTS',
-    path: '/esports',
+    path: '/no-market',
   },
   {
     title: 'MIXED MARTIAL ARTS',
