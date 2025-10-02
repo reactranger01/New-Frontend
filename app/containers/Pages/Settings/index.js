@@ -67,7 +67,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="lg:min-h-screen mx-1 md:mx-0">
+    <div className="lg:min-h-screen mx-1 md:mx-0 pb-5">
       <div className=" py-2 w-full lg:max-w-[570px]">
         <GradientHeading heading={'Change Password'} />
       </div>

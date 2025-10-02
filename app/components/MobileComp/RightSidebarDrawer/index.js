@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import { linksRight } from '@/utils/constants';
 import { reactIcons } from '@/utils/icons';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import Cookies from 'js-cookie';
 import { isLoggedIn, removeAuthCookie } from '@/utils/apiHandlers';
@@ -46,22 +46,28 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
           </div>
           {login && (
             <div className=" px-2 grid grid-cols-2 gap-2 p-1 rounded-md bg-white">
-              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg bg-[#1e8067] text-white">
+              <Link
+                to="/account/deposit"
+                className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg bg-[#1e8067] text-white"
+              >
                 <img
                   src="/images/deposit.png"
                   className="w-[18px] h-[18px]"
                   alt=""
                 />{' '}
                 Deposit
-              </button>
-              <button className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg  text-white  bg-[#dc2626]">
+              </Link>
+              <Link
+                to="/account/withdrawal"
+                className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg  text-white  bg-[#dc2626]"
+              >
                 <img
                   src="/images/withdraw.png"
                   className="w-[18px] h-[18px]"
                   alt=""
                 />{' '}
                 Withdraw
-              </button>
+              </Link>
             </div>
           )}
           <div className="bg-[#daf1eb] flex items-center justify-between px-3 ">

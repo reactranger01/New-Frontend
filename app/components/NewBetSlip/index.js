@@ -172,10 +172,10 @@ const NewBetSlip = () => {
                 setIsloading(false);
                 if (response.data.length > 0) {
                   toast.dismiss();
-                  toast.error(response?.data || 'Something went wrong');
+                  toast.error(response?.data?.error || 'Something went wrong');
                 } else {
                   toast.dismiss();
-                  toast.error(response?.data || 'Something went wrong');
+                  toast.error(response?.data?.error || 'Something went wrong');
                 }
               }
             })

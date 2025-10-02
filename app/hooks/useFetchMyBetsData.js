@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getAuthData } from '@/utils/apiHandlers'; // aapke project ka helper
 import { getQueryString } from '@/utils/formatter';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 let getAllBetsDataBool = false; // global flag to prevent multiple calls
 
@@ -14,6 +15,7 @@ export const useFetchMyBetsData = ({
   const [betsData, setBetsData] = useState(null);
   const [loading, setLoading] = useState(false);
   const today = new Date();
+  const bets = useSelector((state) => state.bet.selectedBet);
 
   const getAllBets = async () => {
     if (getAllBetsDataBool) return;
@@ -50,5 +52,5 @@ export const useFetchMyBetsData = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [take]);
 
-  return { betsData, loading, refetch: getAllBets };
+  return { betsData, bets, loading, refetch: getAllBets };
 };

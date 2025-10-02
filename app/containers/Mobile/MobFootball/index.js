@@ -180,8 +180,8 @@ const MobFootball = () => {
             openBetCount={openBetCount}
           />
         </div>
-        {innerHeadTab === 1 ? (
-          [...allMarketData]
+        <div className={`${innerHeadTab === 1 ? '' : 'hidden'}`}>
+          {[...allMarketData]
             .sort((a, b) =>
               a?.market_name === 'Match Odds'
                 ? -1
@@ -210,16 +210,15 @@ const MobFootball = () => {
                   competition_name={matchData?.competition_name}
                 />
               ),
-            )
-        ) : innerHeadTab === 2 ? (
+            )}
+        </div>
+        <div className={`${innerHeadTab === 2 ? '' : 'hidden'}  `}>
           <MobOpenBets
             eventId={eventId}
             sport={'football'}
             setOpenBetCount={setOpenBetCount}
           />
-        ) : (
-          ''
-        )}
+        </div>
       </div>
     </>
   );

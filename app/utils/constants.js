@@ -315,7 +315,7 @@ export const dropNavLinks = [
   },
   {
     title: 'Deposit',
-    path: '/dashboard/deposit',
+    path: '/account/deposit',
   },
   {
     title: 'Withdraw',
