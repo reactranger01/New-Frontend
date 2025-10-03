@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 
 function AccountStatement() {
   const startDatePickerRef = useRef(null);
+  const [sportFilter, setSportFilter] = useState('');
   const endDatePickerRef = useRef(null);
   const [startDate, setStartDate] = useState(() => {
     const today = new Date();
@@ -32,20 +33,37 @@ function AccountStatement() {
     if (id !== undefined && startDate && endDate) {
       getTransactionList();
     }
-  }, [id, page, take, startDate, endDate]);
+  }, [id, page, take, startDate, endDate, sportFilter]);
 
+  console.log(sportFilter, 'sportFilter');
   const getTransactionList = async () => {
     const islogin = isLoggedIn();
     if (islogin) {
       try {
         const params = getQueryString({
-          filterUserId: id,
+          // filterUserId: id,
           offset: (page - 1) * take,
           limit: take,
           startDate: moment(startDate).startOf('day').toISOString(),
           endDate: moment(endDate).endOf('day').toISOString(),
+          sportid:
+            sportFilter === 'cricket'
+              ? 4
+              : sportFilter === 'soccer'
+              ? 1
+              : sportFilter === 'tennis'
+              ? 2
+              : '',
+          filterTransaction:
+            sportFilter === 'settling'
+              ? 'settling'
+              : ['cricket', 'soccer', 'tennis'].includes(sportFilter)
+              ? 'betting'
+              : '',
         });
-        const response = await getAuthData(`/user/get-transactions?${params}`);
+        const response = await getAuthData(
+          `/user/get-all-transactions?${params}`,
+        );
         if (response?.status === 201 || response?.status === 200) {
           setStatementData(response?.data?.data?.statements);
           setPagination({
@@ -112,10 +130,12 @@ function AccountStatement() {
           <select
             className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
             name=""
+            value={sportFilter}
+            onChange={(e) => setSportFilter(e.target.value)}
             id=""
           >
             <option value="">All</option>
-            <option value="deposit-withdrawal">Deposit/Withdrawal</option>
+            <option value="settling">Deposit/Withdrawal</option>
             <option value="cricket">Cricket</option>
             <option value="soccer">Soccer</option>
             <option value="tennis">Tennis</option>
@@ -162,7 +182,7 @@ function AccountStatement() {
               </tr>
             ) : (
               <>
-                {statementData.map((_item, index) => (
+                {statementData?.map((_item, index) => (
                   <tr
                     key={index}
                     className={`${

@@ -3,13 +3,22 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
-const MobOpenBets = ({ eventId, setOpenBetCount }) => {
+const AllGroupedBets = ({
+  eventId,
+  setOpenBetCount,
+  fromDate,
+  toDate,
+  type,
+}) => {
   const [activeTab, setActiveTab] = useState(1);
   const { betsData, loading } = useFetchMyBetsData({
     take: 100,
     // startDate,
     // endDate,
     eventId,
+    fromDate,
+    toDate,
+    type: type,
   });
   const matchOddsData =
     betsData?.bets?.filter(
@@ -80,45 +89,69 @@ const MobOpenBets = ({ eventId, setOpenBetCount }) => {
         </div>
       </div>
       <div className="px-2">
-        <div className="w-full my-2  pb-4 ">
-          {/* Header */}
-          <div className="grid grid-cols-4 gap-2  font-poppins leading-3 text-14 font-bold text-black py-2  ">
-            <span>Date/Time</span>
-            <span>Selection</span>
-            <span>Odds</span>
-            <span>Stake</span>
-          </div>
+        <div className="w-full my-2 pb-4 overflow-x-auto">
+          <table className="w-full min-w-[700px] table-auto font-poppins text-14">
+            {/* Header */}
+            <thead>
+              <tr className="text-left font-bold text-black leading-3">
+                <th className="py-2">Date/Time</th>
+                <th className="py-2">Selection</th>
+                <th className="py-2">Odds</th>
+                <th className="py-2">Stake</th>
+                <th className="py-2">Rate</th>
+                <th className="py-2">Profit</th>
+                <th className="py-2">Liability</th>
+              </tr>
+            </thead>
 
-          {/* Bets */}
-          {filteredBets?.length > 0 ? (
-            filteredBets?.map((item, index) => (
-              <div
-                key={index}
-                className={`${
-                  item?.bet_on?.toLowerCase() === 'back'
-                    ? 'bg-[#A7D8FD]'
-                    : 'bg-[#F9C9D4]'
-                } grid grid-cols-4  font-poppins font-medium leading-3 text-12 text-black py-2  border-t  border-white`}
-              >
-                <span>{dayjs(item?.created_at).format('DD/MM/YY hh:mm')}</span>
-                <span>{item?.selection}</span>
-                <span>{item?.price}</span>
-                <span>{item?.stake}</span>
-              </div>
-            ))
-          ) : (
-            <div className="w-full my-4 py-2 text-center text-sm bg-[#DEE2E6] rounded-sm text-[#01af70] font-poppins">
-              No bets available
-            </div>
-          )}
+            {/* Bets */}
+            <tbody>
+              {filteredBets?.length > 0 ? (
+                filteredBets.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`${
+                      item?.bet_on?.toLowerCase() === 'back'
+                        ? 'bg-[#A7D8FD]'
+                        : 'bg-[#F9C9D4]'
+                    } text-12 text-black font-medium leading-3 border-t border-white`}
+                  >
+                    <td className="py-2 whitespace-nowrap">
+                      {dayjs(item?.created_at).format('DD/MM/YY hh:mm')}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">
+                      {item?.selection}
+                    </td>
+                    <td className="py-2 whitespace-nowrap">{item?.price}</td>
+                    <td className="py-2 whitespace-nowrap">{item?.stake}</td>
+                    <td className="py-2 whitespace-nowrap">-</td>
+                    <td className="py-2 whitespace-nowrap">-</td>
+                    <td className="py-2 whitespace-nowrap">-</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="text-center text-sm py-2 my-4 bg-[#DEE2E6] rounded-sm text-[#01af70] font-poppins"
+                  >
+                    No bets available
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   );
 };
-MobOpenBets.propTypes = {
+AllGroupedBets.propTypes = {
   eventId: PropTypes.string,
   setOpenBetCount: PropTypes.func,
   openBetCount: PropTypes.any,
+  fromDate: PropTypes.string,
+  toDate: PropTypes.string,
+  type: PropTypes.string,
 };
-export default MobOpenBets;
+export default AllGroupedBets;

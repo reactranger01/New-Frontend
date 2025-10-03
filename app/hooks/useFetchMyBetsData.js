@@ -11,6 +11,9 @@ export const useFetchMyBetsData = ({
   //   startDate,
   //   endDate,
   eventId,
+  fromDate,
+  toDate,
+  type,
 }) => {
   const [betsData, setBetsData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -23,11 +26,16 @@ export const useFetchMyBetsData = ({
     setLoading(true);
 
     const params = getQueryString({
+      offset: 0,
       limit: 20,
-      startDate: moment(today).startOf('day').toISOString(),
-      endDate: moment(today).endOf('day').toISOString(),
+      startDate: moment(fromDate ? fromDate : today)
+        .startOf('day')
+        .toISOString(),
+      endDate: moment(toDate ? toDate : today)
+        .endOf('day')
+        .toISOString(),
       eventId: eventId,
-      status: 'current',
+      status: type ? type : 'current',
     });
 
     try {

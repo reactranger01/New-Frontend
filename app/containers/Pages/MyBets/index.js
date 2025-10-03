@@ -1,4 +1,5 @@
 import GradientHeading from '@/components/GradientHeading';
+import AllBetListModal from '@/components/NewModals/AllBetListModal';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import { getQueryString } from '@/utils/formatter';
@@ -12,6 +13,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 function MyBets() {
   const startDatePickerRef = useRef(null);
   const endDatePickerRef = useRef(null);
+  const [showAll, setShowAll] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
   const [page, setPage] = useState(1);
   const take = 10; // Number of items per page
@@ -64,128 +67,144 @@ function MyBets() {
   }, [page, startDate, endDate, selectedSport]);
 
   return (
-    <div className="min-h-screen mx-1 md:mx-0">
-      <div className="pb-2 md:py-2">
-        <GradientHeading heading={'Open Bets'} />
-      </div>
+    <>
+      <div className="min-h-screen mx-1 md:mx-0">
+        <div className="pb-2 md:py-2">
+          <GradientHeading heading={'My Bets'} />
+        </div>
 
-      {/* Filters */}
-      <div className="flex gap-[5px] items-center w-full mb-2">
-        <div className="w-full">
-          <p className="text-14">From Date</p>
-          <div className="relative">
-            <DatePicker
-              ref={startDatePickerRef}
-              className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
-              selected={startDate}
-              onChange={(date) => {
-                setStartDate(date);
-                setPage(1);
-              }}
-              popperPlacement="bottom-start"
-              dateFormat="dd-MM-yyyy"
-            />
-            <span
-              onClick={() => startDatePickerRef.current.setFocus()}
-              className="ay-center z-0 right-2 cursor-pointer"
-            >
-              {reactIcons.calendar}
-            </span>
-          </div>
-        </div>
-        <div className="w-full">
-          <p className="text-14">To Date</p>
-          <div className="relative">
-            <DatePicker
-              ref={endDatePickerRef}
-              className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
-              selected={endDate}
-              onChange={(date) => {
-                setEndDate(date);
-                setPage(1);
-              }}
-              popperPlacement="bottom-start"
-              dateFormat="dd-MM-yyyy"
-            />
-            <span
-              onClick={() => endDatePickerRef.current.setFocus()}
-              className="ay-center z-0 right-2 cursor-pointer"
-            >
-              {reactIcons.calendar}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex gap-[5px] items-center w-full">
-        <div className="w-full">
-          <p className="text-14">Type</p>
-          <select
-            value={selectedSport}
-            onChange={(e) => {
-              setSelectedSport(e.target.value);
-              setPage(1);
-            }}
-            className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
-          >
-            <option value="cricket">Cricket</option>
-            <option value="soccer">Soccer</option>
-            <option value="tennis">Tennis</option>
-          </select>
-        </div>
-        <div className="w-full">
-          <div className="text-14 h-6"></div>
-          <button
-            onClick={() => setPage(1)}
-            className="bg-primary-1300 text-16 h-10 flex-center rounded-[4px] w-full text-white"
-          >
-            APPLY
-          </button>
-        </div>
-      </div>
-
-      {/* Bets List */}
-      <div className="my-4">
-        {betsData.bets.length > 0 ? (
-          betsData.bets.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white px-[10px] py-2 rounded-[5px] mb-2 flex justify-between gap-2 shadow-[0_1px_10px_rgba(0,0,0,0.2)]"
-            >
-              <div className="flex gap-1">
-                <div className="font-semibold text-14 leading-4 ">
-                  {index + 1 + (page - 1) * take}.
-                </div>
-                <div className="font-semibold text-14 ">
-                  <h1 className="font-semibold text-14 leading-4 ">
-                    {item?.event}
-                  </h1>
-                  <p className="text-12 font-medium">
-                    {dayjs(item?.updated_at).format('DD-MM-YY hh:mm:s')}
-                  </p>
-                </div>
-              </div>
-              <div className="bg-primary-1300 px-3 text-white font-semibold h-7 flex-center text-10 rounded-sm">
-                {item?.bet_count}
-              </div>
+        {/* Filters */}
+        <div className="flex gap-[5px] items-center w-full mb-2">
+          <div className="w-full">
+            <p className="text-14">From Date</p>
+            <div className="relative">
+              <DatePicker
+                ref={startDatePickerRef}
+                className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+                selected={startDate}
+                onChange={(date) => {
+                  setStartDate(date);
+                  setPage(1);
+                }}
+                popperPlacement="bottom-start"
+                dateFormat="dd-MM-yyyy"
+              />
+              <span
+                onClick={() => startDatePickerRef.current.setFocus()}
+                className="ay-center z-0 right-2 cursor-pointer"
+              >
+                {reactIcons.calendar}
+              </span>
             </div>
-          ))
-        ) : (
-          <div className="p-1 mb-5 text-center text-14 bg-[#DAE1DF] border border-[#aaa] cursor-pointer">
-            No Event Found
           </div>
-        )}
+          <div className="w-full">
+            <p className="text-14">To Date</p>
+            <div className="relative">
+              <DatePicker
+                ref={endDatePickerRef}
+                className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+                selected={endDate}
+                onChange={(date) => {
+                  setEndDate(date);
+                  setPage(1);
+                }}
+                popperPlacement="bottom-start"
+                dateFormat="dd-MM-yyyy"
+              />
+              <span
+                onClick={() => endDatePickerRef.current.setFocus()}
+                className="ay-center z-0 right-2 cursor-pointer"
+              >
+                {reactIcons.calendar}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        {/* Pagination */}
-        {betsData?.totalCount > 0 && (
-          <Pagination
-            pageCount={betsData?.totalCount}
-            setPageNumber={setPage}
-            take={take}
-          />
-        )}
+        <div className="flex gap-[5px] items-center w-full">
+          <div className="w-full">
+            <p className="text-14">Type</p>
+            <select
+              value={selectedSport}
+              onChange={(e) => {
+                setSelectedSport(e.target.value);
+                setPage(1);
+              }}
+              className="px-3 text-14 font-medium py-1 w-full h-10 rounded-[4px] border border-gray-300"
+            >
+              <option value="cricket">Cricket</option>
+              <option value="soccer">Soccer</option>
+              <option value="tennis">Tennis</option>
+            </select>
+          </div>
+          <div className="w-full">
+            <div className="text-14 h-6"></div>
+            <button
+              onClick={() => setPage(1)}
+              className="bg-primary-1300 text-16 h-10 flex-center rounded-[4px] w-full text-white"
+            >
+              APPLY
+            </button>
+          </div>
+        </div>
+
+        {/* Bets List */}
+        <div className="my-4">
+          {betsData.bets.length > 0 ? (
+            betsData.bets.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setSelectedEventId(item?.event_id);
+                  setShowAll(true);
+                }}
+                className="bg-white px-[10px] py-2 rounded-[5px] mb-2 flex justify-between gap-2 shadow-[0_1px_10px_rgba(0,0,0,0.2)]"
+              >
+                <div className="flex gap-1">
+                  <div className="font-semibold text-14 leading-4 ">
+                    {index + 1 + (page - 1) * take}.
+                  </div>
+                  <div className="font-semibold text-14 ">
+                    <h1 className="font-semibold text-14 leading-4 ">
+                      {item?.event}
+                    </h1>
+                    <p className="text-12 font-medium">
+                      {dayjs(item?.updated_at).format('DD-MM-YY hh:mm:s')}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-primary-1300 px-3 text-white font-semibold h-7 flex-center text-10 rounded-sm">
+                  {item?.bet_count}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="p-1 mb-5 text-center text-14 bg-[#DAE1DF] border border-[#aaa] cursor-pointer">
+              No Event Found
+            </div>
+          )}
+
+          {/* Pagination */}
+          {betsData?.totalCount > 0 && (
+            <Pagination
+              pageCount={betsData?.totalCount}
+              setPageNumber={setPage}
+              take={take}
+            />
+          )}
+        </div>
       </div>
-    </div>
+      {showAll && (
+        <AllBetListModal
+          isOpen={showAll}
+          handleClose={() => setShowAll(false)}
+          eventId={selectedEventId}
+          fromDate={startDate}
+          toDate={endDate}
+          type="past"
+        />
+      )}
+    </>
   );
 }
 
