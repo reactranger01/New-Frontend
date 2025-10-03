@@ -19,6 +19,7 @@ import BetProcessing from '../NewModals/BetProcessing';
 import BetEditStake from '../NewModals/BetEditStake';
 import MobOpenBets from '../MobOpenBets';
 import { useParams } from 'react-router-dom';
+import { numberWithCommas } from '@/utils/numberWithCommas';
 
 const BetSlip = () => {
   const { eventId } = useParams();
@@ -257,7 +258,10 @@ const BetSlip = () => {
       <div className=" pb-2 text-12 ">
         <div className="bg-[#026B4F] flex items-center justify-between  px-3 py-2">
           <h1 className=" text-14   text-white leading-none ">
-            Available Credit:
+            Available Credit:{' '}
+            {numberWithCommas(
+              userInfo?.balance - Math.abs(userInfo?.exposureAmount) || 0,
+            )}
           </h1>
           <div className="text-white text-2xl">{reactIcons?.downArrow}</div>
         </div>

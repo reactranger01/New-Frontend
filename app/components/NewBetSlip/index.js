@@ -1,6 +1,8 @@
 {
   /* eslint-disable */
 }
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { PropTypes } from 'prop-types';
 import {
   fetchBetDetailsAction,
@@ -18,10 +20,12 @@ import { betValidationSchema } from '@/utils/validation';
 import { isYupError, parseYupError } from '@/utils/Yup';
 import { calcCurrentBetStats } from '@/utils/helper';
 import BetProcessing from '../NewModals/BetProcessing';
+import { numberWithCommas } from '@/utils/numberWithCommas';
 
 const amountArr = [100, 200, 300, 400, 500, 800, 700, 1000];
 
 const NewBetSlip = () => {
+  const [acceptOddsChange, setAcceptOddsChange] = useState(true);
   const [betData, setBetData] = useState({});
   const bets = useSelector((state) => state.bet.selectedBet);
   const dispatch = useDispatch();
@@ -135,8 +139,13 @@ const NewBetSlip = () => {
             ...betData,
             stake: Number(betData?.stake),
             price: betData.price / 100 + 1,
+            acceptOddsChange: acceptOddsChange,
           }
-        : { ...betData, stake: Number(betData?.stake) };
+        : {
+            ...betData,
+            stake: Number(betData?.stake),
+            acceptOddsChange: acceptOddsChange,
+          };
     data.stake = Number(data?.stake);
     if (data?.stake !== 0 && data?.price !== 0) {
       try {
@@ -231,12 +240,40 @@ const NewBetSlip = () => {
   return (
     <>
       <div
-        className={`relative p-2 border-x border-x-[#ddd] bg-white rounded-md pb-2 text-12 ${
+        className={`relative px-2 pb-2 border-x border-x-[#ddd] bg-white rounded-md  text-12 ${
           bets?.[0]?.betOn === 'BACK'
             ? 'border-b-[5px]  border-[#a7d8fd]'
             : 'border-b-[5px] border-[#f9c9d4]'
         } my-2`}
       >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            <div className="w-fit">
+              <FormControlLabel
+                sx={{
+                  marginX: 0,
+                }}
+                control={
+                  <Switch
+                    checked={acceptOddsChange}
+                    onChange={(e) => setAcceptOddsChange(e.target.checked)}
+                    color="primary"
+                    // disabled={loading}
+                  />
+                }
+              />
+            </div>
+            <p className="text-14 font-bold"> Accept any odds</p>
+          </div>
+          <div className="text-14 font-bold flex items-center gap-2">
+            Avail Bal :{' '}
+            <p className="text-green-600">
+              {numberWithCommas(
+                userInfo?.balance - Math.abs(userInfo?.exposureAmount) || 0,
+              )}
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-4 gap-1">
           <div className="col-span-2 bg-[#edebeb] border border-gray-500 text-black relative rounded-sm overflow-hidden">
             <input

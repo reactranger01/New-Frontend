@@ -9,19 +9,19 @@ export const sportSliderLink = [
     title: 'Cricket',
     bgImg: '/images/sportSliderLinks/b2.webp',
     img: '/images/sportSliderLinks/s2.webp',
-    path: '/',
+    path: '/cricket',
   },
   {
     title: 'Football',
     bgImg: '/images/sportSliderLinks/b3.webp',
     img: '/images/sportSliderLinks/s3.webp',
-    path: '/',
+    path: '/football',
   },
   {
     title: 'Tennis',
     bgImg: '/images/sportSliderLinks/b4.webp',
     img: '/images/sportSliderLinks/s4.webp',
-    path: '/',
+    path: '/tennis',
   },
   {
     title: 'Cricket',

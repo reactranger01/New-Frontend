@@ -160,7 +160,8 @@ const DesktopHome = () => {
         </div>
         <div className="flex hide-scrollbar items-center justify- gap-2 overflow-auto  my-2 mb-4">
           {sportSliderLink.map((_item, index) => (
-            <div
+            <Link
+              to={_item?.path}
               key={index}
               style={{ backgroundImage: `url(${_item?.bgImg})` }}
               className="h-9 w-full min-w-[70px] relative rounded-[4px] bg-cover bg-center bg-no-repeat"
@@ -173,7 +174,7 @@ const DesktopHome = () => {
               <p className="absolute bottom-1 left-1 text-white  truncate text-12 leading-none font-semibold ">
                 {_item.title}
               </p>
-            </div>
+            </Link>
           ))}
         </div>
         <div className=" grid grid-cols-2 gap-2">
