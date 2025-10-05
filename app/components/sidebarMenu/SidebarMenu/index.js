@@ -4,7 +4,7 @@ import { SidebarSubMenu } from '@/components';
 import { reactIcons } from '@/utils/icons';
 import { getData } from '@/utils/apiHandlers';
 
-const SidebarMenu = ({ game, back, setOpen }) => {
+const SidebarMenu = ({ game, back }) => {
   const [tournamentData, setTournamentData] = useState([]);
   const handleBack = () => {
     back(0);
@@ -55,7 +55,7 @@ const SidebarMenu = ({ game, back, setOpen }) => {
         </p>
       </div>
       <SidebarSubMenu
-        setOpen={setOpen}
+        // setOpen={setOpen}
         item={tournamentData}
         game={game?.route}
       />
@@ -66,7 +66,6 @@ const SidebarMenu = ({ game, back, setOpen }) => {
 SidebarMenu.propTypes = {
   game: PropTypes.string,
   back: PropTypes.func,
-  setOpen: PropTypes.func.isRequired,
 };
 
 export default SidebarMenu;

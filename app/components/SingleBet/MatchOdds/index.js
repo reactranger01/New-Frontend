@@ -85,7 +85,7 @@ const MatchOdds = ({ heading, data, placedBetWinLossDatas }) => {
     }
   };
   let minLimitOdds, maxLimitOdds;
-  if (data.inplay) {
+  if (data?.inplay) {
     minLimitOdds = data?.inPlayMinLimit;
     maxLimitOdds = data?.inPlayMaxLimit;
   } else {

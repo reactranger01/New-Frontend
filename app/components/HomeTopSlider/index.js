@@ -33,6 +33,26 @@ const imagesArr = [
     img: '/images/newSlider1/5.jpg',
     // css: 'h-[100px] max-w-[200px]',
   },
+  {
+    id: 6,
+    img: '/images/newSlider1/66.jpg',
+    // css: 'h-[100px] max-w-[200px]',
+  },
+  {
+    id: 7,
+    img: '/images/newSlider1/6.jpg',
+    // css: 'h-[100px] max-w-[200px]',
+  },
+  {
+    id: 8,
+    img: '/images/newSlider1/6.jpg',
+    // css: 'h-[100px] max-w-[200px]',
+  },
+  {
+    id: 9,
+    img: '/images/newSlider1/6.jpg',
+    // css: 'h-[100px] max-w-[200px]',
+  },
 ];
 
 const HomeTopSLider = () => {

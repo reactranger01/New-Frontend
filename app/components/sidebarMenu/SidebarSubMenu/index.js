@@ -4,7 +4,7 @@ import { reactIcons } from '@/utils/icons';
 import { getData } from '@/utils/apiHandlers';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const SidebarSubMenu = ({ item, game, setOpen }) => {
+const SidebarSubMenu = ({ item, game }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [eventsData, setEventsData] = useState([]);
@@ -73,7 +73,7 @@ const SidebarSubMenu = ({ item, game, setOpen }) => {
         { state: { data: child } },
       );
     }
-    setOpen(false);
+    // setOpen(false);
   };
 
   return (

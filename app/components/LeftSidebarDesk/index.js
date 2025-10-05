@@ -42,7 +42,7 @@ const LeftSidebarDesk = () => {
           {links.map((item, index) => (
             <NavLink
               onClick={() => handleLinkClick(item)}
-              // to={item.path}
+              to={item.path}
               key={index}
               className={
                 'text-[13px] font-bold border-b text-[#811f0f] border-[#ddd] py-[9px] pl-[15px] flex items-center gap-2 hover:scale-110 hover:bg-gray-100'
