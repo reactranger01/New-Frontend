@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { postAuthData } from '@/utils/apiHandlers';
 import { isYupError, parseYupError } from '@/utils/Yup';
 import { addAccountValidation, addUpiValidation } from '@/utils/validation';
@@ -9,7 +8,7 @@ import toast from 'react-hot-toast';
 import { reactIcons } from '@/utils/icons';
 import { Link } from 'react-router-dom';
 
-const AddAccount = ({ setReftech }) => {
+const AddAccount = () => {
   const userId = useSelector((state) => state.user.id);
   const [isPassword, setIsPassword] = useState(false);
 
@@ -71,7 +70,6 @@ const AddAccount = ({ setReftech }) => {
       const response = await postAuthData('/user/add-user-bank-account', form);
       if (response?.status === 200 || response?.status === 201) {
         toast.success('Account Added Successfully');
-        setReftech((prev) => !prev);
         setFormError({
           bankName: '',
           accountNumber: '',
@@ -101,7 +99,6 @@ const AddAccount = ({ setReftech }) => {
       if (response?.status === 200 || response?.status === 201) {
         toast.success('UPI Id Added Successfully');
         setActiveTab('Account');
-        setReftech((prev) => !prev);
         setFormError({
           upiId: '',
           upiName: '',
@@ -223,8 +220,5 @@ const AddAccount = ({ setReftech }) => {
     </div>
   );
 };
-AddAccount.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  setReftech: PropTypes.func.isRequired,
-};
+
 export default AddAccount;

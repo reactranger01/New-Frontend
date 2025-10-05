@@ -11,18 +11,15 @@ import {
 } from '@/utils/apiHandlers';
 import { isYupError, parseYupError } from '@/utils/Yup';
 // import { withdrawValidation } from '@/utils/validation';
-import { PropTypes } from 'prop-types';
 import { useSelector } from 'react-redux';
 import { AddAccount } from '@/components';
 import toast from 'react-hot-toast';
 
-const WithdrawCard = ({ setReftech, reftech }) => {
+const WithdrawCard = () => {
   const [bankAccountList, setBankAccountList] = useState([]);
-  const [upiList, setUpiList] = useState([]);
   const [type, setType] = useState('');
   const islogin = isLoggedIn();
   const [accountIndex, setAccountIndex] = useState(null);
-  const [upiIndex, setUpiIndex] = useState(null);
   const UserInfo = useSelector((state) => state.user);
   const copieBtn = async (copyText) => {
     toast.success(copyText + ' Coppied!!');
@@ -59,15 +56,14 @@ const WithdrawCard = ({ setReftech, reftech }) => {
 
   useEffect(() => {
     getBankAccountList();
-    getUpiList();
-  }, [reftech]);
+  }, [islogin]);
 
   const getBankAccountList = async () => {
     if (islogin) {
       try {
         const response = await getAuthData('/user/get-user-bank-account');
         if (response?.status === 201 || response?.status === 200) {
-          setBankAccountList(response.data); // Return the data instead of logging it
+          setBankAccountList(response?.data); // Return the data instead of logging it
         }
       } catch (e) {
         console.error(e);
@@ -76,33 +72,6 @@ const WithdrawCard = ({ setReftech, reftech }) => {
     }
   };
 
-  const getUpiList = async () => {
-    const islogin = isLoggedIn();
-    if (islogin) {
-      try {
-        const response = await getAuthData('/user/get-userupi');
-        if (response?.status === 201 || response?.status === 200) {
-          setUpiList(response.data); // Return the data instead of logging it
-        }
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
-  };
-
-  const handleChange = (e, index) => {
-    setUpiIndex(index);
-    let { name, value } = e.target;
-    setForm((prevCredential) => ({
-      ...prevCredential,
-      [name]: value,
-    }));
-    setFormError((prevFormError) => ({
-      ...prevFormError,
-      [name]: '',
-    }));
-  };
   const handleChange2 = (e, index) => {
     setAccountIndex(index);
     let { name, value } = e.target;
@@ -121,23 +90,14 @@ const WithdrawCard = ({ setReftech, reftech }) => {
     setType(type);
     try {
       setFormError({});
-      await withdrawValidation.validate(type === 'upi' ? form : form2, {
+      await withdrawValidation.validate(form2, {
         abortEarly: false,
       });
-      const response = await postAuthData(
-        '/user/widraw-req',
-        type === 'upi'
-          ? {
-              userId: UserInfo.id,
-              amount: form?.amount,
-              upiId: id,
-            }
-          : {
-              userId: UserInfo.id,
-              amount: form2?.amount,
-              bankAccountId: id,
-            },
-      );
+      const response = await postAuthData('/user/widraw-req', {
+        userId: UserInfo.id,
+        amount: form2?.amount,
+        bankAccountId: id,
+      });
       if (response?.status === 200 || response?.status === 201) {
         toast.success('Withdraw Request Sent Successfully');
         setForm((prevForm) => ({
@@ -148,9 +108,8 @@ const WithdrawCard = ({ setReftech, reftech }) => {
           ...prevForm2,
           amount: '', // Resetting amount to empty string
         }));
-        setReftech((pre) => !pre);
       } else {
-        toast.error(response?.data || 'Something went wrong');
+        toast.error('Something went wrong');
       }
     } catch (error) {
       if (isYupError(error)) {
@@ -172,15 +131,14 @@ const WithdrawCard = ({ setReftech, reftech }) => {
         `${type === 'account' ? 'Account' : 'UPI id'} Delete Successfully`,
       );
       getBankAccountList();
-      getUpiList();
     } else {
       toast.error(response?.data || 'Something went wrong');
     }
   };
-
+  console.log(bankAccountList, 'bankAccountList');
   return (
     <>
-      {bankAccountList &&
+      {bankAccountList && bankAccountList.length > 0 ? (
         bankAccountList.map((items, index) => {
           return (
             <div key={index} className="col-span-1 border border-gray-300">
@@ -194,7 +152,7 @@ const WithdrawCard = ({ setReftech, reftech }) => {
                 <h1 className="underline xl:text-24 lg:text-20 text-18 font-semibold text-center">
                   Account
                 </h1>
-                <div className="rounded-lg bg-primary-900/30 px-3 p-1 mt-5 mb-2">
+                <div className="rounded-lg  px-3 p-1 mt-5 mb-2">
                   <div className="flex justify-between items-center my-1 ">
                     <p className="lg:text-16 text-14">
                       Bank Name.: {items?.bankName}
@@ -263,7 +221,7 @@ const WithdrawCard = ({ setReftech, reftech }) => {
                       id="amount"
                       value={accountIndex === index ? form2.amount : ''}
                       onChange={(e) => handleChange2(e, index)}
-                      className="placeholder:text-black w-full h-full bg-primary-900/30 rounded-md text-black outline-none px-4 lg:text-16 text-14"
+                      className="w-full h-full  text-black outline-none px-4 py-1 border border-black rounded-md text-14 md:text-16"
                     />
                   </div>
 
@@ -287,147 +245,25 @@ const WithdrawCard = ({ setReftech, reftech }) => {
               </div>
             </div>
           );
-        })}
-
-      {upiList &&
-        upiList.map((items, index) => {
-          return (
-            <div key={index} className="col-span-1">
-              <div className="bg-white text-black rounded-lg p-4 relative border border-gray-300">
-                <button
-                  onClick={() => handleDeleteClick(items?.id, 'upi')}
-                  className="absolute top-2 right-2 text-2xl flex-center w-10 h-10 rounded-md bg-primary-red text-white"
-                >
-                  {reactIcons.delete}
-                </button>
-                <h1 className="underline xl:text-24 lg:text-20 text-18 font-semibold text-center">
-                  Account
-                </h1>
-                <div className="rounded-lg bg-primary-900/30 px-3 p-1 mt-5 mb-4">
-                  <div className="flex justify-between items-center my-2 gap-2">
-                    <p className="lg:text-16 text-14">
-                      Name: {items?.acountholdername}
-                    </p>
-                    <CopyToClipboard text={items?.acountholdername}>
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => copieBtn(items?.acountholdername)}
-                      >
-                        {reactIcons.copy}
-                      </span>
-                    </CopyToClipboard>
-                  </div>
-                  <div className="flex justify-between items-center my-2 gap-2">
-                    <p className="lg:text-16 text-14">UPI id: {items?.upiId}</p>
-                    <CopyToClipboard text={items?.upiId}>
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => copieBtn(items?.upiId)}
-                      >
-                        {reactIcons.copy}
-                      </span>
-                    </CopyToClipboard>
-                  </div>
-                  <div className="flex justify-between items-center my-2 gap-2">
-                    <p className="lg:text-16 text-14">
-                      Phone Number: {items?.phonenumber}
-                    </p>
-                    <CopyToClipboard text={items?.phonenumber}>
-                      <span
-                        className="cursor-pointer"
-                        onClick={() => copieBtn(items?.phonenumber)}
-                      >
-                        {reactIcons.copy}
-                      </span>
-                    </CopyToClipboard>
-                  </div>
-                </div>
-                <div className="">
-                  <label
-                    htmlFor="amount"
-                    className="text-black flex text-start lg:text-16 text-14"
-                  >
-                    Enter amount
-                  </label>
-                  <div className="rounded-md overflow-hidden h-[48px]">
-                    <input
-                      name="amount"
-                      placeholder={'Enter amount'}
-                      id="amount"
-                      value={upiIndex === index ? form.amount : ''}
-                      onChange={(e) => handleChange(e, index)}
-                      className="placeholder:text-black w-full h-full bg-primary-900/30 rounded-md text-black outline-none px-4 lg:text-16 text-14"
-                    />
-                  </div>
-                  <div className="form-eror text-12 h-[16px]">
-                    {formError.amount &&
-                    form?.id === items?.id &&
-                    type === 'upi'
-                      ? formError.amount
-                      : ''}
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    handleSubmit(items?.id, 'upi');
-                  }}
-                  disabled={upiIndex !== index}
-                  className="btn bg-green-700 rounded-lg mt-4 h-12 w-full font-medium"
-                >
-                  WITHDRAW
-                </button>
-              </div>
-            </div>
-          );
-        })}
+        })
+      ) : (
+        <div className="text-[13px] font-bold p-2 px-5 text-center border border-black rounded-lg">
+          No Account Available. Continue with new account!!
+        </div>
+      )}
     </>
   );
-};
-WithdrawCard.propTypes = {
-  setReftech: PropTypes.func.isRequired,
-  reftech: PropTypes.func.isRequired,
 };
 
 const Withdraw = () => {
   const [accountType, setAccountType] = useState('new');
   const [isOpen, setIsOpen] = useState(false);
-  const [reftech, setReftech] = useState(false);
-  const islogin = isLoggedIn();
-  // eslint-disable-next-line
-  const [withdrawList, setWithdrawList] = useState([]);
-  // eslint-disable-next-line
-  const [page, setPage] = useState(1);
-  const take = 15;
-  // eslint-disable-next-line
-  const [pagination, setPagination] = useState({
-    totalCount: 0,
-  });
   const closeModal = () => {
     setIsOpen(false);
   };
   // eslint-disable-next-line
   const openModal = () => {
     setIsOpen(true);
-  };
-  useEffect(() => {
-    getWithdrawList();
-  }, [reftech, page, take]);
-
-  const getWithdrawList = async () => {
-    if (islogin) {
-      try {
-        const response = await getAuthData('/user/get-user-widrawreq');
-        if (response?.status === 201 || response?.status === 200) {
-          setWithdrawList(response?.data?.deposits);
-          setPagination({
-            totalCount: response.data.total_bets,
-          });
-        }
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
   };
 
   const rules = [
@@ -494,15 +330,9 @@ const Withdraw = () => {
             </div>
 
             {accountType === 'new' ? (
-              <AddAccount
-                isOpen={isOpen}
-                closeModal={closeModal}
-                setReftech={setReftech}
-              />
+              <AddAccount isOpen={isOpen} closeModal={closeModal} />
             ) : (
-              <div className="text-[13px] font-bold p-2 px-5 text-center border border-black rounded-lg">
-                No Account Available. Continue with new account!!
-              </div>
+              <WithdrawCard />
             )}
           </div>
         </div>
