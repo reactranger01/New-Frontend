@@ -6,7 +6,7 @@ import {
   init,
   setBetPlacementSuccess,
 } from '@/redux/actions';
-import { postAuthData } from '@/utils/apiHandlers';
+import { isLoggedIn, postAuthData } from '@/utils/apiHandlers';
 import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -22,6 +22,7 @@ import { useParams } from 'react-router-dom';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 
 const BetSlip = () => {
+  const isLogin = isLoggedIn();
   const { eventId } = useParams();
   const [openEditStake, setOpenEditStake] = useState(false);
   const [stakebutton, setStakeButton] = useState([
@@ -256,15 +257,18 @@ const BetSlip = () => {
   return (
     <>
       <div className=" pb-2 text-12 ">
-        <div className="bg-[#026B4F] flex items-center justify-between  px-3 py-2">
-          <h1 className=" text-14   text-white leading-none ">
-            Available Credit:{' '}
-            {numberWithCommas(
-              userInfo?.balance - Math.abs(userInfo?.exposureAmount) || 0,
-            )}
-          </h1>
-          <div className="text-white text-2xl">{reactIcons?.downArrow}</div>
-        </div>
+        {isLogin && (
+          <div className="bg-[#026B4F] flex items-center justify-between  px-3 py-2">
+            <h1 className=" text-14   text-white leading-none ">
+              Available Credit:{' '}
+              {numberWithCommas(
+                userInfo?.balance - Math.abs(userInfo?.exposureAmount) || 0,
+              )}
+            </h1>
+            <div className="text-white text-2xl">{reactIcons?.downArrow}</div>
+          </div>
+        )}
+
         <h1 className="border-b border-[#777]  py-1 text-16 mt-2  text-black">
           Bet Slip
         </h1>
@@ -279,21 +283,23 @@ const BetSlip = () => {
             >
               Betslip
             </div>
-            <div
+            <button
               onClick={() => setActiveTab('openBets')}
+              disabled={!isLogin}
               className={`${
                 activeTab === 'openBets' ? 'bg-white' : 'bg-[#DEDBD7]'
               } text-12 py-2 px-[15px] rounded cursor-pointer`}
             >
               Open Bets
-            </div>
+            </button>
           </div>
-          <div
+          <button
             onClick={() => setOpenEditStake(true)}
+            disabled={!isLogin}
             className="bg-[#1E8067] px-2 py-1 rounded text-white font-bold text-[13px]"
           >
             Edit Stakes
-          </div>
+          </button>
         </div>
         {/* main div */}
         <div className={activeTab === 'openBets' ? 'hidden' : ''}>
