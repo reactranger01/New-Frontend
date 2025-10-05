@@ -1,5 +1,5 @@
 import { postReq } from '@/utils/apiHandlers';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
 import { reactIcons } from '@/utils/icons';
@@ -44,6 +44,25 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
   });
   const [formError, setFormError] = useState({});
 
+  const [resetOtpTimer, setResetOtpTimer] = useState(false);
+  const [timer, setTimer] = useState(120);
+
+  useEffect(() => {
+    let interval;
+    if (isOtpSent && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0 && isOtpSent) {
+      setIsOtpButtonDisabled(false);
+    }
+    return () => clearInterval(interval);
+  }, [isOtpSent, timer]);
+
+  useEffect(() => {
+    resetOtpTimer === true ? setTimer(120) : setTimer(0);
+  }, [resetOtpTimer]);
+
   const handleChange = (e) => {
     let { name, value } = e.target;
 
@@ -62,7 +81,8 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
     });
   };
 
-  const handleSendOtp = async () => {
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
     try {
       const validationPayload = {
         mobile: form?.mobile,
@@ -73,15 +93,16 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
       });
       const payload = { phoneNumber: form?.dialCode + form?.mobile };
       const response = await postReq('/user/forgot-password', payload);
-      console.log(response, 'res');
       if (response?.status) {
         setIsOtpSent(true);
         setIsOtpButtonDisabled(true);
+        setResetOtpTimer(true);
         toast.success(response?.data?.data?.message);
       } else {
         toast.error(response?.error?.error || 'Internal Server Error');
       }
     } catch (error) {
+      console.log(error);
       if (isYupError(error)) {
         setFormError(parseYupError(error));
       } else {
@@ -163,6 +184,11 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
     } finally {
       toast.dismiss(toastId);
     }
+  };
+  const handleResendOtp = async (e) => {
+    e.preventDefault();
+    setResetOtpTimer(false);
+    handleSendOtp(e);
   };
 
   return (
@@ -247,6 +273,26 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                 )}
                 {isOtpSent && (
                   <>
+                    <div className="flex items-center mt-2 justify-between leading-3 text-white font-lato text-12 mb-2">
+                      <span>
+                        Time Remaining{' '}
+                        {String(Math.floor(timer / 60)).padStart(2, '0')}:
+                        {String(timer % 60).padStart(2, '0')}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleResendOtp}
+                        // disabled={timer > 0 || isOtpButtonDisabled}
+                        className={`${
+                          timer > 0 ? 'pointer-events-none opacity-80' : ''
+                        } font-lato font-semibold text-12 leading-3 !text-red-600`}
+                      >
+                        Not received otp?{' '}
+                        <span className="text-white hover:border-b !pb-[1px]">
+                          Resend
+                        </span>
+                      </button>
+                    </div>
                     <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
                       <input
                         type="number"
