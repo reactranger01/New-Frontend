@@ -241,7 +241,7 @@ export async function getData(url) {
 // };
 
 export const postReq = async (url, data) => {
-  const route_url = API_URL + url;
+  const route_url = apiUrl + url;
   return await axios
     .post(route_url, data, {
       headers: {

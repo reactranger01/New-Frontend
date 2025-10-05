@@ -12,6 +12,31 @@ export const loginValidation = Yup.object().shape({
   username: Yup.string().required('Please enter username'),
   password: Yup.string().required('Please enter password'),
 });
+
+export const otpVerifyValidation = Yup.object().shape({
+  otp: Yup.string()
+    .required('OTP is required')
+    .matches(/^[0-9]{4,6}$/, 'OTP must be 4 to 6 digits'),
+  mobile: Yup.string()
+    .required('Phone number is required')
+    .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
+});
+
+export const forgotPassValidationSchema = Yup.object().shape({
+  otp: Yup.string()
+    .required('OTP is required')
+    .matches(/^[0-9]{4,6}$/, 'OTP must be 4 to 6 digits'),
+  password: Yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters long'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
+  mobile: Yup.string()
+    .required('Phone number is required')
+    .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits'),
+});
+
 export const otpValidationSchema = Yup.object().shape({
   // username: Yup.string()
   //   // .required('Username is required')

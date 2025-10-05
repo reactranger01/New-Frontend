@@ -1,7 +1,4 @@
-import { isYupError, parseYupError } from '@/utils/Yup';
-import { postData, setAuthCookie } from '@/utils/apiHandlers';
-import { loginValidation } from '@/utils/validation';
-import Cookies from 'js-cookie';
+import { postReq } from '@/utils/apiHandlers';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
@@ -10,6 +7,12 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { closeModal, openModal } from '@/redux/Slices/modalSlice';
 import { useDispatch } from 'react-redux';
+import {
+  forgotPassValidationSchema,
+  otpValidationSchema,
+  otpVerifyValidation,
+} from '@/utils/validation';
+import { isYupError, parseYupError } from '@/utils/Yup';
 
 const style = {
   position: 'absolute',
@@ -27,54 +30,56 @@ const style = {
 
 const ForgotPasswordModal = ({ isOpen, handleClose }) => {
   const dispatch = useDispatch();
-  const [otpSent, setOtpSent] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(false);
   const [isConfirmPassword, setIsConfirmPassword] = useState(false);
+  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+
   const [form, setForm] = useState({
-    username: '',
+    dialCode: '91',
+    mobile: '',
     password: '',
+    confirmPassword: '',
   });
-  const [formError, setFormError] = useState({
-    username: '',
-    password: '',
-  });
+  const [formError, setFormError] = useState({});
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+
+    if (name === 'mobile') {
+      value = value.replace(/\D/g, '');
+    }
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
+
     setFormError({
       ...formError,
       [name]: '',
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSendOtp = async () => {
     try {
-      setFormError({});
-      await loginValidation.validate(form, {
+      const validationPayload = {
+        mobile: form?.mobile,
+      };
+
+      await otpValidationSchema.validate(validationPayload, {
         abortEarly: false,
       });
-      const response = await postData('/user/signin', form);
-      if (response?.status === 200 && response?.data?.data?.ut === 'USER') {
-        setAuthCookie();
-        Cookies.set('__users__isLoggedIn', response?.data?.data?.token);
-        localStorage.setItem(
-          '__users__isLoggedIn',
-          response?.data?.data?.token,
-        );
-        toast.success('Login Successfully');
-        window.location.reload();
-
-        handleClose();
-      } else if (
-        response?.status === 200 &&
-        response?.data?.data?.ut !== 'USER'
-      ) {
-        toast.error('User not found');
+      const payload = { phoneNumber: form?.dialCode + form?.mobile };
+      const response = await postReq('/user/forgot-password', payload);
+      console.log(response, 'res');
+      if (response?.status) {
+        setIsOtpSent(true);
+        setIsOtpButtonDisabled(true);
+        toast.success(response?.data?.data?.message);
       } else {
-        toast.dismiss();
-        toast.error(response?.data?.error || 'Something went wrong');
+        toast.error(response?.error?.error || 'Internal Server Error');
       }
     } catch (error) {
       if (isYupError(error)) {
@@ -83,6 +88,80 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
         toast.dismiss();
         toast.error(error?.message || 'Unauthorised');
       }
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        mobile: form?.mobile,
+        otp: form?.otp,
+        // password: form?.password,
+        // confirmPassword: form?.confirmPassword,
+      };
+      await otpVerifyValidation.validate(payload, {
+        abortEarly: false,
+      });
+      const data = {
+        ...payload,
+        phoneNumber: form?.dialCode + form?.mobile,
+      };
+      const response = await postReq('/user/verify-otp', data);
+      if (response?.status) {
+        toast.success(response?.data?.data?.message);
+        setIsOtpVerified(true);
+      } else if (response?.error) {
+        toast.error(response?.error?.message || 'Invalid OTP');
+      }
+    } catch (error) {
+      if (isYupError(error)) {
+        setFormError(parseYupError(error));
+      } else {
+        toast.dismiss();
+        toast.error(error?.message || 'Unauthorised');
+      }
+    }
+  };
+
+  const finalSubmit = async (e) => {
+    e.preventDefault();
+    const toastId = toast.loading('Loading...');
+
+    try {
+      const payload = {
+        mobile: form?.mobile,
+        otp: form?.otp,
+        password: form?.password,
+        confirmPassword: form?.confirmPassword,
+      };
+      await forgotPassValidationSchema.validate(payload, {
+        abortEarly: false,
+      });
+      const data = {
+        phoneNumber: form?.dialCode + form?.mobile,
+        otp: form?.otp,
+        password: form?.password,
+        confirmPassword: form?.confirmPassword,
+      };
+      const response = await postReq('/user/reset-password', data);
+
+      if (response.status) {
+        toast.success('Password reset successfully');
+        dispatch(closeModal());
+        dispatch(openModal('login'));
+      } else {
+        toast.error(response?.error?.message || response?.error?.error);
+      }
+    } catch (error) {
+      if (isYupError(error)) {
+        setFormError(parseYupError(error));
+      } else {
+        toast.dismiss();
+        toast.error(error?.message || 'Unauthorised');
+      }
+    } finally {
+      toast.dismiss(toastId);
     }
   };
 
@@ -113,13 +192,14 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                 Forget Password
               </h1>
 
-              <form action="">
+              <form>
                 <div className="flex items-center gap-4">
                   <div className="border-b-2 border-[#f4d821] pb-1">
                     <select
                       onChange={handleChange}
                       value={form?.username}
                       name="dialCode"
+                      disabled={isOtpVerified}
                       placeholder="Enter User Id*"
                       className="text-16 font-medium text-white bg-transparent placeholder:text-white outline-none"
                     >
@@ -142,85 +222,120 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
                   </div>
                   <div className="border-b-2 border-[#f4d821] pb-1 w-full relative">
                     <input
-                      type="number"
+                      type="text"
                       onChange={handleChange}
-                      value={form?.username}
-                      name="username"
+                      value={form?.mobile}
+                      name="mobile"
+                      disabled={isOtpVerified}
+                      maxLength={10}
                       placeholder="Enter Mobile Number*"
                       className="text-16 font-medium text-white bg-transparent placeholder:text-white outline-none w-full"
                     />
-                    <span
-                      onClick={() => setOtpSent(true)}
-                      className="absolute bottom-2 right-[10px] flex items-center justify-center py-1 px-3 rounded-md bg-[#F4D821] text-black text-14"
-                    >
-                      GET OTP
-                    </span>
+                    {!isOtpSent && (
+                      <span
+                        onClick={handleSendOtp}
+                        disabled={isOtpButtonDisabled}
+                        className="absolute bottom-2 right-[10px] flex items-center justify-center py-1 px-3 rounded-md bg-[#F4D821] text-black text-14"
+                      >
+                        GET OTP
+                      </span>
+                    )}
                   </div>
                 </div>
                 {formError?.mobile && (
                   <p className="text-red-600 text-12">{formError?.mobile}</p>
                 )}
-                {otpSent && (
-                  <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
-                    <input
-                      type="number"
-                      onChange={handleChange}
-                      value={form?.otp}
-                      name="otp"
-                      placeholder="Enter OTP*"
-                      className="text-16 font-medium text-white pl-6 bg-transparent placeholder:text-white outline-none"
-                    />
-                    <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
-                      {reactIcons.key}
-                    </span>
-                  </div>
+                {isOtpSent && (
+                  <>
+                    <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
+                      <input
+                        type="number"
+                        onChange={handleChange}
+                        value={form?.otp}
+                        name="otp"
+                        disabled={isOtpVerified}
+                        placeholder="Enter OTP*"
+                        className="text-16 font-medium text-white pl-6 bg-transparent placeholder:text-white outline-none"
+                      />
+                      <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
+                        {reactIcons.key}
+                      </span>
+                    </div>
+                    {formError?.otp && (
+                      <p className="text-red-600 text-12">{formError?.otp}</p>
+                    )}
+                  </>
                 )}
-                <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
-                  <input
-                    type={!isPassword ? 'password' : 'text'}
-                    onChange={handleChange}
-                    value={form?.password}
-                    name="password"
-                    placeholder="Enter Password*"
-                    className="text-16 font-medium pl-6 text-white bg-transparent placeholder:text-white outline-none"
-                  />
-                  <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
-                    {reactIcons.newLock}
-                  </span>
-                  <span
-                    className="ay-center right-[10px] text-22 text-gray-300 cursor-pointer"
-                    onClick={() => setIsPassword(!isPassword)}
+                {!isOtpVerified ? (
+                  <button
+                    type="submit"
+                    disabled={!isOtpSent}
+                    onClick={(e) => handleVerifyOtp(e)}
+                    className="flex items-center mt-4 w-full justify-center py-2 rounded-md bg-[#F4D821] disabled:bg-opacity-50 text-black text-14 font-medium"
                   >
-                    {isPassword ? reactIcons.eye : reactIcons.eyeSlash}
-                  </span>
-                </div>
-                <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
-                  <input
-                    type={!isConfirmPassword ? 'password' : 'text'}
-                    onChange={handleChange}
-                    value={form?.confirmPassword}
-                    name="confirmPassword"
-                    placeholder="Enter Confirm Password*"
-                    className="text-16 font-medium text-white pl-6 bg-transparent placeholder:text-white outline-none"
-                  />
-                  <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
-                    {reactIcons.newLock}
-                  </span>
-                  <span
-                    className="ay-center right-[10px] text-22 text-gray-300 cursor-pointer"
-                    onClick={() => setIsConfirmPassword(!isConfirmPassword)}
-                  >
-                    {isConfirmPassword ? reactIcons.eye : reactIcons.eyeSlash}
-                  </span>
-                </div>
-
-                <button
-                  type="submit"
-                  onClick={handleSubmit}
-                  className="flex items-center mt-4 w-full justify-center py-2 rounded-md bg-[#F4D821] text-black text-14 font-medium"
-                >
-                  Update Password
-                </button>
+                    Verify Otp
+                  </button>
+                ) : (
+                  <>
+                    <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
+                      <input
+                        type={!isPassword ? 'password' : 'text'}
+                        onChange={handleChange}
+                        value={form?.password}
+                        name="password"
+                        placeholder="Enter Password*"
+                        className="text-16 font-medium pl-6 text-white bg-transparent placeholder:text-white outline-none"
+                      />
+                      <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
+                        {reactIcons.newLock}
+                      </span>
+                      <span
+                        className="ay-center right-[10px] text-22 text-gray-300 cursor-pointer"
+                        onClick={() => setIsPassword(!isPassword)}
+                      >
+                        {isPassword ? reactIcons.eye : reactIcons.eyeSlash}
+                      </span>
+                    </div>
+                    {formError?.password && (
+                      <p className="text-red-600 text-12">
+                        {formError?.password}
+                      </p>
+                    )}
+                    <div className="border-b-2 border-[#f4d821] pb-1 mt-4 relative">
+                      <input
+                        type={!isConfirmPassword ? 'password' : 'text'}
+                        onChange={handleChange}
+                        value={form?.confirmPassword}
+                        name="confirmPassword"
+                        placeholder="Enter Confirm Password*"
+                        className="text-16 font-medium text-white pl-6 bg-transparent placeholder:text-white outline-none"
+                      />
+                      <span className="ay-center left-0 text-lg text-gray-300 cursor-pointer">
+                        {reactIcons.newLock}
+                      </span>
+                      <span
+                        className="ay-center right-[10px] text-22 text-gray-300 cursor-pointer"
+                        onClick={() => setIsConfirmPassword(!isConfirmPassword)}
+                      >
+                        {isConfirmPassword
+                          ? reactIcons.eye
+                          : reactIcons.eyeSlash}
+                      </span>
+                    </div>
+                    {formError?.confirmPassword && (
+                      <p className="text-red-600 text-12">
+                        {formError?.confirmPassword}
+                      </p>
+                    )}
+                    <button
+                      type="submit"
+                      onClick={(e) => finalSubmit(e)}
+                      className="flex items-center mt-4 w-full justify-center py-2 rounded-md bg-[#F4D821] text-black text-14 font-medium"
+                    >
+                      Update Password
+                    </button>
+                  </>
+                )}
 
                 <p className="underline my-2 text-14  text-center text-white">
                   Remember your password?{' '}
