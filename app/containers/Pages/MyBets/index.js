@@ -169,7 +169,7 @@ function MyBets() {
                       {item?.event}
                     </h1>
                     <p className="text-12 font-medium">
-                      {dayjs(item?.updated_at).format('DD-MM-YY hh:mm:s')}
+                      {dayjs(item?.last_updated).format('DD-MM-YY hh:mm:s')}
                     </p>
                   </div>
                 </div>
