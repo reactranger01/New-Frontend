@@ -218,7 +218,7 @@ const CricketMarket = () => {
             // src={`https://diamondapi.uk/dcasino/sr.php?eventid=${eventId}&sportid=1`}
             src={
               isLiveTv
-                ? `https://hr08bets.in/sports-stream-live/index.html?eventid=${eventId}`
+                ? `https://e765432.diamondcricketid.com/dtv.php?id=${eventId}`
                 : ''
             }
             allow="autoplay; fullscreen"
