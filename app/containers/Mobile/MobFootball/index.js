@@ -161,7 +161,7 @@ const MobFootball = () => {
           <iframe
             src={
               isLiveTv
-                ? `https://hr08bets.in/sports-stream-live/index.html?eventid=${eventId}`
+                ? `https://e765432.diamondcricketid.com/dtv.php?id=${eventId}`
                 : ''
             }
             allow="autoplay; fullscreen"
