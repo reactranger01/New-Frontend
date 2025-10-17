@@ -165,7 +165,7 @@ const MobTennis = () => {
           />
         </div>
 
-        <div className={`${innerHeadTab === 1 ? '' : 'hidden'}`}>
+        <div className={`${innerHeadTab === 2 ? 'hidden' : ''}`}>
           {[...allMarketData]
             .sort((a, b) =>
               a?.market_name === 'Match Odds'

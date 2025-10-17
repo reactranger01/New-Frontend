@@ -498,7 +498,7 @@ const MobCricket = () => {
           />
         </div>
         {/* {innerHeadTab === 1 ? ( */}
-        <div className={`${innerHeadTab === 1 ? '' : 'hidden'}`}>
+        <div className={`${innerHeadTab === 2 ? 'hidden' : ''}`}>
           {oddsData?.runners?.length > 0 ? (
             <div className="matchodds    rounded-lg mb-3 ">
               <div className="bg-[#eceaea]  flex items-center justify-between py-1">
