@@ -55,21 +55,23 @@ const InnerHeading = ({ activeTab = 1, setActiveTab, openBetCount }) => {
       </div>
 
       {/* ✅ Show Live TV iframe only when LIVE tab is active */}
-      {activeTab === 3 && isLiveTv && eventId && (
-        <div className="col-span-3 bg-black">
-          <iframe
-            src={`https://e765432.diamondcricketid.com/dtv.php?id=${eventId}`}
-            allow="autoplay; fullscreen"
-            sandbox="allow-scripts allow-same-origin allow-popups"
-            title="Live TV"
-            className="w-full"
-            style={{
-              aspectRatio: '16/9',
-              border: 'none',
-            }}
-          ></iframe>
-        </div>
-      )}
+      {activeTab === 3 &&
+        eventId &
+        (
+          <div className="col-span-3 bg-black">
+            <iframe
+              src={`https://e765432.diamondcricketid.com/dtv.php?id=${eventId}`}
+              allow="autoplay; fullscreen"
+              sandbox="allow-scripts allow-same-origin allow-popups"
+              title="Live TV"
+              className="w-full"
+              style={{
+                aspectRatio: '16/9',
+                border: 'none',
+              }}
+            ></iframe>
+          </div>
+        )}
     </div>
   );
 };
