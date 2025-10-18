@@ -323,37 +323,53 @@ const DesktopHome = () => {
             </div>
           </div>
         )}
-        <DesktopFixtureCricket
-          type={'LiveMatches'}
-          fixtureData={inplayTrue}
-          isLoading={isLoading}
-        />
-        <DesktopFixtureTennis
-          type={'LiveMatches'}
-          fixtureData={inplayTrueTennis}
-          isLoading={isLoadingT}
-        />
-        <DesktopFixtureFootball
-          type={'LiveMatches'}
-          fixtureData={inplayTrueSoccer}
-          isLoading={isLoadingS}
-        />
-        <MostPopular text="Upcoming Events" />
-        <DesktopFixtureCricket
-          type={'NotLiveMatches'}
-          fixtureData={inplayFalse}
-          isLoading={isLoading}
-        />{' '}
-        <DesktopFixtureTennis
-          type={'NotLiveMatches'}
-          fixtureData={inplayFalseTennis}
-          isLoading={isLoadingT}
-        />
-        <DesktopFixtureFootball
-          type={'NotLiveMatches'}
-          fixtureData={inplayFalseSoccer}
-          isLoading={isLoadingS}
-        />
+        {inplayTrue && inplayTrue.length > 0 && (
+          <DesktopFixtureCricket
+            type={'LiveMatches'}
+            fixtureData={inplayTrue}
+            isLoading={isLoading}
+          />
+        )}
+        {inplayTrueTennis && inplayTrueTennis.length > 0 && (
+          <DesktopFixtureTennis
+            type={'LiveMatches'}
+            fixtureData={inplayTrueTennis}
+            isLoading={isLoadingT}
+          />
+        )}
+        {inplayTrueSoccer && inplayTrueSoccer.length > 0 && (
+          <DesktopFixtureFootball
+            type={'LiveMatches'}
+            fixtureData={inplayTrueSoccer}
+            isLoading={isLoadingS}
+          />
+        )}
+        {(inplayFalse.length > 0 ||
+          inplayFalseTennis.length > 0 ||
+          inplayFalseSoccer.length > 0) && (
+          <MostPopular text="Upcoming Events" />
+        )}
+        {inplayFalse && inplayFalse.length > 0 && (
+          <DesktopFixtureCricket
+            type={'NotLiveMatches'}
+            fixtureData={inplayFalse}
+            isLoading={isLoading}
+          />
+        )}
+        {inplayFalseTennis && inplayFalseTennis.length > 0 && (
+          <DesktopFixtureTennis
+            type={'NotLiveMatches'}
+            fixtureData={inplayFalseTennis}
+            isLoading={isLoadingT}
+          />
+        )}
+        {inplayFalseSoccer && inplayFalseSoccer.length > 0 && (
+          <DesktopFixtureFootball
+            type={'NotLiveMatches'}
+            fixtureData={inplayFalseSoccer}
+            isLoading={isLoadingS}
+          />
+        )}
       </div>
     </div>
   );
