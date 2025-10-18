@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { BetSlip, Loading, MatchOddsSoccer, UnderMarket } from '@/components';
+import { Loading, MatchOddsSoccer, UnderMarket } from '@/components';
+import MobOpenBets from '@/components/MobOpenBets';
 import InnerHeading from '@/containers/Mobile/InnerHeading';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import {
@@ -13,6 +14,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const FootballMarket = () => {
   const [innerHeadTab, setInnerHeadTab] = useState(1);
+  const [openBetCount, setOpenBetCount] = useState(0);
 
   const isLogin = isLoggedIn();
   const [allMarketData, setAllMarketData] = useState([]);
@@ -25,7 +27,6 @@ const FootballMarket = () => {
   const [placedBetWinLossDatas, setPlacedBetWinLossData] = useState({});
   const [usersBets, setusersBets] = useState({});
   const matchData = location.state?.data;
-  const betData = useSelector((state) => state.bet.selectedBet);
   const { eventId } = useParams();
   const [isLiveMobile, setIsLiveMobile] = useState(false);
   const [isLiveTv, setIsLiveTV] = useState(false);
@@ -165,11 +166,25 @@ const FootballMarket = () => {
               style={{ width: '100%', height: '518px' }}
             ></iframe>
           </div>
-          <div className="my-2">
+          <div className="my-2 lg:hidden">
             <InnerHeading
               activeTab={innerHeadTab}
               setActiveTab={setInnerHeadTab}
+              openBetCount={openBetCount}
             />
+          </div>
+          <div className="w-full hidden lg:block">
+            <iframe
+              src={`https://tv.tresting.com/lnt.php?eventid=${eventId}`}
+              allow="autoplay; fullscreen"
+              sandbox="allow-scripts allow-same-origin allow-popups"
+              title="Live Score"
+              className="w-full"
+              style={{
+                aspectRatio: '16/9',
+                border: 'none',
+              }}
+            ></iframe>
           </div>
           {[...allMarketData]
             .sort((a, b) =>
@@ -201,15 +216,9 @@ const FootballMarket = () => {
                 />
               ),
             )}
-        </div>
-        <div>
-          {isLogin && betData.length > 0 ? (
-            <div className="hidden lg:block">
-              <BetSlip />{' '}
-            </div>
-          ) : (
-            ''
-          )}
+          <div className={`${innerHeadTab === 2 ? '' : 'lg:hidden'}  `}>
+            <MobOpenBets eventId={eventId} setOpenBetCount={setOpenBetCount} />
+          </div>
         </div>
       </div>
     </>

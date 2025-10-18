@@ -17,7 +17,6 @@ import { updatePlacedBetCalculation } from '@/utils/helper';
 import { openModal } from '@/redux/Slices/modalSlice';
 const MobileFootballInnerOdds = ({
   data,
-
   placedBetWinLossDatas,
   competition_name,
 }) => {
@@ -87,6 +86,7 @@ const MobileFootballInnerOdds = ({
           _marketData,
         },
       ]);
+      // dispatch(setActiveBetSlipIndex(Number(selectionId)));
     } else {
       dispatch(openModal('login'));
     }
@@ -225,12 +225,12 @@ const MobileFootballInnerOdds = ({
                           />
                         </div>
                       </div>
-                      {/* {activeBetSlip == Number(items?.selectionId) &&
+                      {activeBetSlip == Number(items?.selectionId) &&
                         Number(items?.selectionId) ==
                           Number(bets[0]?.selectionId) &&
                         isLoggedIn() &&
                         betData?.length > 0 &&
-                        isMobile && <NewBetSlip />} */}
+                        isMobile && <NewBetSlip />}
                     </>
                   );
                 })}

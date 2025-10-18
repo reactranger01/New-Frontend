@@ -5,6 +5,7 @@ import ForgotPasswordModal from '../FogotPasswordModal';
 import { closeModal } from '@/redux/Slices/modalSlice';
 import RegisterModal from '../RegisterModal';
 import RulesModal from '../RulesModal';
+import AuraLobbyModal from '../NewModals/AuraLobbyModal';
 
 const ModalManager = () => {
   const { type, isOpen } = useSelector((state) => state.modal);
@@ -37,6 +38,13 @@ const ModalManager = () => {
     case 'rules':
       return (
         <RulesModal
+          isOpen={isOpen}
+          handleClose={() => dispatch(closeModal())}
+        />
+      );
+    case 'auraLobby':
+      return (
+        <AuraLobbyModal
           isOpen={isOpen}
           handleClose={() => dispatch(closeModal())}
         />

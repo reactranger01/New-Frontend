@@ -14,8 +14,11 @@ import {
   transformBookmakerData,
 } from '@/utils/helper';
 import InnerHeading from '@/containers/Mobile/InnerHeading';
+import MobOpenBets from '@/components/MobOpenBets';
 const CricketMarket = () => {
   const [innerHeadTab, setInnerHeadTab] = useState(1);
+  const [openBetCount, setOpenBetCount] = useState(0);
+
   const isLogin = isLoggedIn();
   const location = useLocation();
   const { eventId } = useParams();
@@ -227,11 +230,25 @@ const CricketMarket = () => {
             style={{ width: '100%', height: '518px' }}
           ></iframe>
         </div>
-        <div className="my-2">
+        <div className="my-2 lg:hidden">
           <InnerHeading
             activeTab={innerHeadTab}
             setActiveTab={setInnerHeadTab}
+            openBetCount={openBetCount}
           />
+        </div>
+        <div className="w-full hidden lg:block">
+          <iframe
+            src={`https://tv.tresting.com/lnt.php?eventid=${eventId}`}
+            allow="autoplay; fullscreen"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+            title="Live Score"
+            className="w-full"
+            style={{
+              aspectRatio: '16/9',
+              border: 'none',
+            }}
+          ></iframe>
         </div>
         <MatchOdds
           heading="Match Odds"
@@ -267,6 +284,10 @@ const CricketMarket = () => {
           competition_name={matchData?.competition_name}
           oddsData={oddsData}
         />
+
+        <div className={`${innerHeadTab === 2 ? '' : 'lg:hidden'}  `}>
+          <MobOpenBets eventId={eventId} setOpenBetCount={setOpenBetCount} />
+        </div>
       </div>
     </>
   );

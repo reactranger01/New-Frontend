@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { BetSlip, Loading, MatchOddsTennis, Set1Winner } from '@/components';
+import MobOpenBets from '@/components/MobOpenBets';
 import InnerHeading from '@/containers/Mobile/InnerHeading';
+
 import { isLoggedIn } from '@/utils/apiHandlers';
 import {
   calcPlacedBetOddsFootballOrTenisCalculation,
@@ -16,6 +18,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const TennisMarket = () => {
   const [innerHeadTab, setInnerHeadTab] = useState(1);
+  const [openBetCount, setOpenBetCount] = useState(0);
 
   const isLogin = isLoggedIn();
   const { eventId } = useParams();
@@ -244,11 +247,25 @@ const TennisMarket = () => {
             </div>
           </div> */}
           </div>
-          <div className="my-2">
+          <div className="my-2 lg:hidden">
             <InnerHeading
               activeTab={innerHeadTab}
               setActiveTab={setInnerHeadTab}
+              openBetCount={openBetCount}
             />
+          </div>
+          <div className="w-full hidden lg:block">
+            <iframe
+              src={`https://tv.tresting.com/lnt.php?eventid=${eventId}`}
+              allow="autoplay; fullscreen"
+              sandbox="allow-scripts allow-same-origin allow-popups"
+              title="Live Score"
+              className="w-full"
+              style={{
+                aspectRatio: '16/9',
+                border: 'none',
+              }}
+            ></iframe>
           </div>
           {[...allMarketData]
             .sort((a, b) =>
@@ -282,6 +299,15 @@ const TennisMarket = () => {
                 />
               ),
             )}
+
+          <div className={`${innerHeadTab === 2 ? '' : 'lg:hidden'}  `}>
+            <MobOpenBets
+              eventId={eventId}
+              sport={'cricket'}
+              openBetCount={openBetCount}
+              setOpenBetCount={setOpenBetCount}
+            />
+          </div>
           {/* <Set1Winner
           heading="Set 2 Winner "
           data={set2Winner}

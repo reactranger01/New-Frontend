@@ -17,6 +17,15 @@ const style = {
 };
 
 export default function BetProcessing({ isOpen }) {
+  const [seconds, setSeconds] = React.useState(6);
+  React.useEffect(() => {
+    if (seconds > 0) {
+      const timer = setTimeout(() => {
+        setSeconds(seconds - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [seconds]);
   return (
     <Modal
       open={isOpen}
@@ -34,10 +43,10 @@ export default function BetProcessing({ isOpen }) {
         <div className="bg-white hide-scrollbar p-6 flex flex-col items-center gap-4">
           <h2 className="text-16 font-bold text-center">
             Your Bet Is Being Processed <br />
-            Please Wait...
+            Please Wait...{seconds}
           </h2>
           <img
-            src="/images/clockIcon.png"
+            src="/images/timer.gif"
             className="w-12 h-12 lg:h-16 lg:w-16"
             alt=""
           />

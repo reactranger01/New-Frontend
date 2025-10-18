@@ -56,47 +56,6 @@ export const sportSliderLink = [
   },
 ];
 
-export const sportSlider1 = [
-  {
-    title: 'Sportsbook',
-    bgImg: '/images/sportSlider1/b1.webp',
-    img: '/images/sportSlider1/s1.webp',
-    path: '/',
-  },
-  {
-    title: 'Evolution',
-    bgImg: '/images/sportSlider1/b2.webp',
-    img: '/images/sportSlider1/s2.webp',
-    path: '/',
-  },
-  {
-    title: 'e-Cricket',
-    bgImg: '/images/sportSlider1/b3.webp',
-    img: '/images/sportSlider1/s3.webp',
-    path: '/',
-  },
-];
-export const sportSlider2 = [
-  {
-    title: 'Casino',
-    bgImg: '/images/sportSlider1/b4.webp',
-    img: '/images/sportSlider1/s3.webp',
-    path: '/',
-  },
-  {
-    title: 'Royal Gaming',
-    bgImg: '/images/sportSlider1/b5.webp',
-    img: '/images/sportSlider1/s3.webp',
-    path: '/',
-  },
-  {
-    title: 'Card Games',
-    bgImg: '/images/sportSlider1/b5.webp',
-    img: '/images/sportSlider1/s6.webp',
-    path: '/',
-  },
-];
-
 export const links = [
   {
     title: 'cricket',

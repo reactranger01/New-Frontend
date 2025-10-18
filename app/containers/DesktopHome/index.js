@@ -7,10 +7,11 @@ import DesktopFixtureCricket from '@/components/Desktop/DesktopFixtureCricket';
 import DesktopFixtureTennis from '@/components/Desktop/DesktopFixtureTennis';
 import DesktopFixtureFootball from '@/components/Desktop/DesktopFixtureFootball';
 import MostPopular from '@/components/MostPopular';
-import { sportSlider1, sportSlider2, sportSliderLink } from '@/utils/constants';
+import { sportSliderLink } from '@/utils/constants';
 import HomeTopSLider from '@/components/HomeTopSlider';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { openModal } from '@/redux/Slices/modalSlice';
 
 const gifArr = [
   {
@@ -46,6 +47,7 @@ const DesktopHome = () => {
   const [inplayFalseSoccer, setInplayFalseSoccer] = useState([]);
   // eslint-disable-next-line
   const [loaderOneTime, setLoaderOneTime] = useState(false);
+  const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user);
   const login = isLoggedIn();
   // const handleClickCasino = (item) => {
@@ -114,6 +116,96 @@ const DesktopHome = () => {
     }, fetchInterval);
     return () => clearInterval(intervalId);
   }, []);
+
+  const sportSlider1 = [
+    {
+      title: 'Sportsbook',
+      bgImg: '/images/sportSlider1/b1.webp',
+      img: '/images/sportSlider1/s1.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Evolution',
+      bgImg: '/images/sportSlider1/b2.webp',
+      img: '/images/sportSlider1/s2.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'e-Cricket',
+      bgImg: '/images/sportSlider1/b3.webp',
+      img: '/images/sportSlider1/s3.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Slot Games',
+      bgImg: '/images/sportSlider1/nb1.webp',
+      img: '/images/sportSlider1/ns1.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Lobby More Slots',
+      bgImg: '/images/sportSlider1/nb2.webp',
+      img: '/images/sportSlider1/patti.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Lobby Mac 88',
+      bgImg: '/images/sportSlider1/nb5.webp',
+      img: '/images/sportSlider1/patti.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Lobby Ezugi',
+      bgImg: '/images/sportSlider1/nb7.webp',
+      img: '/images/sportSlider1/patti.webp',
+      onClick: () => {},
+    },
+  ];
+  const sportSlider2 = [
+    {
+      title: 'Casino',
+      bgImg: '/images/sportSlider1/b4.webp',
+      img: '/images/sportSlider1/s3.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Royal Gaming',
+      bgImg: '/images/sportSlider1/b5.webp',
+      img: '/images/sportSlider1/s3.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Card Games',
+      bgImg: '/images/sportSlider1/b5.webp',
+      img: '/images/sportSlider1/s6.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Fishing Games',
+      bgImg: '/images/sportSlider1/nb3.webp',
+      img: '/images/sportSlider1/fish.webp',
+      onClick: () => {},
+    },
+    {
+      title: 'Lobby Royal',
+      bgImg: '/images/sportSlider1/nb4.webp',
+      img: '/images/sportSlider1/patti.webp',
+      onClick: () => {},
+    },
+
+    {
+      title: 'Lobby Aura',
+      bgImg: '/images/sportSlider1/nb6.webp',
+      img: '/images/sportSlider1/patti.webp',
+      onClick: () => dispatch(openModal('auraLobby')),
+    },
+    {
+      title: 'Lobby Marbles',
+      bgImg: '/images/sportSlider1/nb4.webp',
+      img: '/images/sportSlider1/patti.webp',
+      onClick: () => {},
+    },
+  ];
 
   return (
     <div className="w-full light-bg ">
@@ -189,8 +281,9 @@ const DesktopHome = () => {
             {sportSlider1?.map((item, index) => (
               <div
                 key={index}
+                onClick={item?.onClick}
                 style={{ backgroundImage: `url(${item?.bgImg})` }}
-                className="h-[50px] min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
+                className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
               >
                 <div className="flex items-center gap-2">
                   <img src={item?.img} className="h-4 w-4" alt="" />
@@ -203,8 +296,9 @@ const DesktopHome = () => {
             {sportSlider2?.map((item, index) => (
               <div
                 key={index}
+                onClick={item?.onClick}
                 style={{ backgroundImage: `url(${item?.bgImg})` }}
-                className="h-[50px] min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
+                className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
               >
                 <div className="flex items-center gap-2">
                   <img src={item?.img} className="h-4 w-4" alt="" />

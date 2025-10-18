@@ -200,11 +200,7 @@ const MobTennis = () => {
             )}
         </div>
         <div className={`${innerHeadTab === 2 ? '' : 'hidden'}  `}>
-          <MobOpenBets
-            eventId={eventId}
-            sport={'tennis'}
-            setOpenBetCount={setOpenBetCount}
-          />
+          <MobOpenBets eventId={eventId} setOpenBetCount={setOpenBetCount} />
         </div>
       </div>
     </>
