@@ -312,7 +312,7 @@ const LoginForm = ({ onClose }) => {
           </>
         )}
         <div className="flex justify-end items-center">
-          <button
+          <span
             onClick={(e) => {
               e.preventDefault();
               dispatch(closeModal());
@@ -321,7 +321,7 @@ const LoginForm = ({ onClose }) => {
             className="ml-auto underline text-14 my-1 text-right text-white"
           >
             Forgot Password?
-          </button>
+          </span>
         </div>
         <div className="grid grid-cols-2 gap-2 mt-2">
           <button

@@ -146,3 +146,6 @@ export const MobSlider = loadable(() => import('./MobileComp/MobSlider'), {
 export const MobFooter = loadable(() => import('./MobileComp/MobFooter'), {
   fallback: <Loading />,
 });
+export const CasinoPage = loadable(() => import('./CasinoPage'), {
+  fallback: <Loading />,
+});

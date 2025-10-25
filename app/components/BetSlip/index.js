@@ -122,16 +122,19 @@ const BetSlip = () => {
   };
   const placeBet = async (e) => {
     e.preventDefault();
+
     const checkRestriction = await handleRestrictedGames(betData?.gameId);
     if (checkRestriction) {
       toast.error('Betting on this sport is not permitted.');
       setIsloading(false);
       return;
     }
+
     if (userInfo.betLock) {
       toast.error('Betting is currently locked. You cannot place a bet.');
       return;
     }
+
     setIsloading(true);
     setFormError({});
 
@@ -143,7 +146,9 @@ const BetSlip = () => {
             price: betData.price / 100 + 1,
           }
         : { ...betData, stake: Number(betData?.stake) };
+
     data.stake = Number(data?.stake);
+
     if (data?.stake !== 0 && data?.price !== 0) {
       try {
         await betValidationSchema.validate(
@@ -158,38 +163,31 @@ const BetSlip = () => {
                 ? (betData?.maximumBet || Infinity) / 100
                 : betData?.maximumBet || Infinity,
           },
-          {
-            abortEarly: false,
-          },
+          { abortEarly: false },
         );
-        setTimeout(async () => {
-          await postAuthData('/user/place-bet', data)
-            .then((response) => {
-              if (response.status === 200) {
-                setIsloading(false);
-                toast.success('Bet Placed Successfully');
-                handleRemoveBet(data.selectionId);
-                dispatch(fetchCurrentCalculationAction({}));
-                dispatch(fetchBetDetailsAction([]));
-                dispatch(init([]));
-                handleProfitzero();
-                dispatch(setBetPlacementSuccess());
-              } else {
-                setIsloading(false);
-                if (response.data.length > 0) {
-                  toast.dismiss();
-                  toast.error(response?.data?.error || 'Something went wrong');
-                } else {
-                  toast.dismiss();
-                  toast.error(response?.data?.error || 'Something went wrong');
-                }
-              }
-            })
-            .catch((e) => {
-              setIsloading(false);
-              console.error(e);
-            });
-        }, 1000);
+
+        // 1️⃣ Start both API and 6-second delay together
+        const apiCall = postAuthData('/user/place-bet', data);
+        const delay = new Promise((resolve) => setTimeout(resolve, 6000));
+
+        // 2️⃣ Wait for both to complete
+        const [response] = await Promise.all([apiCall, delay]);
+
+        // 3️⃣ Handle API response
+        if (response.status === 200) {
+          setIsloading(false);
+          toast.success('Bet Placed Successfully');
+          handleRemoveBet(data.selectionId);
+          dispatch(fetchCurrentCalculationAction({}));
+          dispatch(fetchBetDetailsAction([]));
+          dispatch(init([]));
+          handleProfitzero();
+          dispatch(setBetPlacementSuccess());
+        } else {
+          setIsloading(false);
+          toast.dismiss();
+          toast.error(response?.data?.error || 'Something went wrong');
+        }
       } catch (error) {
         if (isYupError(error)) {
           setFormError(parseYupError(error));
@@ -201,9 +199,94 @@ const BetSlip = () => {
     } else {
       setIsloading(false);
       toast.dismiss();
-      toast.error('can not place bet due to missing odds');
+      toast.error('Cannot place bet due to missing odds');
     }
   };
+
+  // const placeBet = async (e) => {
+  //   e.preventDefault();
+  //   const checkRestriction = await handleRestrictedGames(betData?.gameId);
+  //   if (checkRestriction) {
+  //     toast.error('Betting on this sport is not permitted.');
+  //     setIsloading(false);
+  //     return;
+  //   }
+  //   if (userInfo.betLock) {
+  //     toast.error('Betting is currently locked. You cannot place a bet.');
+  //     return;
+  //   }
+  //   setIsloading(true);
+  //   setFormError({});
+
+  //   let data =
+  //     betData?.market == 'bookmaker'
+  //       ? {
+  //           ...betData,
+  //           stake: Number(betData?.stake),
+  //           price: betData.price / 100 + 1,
+  //         }
+  //       : { ...betData, stake: Number(betData?.stake) };
+  //   data.stake = Number(data?.stake);
+  //   if (data?.stake !== 0 && data?.price !== 0) {
+  //     try {
+  //       await betValidationSchema.validate(
+  //         {
+  //           ...data,
+  //           minimumBet:
+  //             userInfo.currency_type === 'HKD'
+  //               ? (betData?.minimumBet || 0) / 10
+  //               : betData?.minimumBet || 0,
+  //           maximumBet:
+  //             userInfo.currency_type === 'HKD'
+  //               ? (betData?.maximumBet || Infinity) / 100
+  //               : betData?.maximumBet || Infinity,
+  //         },
+  //         {
+  //           abortEarly: false,
+  //         },
+  //       );
+  //       setTimeout(async () => {
+  //         await postAuthData('/user/place-bet', data)
+  //           .then((response) => {
+  //             if (response.status === 200) {
+  //               setIsloading(false);
+  //               toast.success('Bet Placed Successfully');
+  //               handleRemoveBet(data.selectionId);
+  //               dispatch(fetchCurrentCalculationAction({}));
+  //               dispatch(fetchBetDetailsAction([]));
+  //               dispatch(init([]));
+  //               handleProfitzero();
+  //               dispatch(setBetPlacementSuccess());
+  //             } else {
+  //               setIsloading(false);
+  //               if (response.data.length > 0) {
+  //                 toast.dismiss();
+  //                 toast.error(response?.data?.error || 'Something went wrong');
+  //               } else {
+  //                 toast.dismiss();
+  //                 toast.error(response?.data?.error || 'Something went wrong');
+  //               }
+  //             }
+  //           })
+  //           .catch((e) => {
+  //             setIsloading(false);
+  //             console.error(e);
+  //           });
+  //       }, 1000);
+  //     } catch (error) {
+  //       if (isYupError(error)) {
+  //         setFormError(parseYupError(error));
+  //       } else {
+  //         toast.error('An error occurred while placing the bet');
+  //       }
+  //       setIsloading(false);
+  //     }
+  //   } else {
+  //     setIsloading(false);
+  //     toast.dismiss();
+  //     toast.error('can not place bet due to missing odds');
+  //   }
+  // };
 
   const handleIncrease = () => {
     if (betData?.price > 1) {

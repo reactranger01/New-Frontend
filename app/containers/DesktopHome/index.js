@@ -12,19 +12,29 @@ import HomeTopSLider from '@/components/HomeTopSlider';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { openModal } from '@/redux/Slices/modalSlice';
+import { CasinoPage } from '@/components';
 
 const gifArr = [
   {
     id: 1,
     gif: '/images/gifs/1.gif',
+    gameId: 67722,
+    launchId: ['67722-2_8', '6772228'],
+    title: 'AVIATOR',
   },
   {
     id: 2,
     gif: '/images/gifs/2.gif',
+    gameId: 70011,
+    launchId: ['70011_8', '700118'],
+    title: 'MINES',
   },
   {
     id: 3,
     gif: '/images/gifs/3.gif',
+    gameId: 70001,
+    launchId: ['70001_8', '700018'],
+    title: 'FUN GAMES',
   },
   {
     id: 4,
@@ -33,6 +43,12 @@ const gifArr = [
 ];
 
 const DesktopHome = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGif, setSelectedGif] = useState({
+    launchId: null,
+    title: '',
+  });
+  const isLogin = isLoggedIn();
   const [cricketInplay, setCricketInplay] = useState([]);
   const [soccerInplay, setsoccerInplay] = useState([]);
   const [tennisInplay, settennisInplay] = useState([]);
@@ -271,7 +287,23 @@ const DesktopHome = () => {
         </div>
         <div className=" grid grid-cols-2 gap-2">
           {gifArr?.map((item, index) => (
-            <div key={index} className="rounded-[4px] overflow-hidden">
+            <div
+              onClick={() => {
+                if (isLogin) {
+                  if (item?.launchId) {
+                    setSelectedGif({
+                      launchId: item.launchId ? item.launchId[0] : null,
+                      title: item.title || 'Casino',
+                    });
+                    setIsModalOpen(true);
+                  }
+                } else {
+                  dispatch(openModal('login'));
+                }
+              }}
+              key={index}
+              className="rounded-[4px] overflow-hidden"
+            >
               <img src={item?.gif} className="h-[60px] w-full" alt="" />{' '}
             </div>
           ))}
@@ -368,6 +400,14 @@ const DesktopHome = () => {
             type={'NotLiveMatches'}
             fixtureData={inplayFalseSoccer}
             isLoading={isLoadingS}
+          />
+        )}
+
+        {isModalOpen && selectedGif?.launchId && (
+          <CasinoPage
+            isOpen={isModalOpen}
+            data={selectedGif}
+            handleClose={() => setIsModalOpen(false)}
           />
         )}
       </div>

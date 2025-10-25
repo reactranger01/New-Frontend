@@ -117,36 +117,43 @@ const NewBetSlip = () => {
 
   const placeBet = async (e) => {
     e.preventDefault();
+
     if (betData?.stake == '' || betData?.stake == null) {
       setFormError({ ...formError, stake: 'Required' });
       return;
     }
+
     const checkRestriction = await handleRestrictedGames(betData?.gameId);
     if (checkRestriction) {
       toast.error('Betting on this sport is not permitted.');
       setIsloading(false);
       return;
     }
+
     if (userInfo.betLock) {
       toast.error('Betting is currently locked. You cannot place a bet.');
       return;
     }
+
     setIsloading(true);
     setFormError({});
+
     let data =
-      betData?.market == 'bookmaker'
+      betData?.market === 'bookmaker'
         ? {
             ...betData,
             stake: Number(betData?.stake),
             price: betData.price / 100 + 1,
-            acceptOddsChange: acceptOddsChange,
+            acceptOddsChange,
           }
         : {
             ...betData,
             stake: Number(betData?.stake),
-            acceptOddsChange: acceptOddsChange,
+            acceptOddsChange,
           };
+
     data.stake = Number(data?.stake);
+
     if (data?.stake !== 0 && data?.price !== 0) {
       try {
         await betValidationSchema.validate(
@@ -161,39 +168,31 @@ const NewBetSlip = () => {
                 ? (betData?.maximumBet || Infinity) / 100
                 : betData?.maximumBet || Infinity,
           },
-          {
-            abortEarly: false,
-          },
+          { abortEarly: false },
         );
-        setTimeout(async () => {
-          await postAuthData('/user/place-bet', data)
-            .then((response) => {
-              if (response.status === 200) {
-                setIsloading(false);
-                toast.success('Bet Placed Successfully');
-                handleRemoveBet(data.selectionId);
 
-                dispatch(fetchCurrentCalculationAction(null));
-                dispatch(fetchBetDetailsAction([]));
-                dispatch(init([]));
-                handleProfitzero();
-                dispatch(setBetPlacementSuccess());
-              } else {
-                setIsloading(false);
-                if (response.data.length > 0) {
-                  toast.dismiss();
-                  toast.error(response?.data?.error || 'Something went wrong');
-                } else {
-                  toast.dismiss();
-                  toast.error(response?.data?.error || 'Something went wrong');
-                }
-              }
-            })
-            .catch((e) => {
-              setIsloading(false);
-              console.error(e);
-            });
-        }, 3000);
+        // ✅ Start both API and 6-second timer simultaneously
+        const apiCall = postAuthData('/user/place-bet', data);
+        const delay = new Promise((resolve) => setTimeout(resolve, 6000));
+
+        // Wait until BOTH are done
+        const [response] = await Promise.all([apiCall, delay]);
+
+        // ✅ Now handle the API response
+        if (response.status === 200) {
+          setIsloading(false);
+          toast.success('Bet Placed Successfully');
+          handleRemoveBet(data.selectionId);
+          dispatch(fetchCurrentCalculationAction(null));
+          dispatch(fetchBetDetailsAction([]));
+          dispatch(init([]));
+          handleProfitzero();
+          dispatch(setBetPlacementSuccess());
+        } else {
+          setIsloading(false);
+          toast.dismiss();
+          toast.error(response?.data?.error || 'Something went wrong');
+        }
       } catch (error) {
         if (isYupError(error)) {
           setFormError(parseYupError(error));
@@ -205,7 +204,7 @@ const NewBetSlip = () => {
     } else {
       setIsloading(false);
       toast.dismiss();
-      toast.error('can not place bet due to missing odds');
+      toast.error('Cannot place bet due to missing odds');
     }
   };
 
