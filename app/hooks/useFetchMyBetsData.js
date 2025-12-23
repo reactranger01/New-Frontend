@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAuthData } from '@/utils/apiHandlers'; // aapke project ka helper
+import { getAuthData, isLoggedIn } from '@/utils/apiHandlers'; // aapke project ka helper
 import { getQueryString } from '@/utils/formatter';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
@@ -18,6 +18,8 @@ export const useFetchMyBetsData = ({
   const [betsData, setBetsData] = useState(null);
   const [loading, setLoading] = useState(false);
   const today = new Date();
+  const login = isLoggedIn();
+
   const bets = useSelector((state) => state.bet.selectedBet);
 
   const getAllBets = async () => {
@@ -56,9 +58,11 @@ export const useFetchMyBetsData = ({
   };
 
   useEffect(() => {
-    getAllBets();
+    if (login) {
+      getAllBets();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [take, bets]);
 
-  return { betsData, loading, refetch: getAllBets };
+  return { betsData, loading, refetch: getAllBets, login };
 };

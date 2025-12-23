@@ -3,16 +3,19 @@ import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useState } from 'react';
 import { isLoggedIn } from '@/utils/apiHandlers';
 import { getFixtureDataMobile } from '@/utils/helper';
-import DesktopFixtureCricket from '@/components/Desktop/DesktopFixtureCricket';
-import DesktopFixtureTennis from '@/components/Desktop/DesktopFixtureTennis';
-import DesktopFixtureFootball from '@/components/Desktop/DesktopFixtureFootball';
+
 import MostPopular from '@/components/MostPopular';
 import { sportSliderLink } from '@/utils/constants';
 import HomeTopSLider from '@/components/HomeTopSlider';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { openModal } from '@/redux/Slices/modalSlice';
-import { CasinoPage } from '@/components';
+import {
+  CasinoPage,
+  DesktopFixtureCricket,
+  DesktopFixtureFootball,
+  DesktopFixtureTennis,
+} from '@/components';
 
 const gifArr = [
   {
@@ -66,72 +69,139 @@ const DesktopHome = () => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.user);
   const login = isLoggedIn();
-  // const handleClickCasino = (item) => {
-  //   if (item.available) {
-  //     navigate('/dashboard', { state: item });
-  //   } else {
-  //     navigate('/');
-  //   }
+
+  // const getCricketData = () => {
+  //   getFixtureDataMobile(
+  //     'cricket',
+  //     setCricketInplay,
+  //     setInplayTrue,
+  //     setInplayFalse,
+  //     setisLoading,
+  //     setLoaderOneTime,
+  //   );
   // };
 
-  const getCricketData = () => {
-    getFixtureDataMobile(
-      'cricket',
-      setCricketInplay,
-      setInplayTrue,
-      setInplayFalse,
-      setisLoading,
-      setLoaderOneTime,
-    );
+  // const getTennisData = () => {
+  //   getFixtureDataMobile(
+  //     'tennis',
+  //     settennisInplay,
+  //     setInplayTrueTennis,
+  //     setInplayFalseTennis,
+  //     setisLoadingT,
+  //     setLoaderOneTime,
+  //   );
+  // };
+
+  // const getFootballData = () => {
+  //   getFixtureDataMobile(
+  //     'soccer',
+  //     setsoccerInplay,
+  //     setInplayTrueSoccer,
+  //     setInplayFalseSoccer,
+  //     setisLoadingS,
+  //     setLoaderOneTime,
+  //   );
+  // };
+
+  const startPolling = (fetchFn, interval) => {
+    let isCancelled = false;
+
+    const poll = async () => {
+      if (isCancelled) return;
+
+      await fetchFn(); // ⬅ waits for API to finish
+      if (!isCancelled) {
+        setTimeout(poll, interval);
+      }
+    };
+
+    poll();
+
+    return () => {
+      isCancelled = true;
+    };
   };
 
-  const getTennisData = () => {
-    getFixtureDataMobile(
-      'tennis',
-      settennisInplay,
-      setInplayTrueTennis,
-      setInplayFalseTennis,
-      setisLoadingT,
-      setLoaderOneTime,
+  // useEffect(() => {
+  //   const fetchInterval = login ? 5000 : 10000;
+  //   getCricketData();
+  //   const intervalId = setInterval(() => {
+  //     getCricketData();
+  //   }, fetchInterval);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchInterval = login ? 5000 : 10000;
+  //   getTennisData();
+  //   const intervalId = setInterval(() => {
+  //     getTennisData();
+  //   }, fetchInterval);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchInterval = login ? 5000 : 10000;
+  //   getFootballData();
+  //   const intervalId = setInterval(() => {
+  //     getFootballData();
+  //   }, fetchInterval);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  useEffect(() => {
+    const interval = login ? 5000 : 10000;
+
+    const stopPolling = startPolling(
+      () =>
+        getFixtureDataMobile(
+          'cricket',
+          setCricketInplay,
+          setInplayTrue,
+          setInplayFalse,
+          setisLoading,
+        ),
+      interval,
     );
-  };
 
-  const getFootballData = () => {
-    getFixtureDataMobile(
-      'soccer',
-      setsoccerInplay,
-      setInplayTrueSoccer,
-      setInplayFalseSoccer,
-      setisLoadingS,
-      setLoaderOneTime,
+    return stopPolling;
+  }, [login]);
+
+  useEffect(() => {
+    const interval = login ? 5000 : 10000;
+
+    const stopPolling = startPolling(
+      () =>
+        getFixtureDataMobile(
+          'tennis',
+          settennisInplay,
+          setInplayTrueTennis,
+          setInplayFalseTennis,
+          setisLoadingT,
+        ),
+      interval,
     );
-  };
-  useEffect(() => {
-    const fetchInterval = login ? 5000 : 10000;
-    getCricketData();
-    const intervalId = setInterval(() => {
-      getCricketData();
-    }, fetchInterval);
-    return () => clearInterval(intervalId);
-  }, []);
+
+    return stopPolling;
+  }, [login]);
 
   useEffect(() => {
-    const fetchInterval = login ? 5000 : 10000;
-    getTennisData();
-    const intervalId = setInterval(() => {
-      getTennisData();
-    }, fetchInterval);
-    return () => clearInterval(intervalId);
-  }, []);
+    const interval = login ? 5000 : 10000;
 
-  useEffect(() => {
-    const fetchInterval = login ? 5000 : 10000;
-    getFootballData();
-    const intervalId = setInterval(() => {
-      getFootballData();
-    }, fetchInterval);
-    return () => clearInterval(intervalId);
-  }, []);
+    const stopPolling = startPolling(
+      () =>
+        getFixtureDataMobile(
+          'soccer',
+          setsoccerInplay,
+          setInplayTrueSoccer,
+          setInplayFalseSoccer,
+          setisLoadingS,
+        ),
+      interval,
+    );
+
+    return stopPolling;
+  }, [login]);
 
   const sportSlider1 = [
     {

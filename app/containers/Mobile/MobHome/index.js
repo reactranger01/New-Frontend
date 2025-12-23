@@ -39,8 +39,41 @@ const MobHome = () => {
     }
   };
 
-  const getCricketData = () => {
-    getFixtureDataMobile(
+  // const getCricketData = () => {
+  //   getFixtureDataMobile(
+  //     'cricket',
+  //     setCricketInplay,
+  //     setInplayTrue,
+  //     setInplayFalse,
+  //     setisLoading,
+  //     setLoaderOneTime,
+  //   );
+  // };
+
+  // const getTennisData = () => {
+  //   getFixtureDataMobile(
+  //     'tennis',
+  //     settennisInplay,
+  //     setInplayTrueTennis,
+  //     setInplayFalseTennis,
+  //     setisLoadingT,
+  //     setLoaderOneTime,
+  //   );
+  // };
+
+  // const getFootballData = () => {
+  //   getFixtureDataMobile(
+  //     'soccer',
+  //     setsoccerInplay,
+  //     setInplayTrueSoccer,
+  //     setInplayFalseSoccer,
+  //     setisLoadingS,
+  //     setLoaderOneTime,
+  //   );
+  // };
+
+  const getCricketData = async () => {
+    await getFixtureDataMobile(
       'cricket',
       setCricketInplay,
       setInplayTrue,
@@ -50,8 +83,8 @@ const MobHome = () => {
     );
   };
 
-  const getTennisData = () => {
-    getFixtureDataMobile(
+  const getTennisData = async () => {
+    await getFixtureDataMobile(
       'tennis',
       settennisInplay,
       setInplayTrueTennis,
@@ -61,8 +94,8 @@ const MobHome = () => {
     );
   };
 
-  const getFootballData = () => {
-    getFixtureDataMobile(
+  const getFootballData = async () => {
+    await getFixtureDataMobile(
       'soccer',
       setsoccerInplay,
       setInplayTrueSoccer,
@@ -71,32 +104,75 @@ const MobHome = () => {
       setLoaderOneTime,
     );
   };
-  useEffect(() => {
-    const fetchInterval = login ? 5000 : 10000;
-    getCricketData();
-    const intervalId = setInterval(() => {
-      getCricketData();
-    }, fetchInterval);
-    return () => clearInterval(intervalId);
-  }, []);
+
+  const startPolling = (apiFn, interval) => {
+    let stopped = false;
+
+    const poll = async () => {
+      if (stopped) return;
+
+      await apiFn(); // ⬅ waits for API
+      if (!stopped) {
+        setTimeout(poll, interval);
+      }
+    };
+
+    poll();
+
+    return () => {
+      stopped = true;
+    };
+  };
 
   useEffect(() => {
-    const fetchInterval = login ? 5000 : 10000;
-    getTennisData();
-    const intervalId = setInterval(() => {
-      getTennisData();
-    }, fetchInterval);
-    return () => clearInterval(intervalId);
-  }, []);
+    const interval = login ? 5000 : 10000;
+
+    const stop = startPolling(getCricketData, interval);
+
+    return stop;
+  }, [login]);
+  useEffect(() => {
+    const interval = login ? 5000 : 10000;
+
+    const stop = startPolling(getTennisData, interval);
+
+    return stop;
+  }, [login]);
 
   useEffect(() => {
-    const fetchInterval = login ? 5000 : 10000;
-    getFootballData();
-    const intervalId = setInterval(() => {
-      getFootballData();
-    }, fetchInterval);
-    return () => clearInterval(intervalId);
-  }, []);
+    const interval = login ? 5000 : 10000;
+
+    const stop = startPolling(getFootballData, interval);
+
+    return stop;
+  }, [login]);
+
+  // useEffect(() => {
+  //   const fetchInterval = login ? 5000 : 10000;
+  //   getCricketData();
+  //   const intervalId = setInterval(() => {
+  //     getCricketData();
+  //   }, fetchInterval);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchInterval = login ? 5000 : 10000;
+  //   getTennisData();
+  //   const intervalId = setInterval(() => {
+  //     getTennisData();
+  //   }, fetchInterval);
+  //   return () => clearInterval(intervalId);
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchInterval = login ? 5000 : 10000;
+  //   getFootballData();
+  //   const intervalId = setInterval(() => {
+  //     getFootballData();
+  //   }, fetchInterval);
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   return (
     <div className="w-full light-bg ">

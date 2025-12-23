@@ -149,3 +149,49 @@ export const MobFooter = loadable(() => import('./MobileComp/MobFooter'), {
 export const CasinoPage = loadable(() => import('./CasinoPage'), {
   fallback: <Loading />,
 });
+export const ScrollToTop = loadable(() => import('./ScrollToTop'), {
+  fallback: <Loading />,
+});
+export const ModalManager = loadable(() => import('./ModalManager'), {
+  fallback: <Loading />,
+});
+export const DesktopFixtureCricket = loadable(
+  () => import('./Desktop/DesktopFixtureCricket'),
+  {
+    fallback: <Loading />,
+  },
+);
+
+export const DesktopFixtureFootball = loadable(
+  () => import('./Desktop/DesktopFixtureFootball'),
+  {
+    fallback: <Loading />,
+  },
+);
+export const DesktopFixtureTennis = loadable(
+  () => import('./Desktop/DesktopFixtureTennis'),
+  {
+    fallback: <Loading />,
+  },
+);
+
+export const DesktopGameHeader = loadable(
+  () => import('./Desktop/DesktopGameHeader'),
+  {
+    fallback: <Loading />,
+  },
+);
+export const DesktopMarketAll = loadable(() => import('./DesktopMarketAll'), {
+  fallback: <Loading />,
+});
+
+export const MobileMarketAll = loadable(
+  () => import('./Mobile/MobileMarketAll'),
+  {
+    fallback: <Loading />,
+  },
+);
+
+export const MostPopular = loadable(() => import('./MostPopular'), {
+  fallback: <Loading />,
+});

@@ -11,43 +11,41 @@ import {
   AccountStatement,
   AddAccount,
   BankDetails,
-  // Casino,
   Cricket,
   CricketMarket,
   Deposit,
+  DesktopHome,
   EditBankAccountDetails,
+  EditStakes,
   Football,
   FootballMarket,
-  // Home,
-  // Landing,
+  LayoutThree,
   MobCricket,
   MobFootball,
   MobHome,
   MobLayout,
   MobTennis,
-  // Login,
   MyBets,
   NotFound,
   ProfitAndLoss,
-  // RulesRegulation,
   Settings,
   Sidebar,
   Tennis,
   TennisMarket,
+  TransactionsPage,
   Withdraw,
+  NotificationPage,
+  LayoutTwo,
+  OpenBets,
 } from './containers/pageListAsync';
-import { ImageUpload, NoMarketAvailable } from './components';
+import {
+  ImageUpload,
+  ModalManager,
+  NoMarketAvailable,
+  ScrollToTop,
+} from './components';
 import PrivateRoute from './containers/auth/PrivateRoute';
 import { useMediaQuery } from '@mui/material';
-import DesktopHome from './containers/DesktopHome';
-import ModalManager from './components/ModalManager';
-import NotificationPage from './containers/NotificationPage';
-import LayoutTwo from './containers/LayoutTwo';
-import OpenBets from './containers/Pages/OpenBets';
-import TransactionsPage from './containers/Pages/TransactionsPage';
-import LayoutThree from './containers/LayoutThree';
-import ScrollToTop from './components/ScrollToTop';
-import EditStakes from './containers/EditStakes';
 
 const sagaMiddleware = createSagaMiddleware();
 const reducer = createReducer();
@@ -78,7 +76,6 @@ function App() {
             <Route path="football" element={<MobFootball />} />
             <Route path="tennis" element={<MobTennis />} />
           </Route>
-          {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/" element={isMobile ? <MobLayout /> : <Sidebar />}>
             <Route index element={<DesktopHome />} />
             <Route path="/cricket" element={<Cricket />} />

@@ -6,6 +6,9 @@ import loadable from '../utils/loadable';
 export const Landing = loadable(() => import('./Landing'), {
   fallback: <Loading />,
 });
+export const DesktopHome = loadable(() => import('./DesktopHome'), {
+  fallback: <Loading />,
+});
 //Login Page
 export const LoginModal = loadable(() => import('./Pages/LoginModal'), {
   fallback: <Loading />,
@@ -158,5 +161,27 @@ export const UpdateModal = loadable(() => import('./Pages/UpdateModal'), {
   fallback: <Loading />,
 });
 export const RulesRegulation = loadable(() => import('./RulesRegulation'), {
+  fallback: <Loading />,
+});
+export const EditStakes = loadable(() => import('./EditStakes'), {
+  fallback: <Loading />,
+});
+export const LayoutThree = loadable(() => import('./LayoutThree'), {
+  fallback: <Loading />,
+});
+export const TransactionsPage = loadable(
+  () => import('./Pages/TransactionsPage'),
+  {
+    fallback: <Loading />,
+  },
+);
+export const OpenBets = loadable(() => import('./Pages/OpenBets'), {
+  fallback: <Loading />,
+});
+
+export const LayoutTwo = loadable(() => import('./LayoutTwo'), {
+  fallback: <Loading />,
+});
+export const NotificationPage = loadable(() => import('./NotificationPage'), {
   fallback: <Loading />,
 });

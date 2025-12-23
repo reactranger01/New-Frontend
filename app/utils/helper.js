@@ -478,6 +478,54 @@ export const desktopModalStyle = {
   borderRadius: '10px',
 };
 
+// export const getFixtureDataMobile = async (
+//   game,
+//   setInplay,
+//   setInplayTrue,
+//   setInplayFalse,
+//   setLoading,
+// ) => {
+//   setLoading(true);
+//   try {
+//     const response = await getAuthData(
+//       `/catalogue/${game}/get-fixture-details`,
+//     );
+//     if (response?.status === 200 || response?.status === 201) {
+//       const data = response?.data.filter((item) => item.isDelete === false);
+//       if (data) {
+//         setLoading(false);
+//         const todayDate = new Date().toISOString().split('T')[0];
+//         const inplayTrueData = [];
+//         const inplayFalseData = [];
+//         data
+//           .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
+//           .forEach((item) => {
+//             const entryDate = new Date(item?.matchDateTime)
+//               ?.toISOString()
+//               ?.split('T')[0];
+//             if (
+//               entryDate >= todayDate ||
+//               item?.status === 'ACTIVE' ||
+//               item?.status === 'OPEN'
+//             ) {
+//               if (item?.inplay === true) {
+//                 inplayTrueData.push(item);
+//               } else {
+//                 inplayFalseData.push(item);
+//               }
+//             }
+//           });
+
+//         setInplay(data);
+//         setInplayTrue(inplayTrueData);
+//         setInplayFalse(inplayFalseData);
+//       }
+//     }
+//   } catch (e) {
+//     setLoading(false);
+//     console.error(`Error fetching data from ${game}:`, e);
+//   }
+// };
 export const getFixtureDataMobile = async (
   game,
   setInplay,
@@ -490,40 +538,40 @@ export const getFixtureDataMobile = async (
     const response = await getAuthData(
       `/catalogue/${game}/get-fixture-details`,
     );
+
     if (response?.status === 200 || response?.status === 201) {
       const data = response?.data.filter((item) => item.isDelete === false);
-      if (data) {
-        setLoading(false);
-        const todayDate = new Date().toISOString().split('T')[0];
-        const inplayTrueData = [];
-        const inplayFalseData = [];
-        data
-          .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
-          .forEach((item) => {
-            const entryDate = new Date(item?.matchDateTime)
-              ?.toISOString()
-              ?.split('T')[0];
-            if (
-              entryDate >= todayDate ||
-              item?.status === 'ACTIVE' ||
-              item?.status === 'OPEN'
-            ) {
-              if (item?.inplay === true) {
-                inplayTrueData.push(item);
-              } else {
-                inplayFalseData.push(item);
-              }
-            }
-          });
 
-        setInplay(data);
-        setInplayTrue(inplayTrueData);
-        setInplayFalse(inplayFalseData);
-      }
+      const todayDate = new Date().toISOString().split('T')[0];
+      const inplayTrueData = [];
+      const inplayFalseData = [];
+
+      data
+        .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
+        .forEach((item) => {
+          const entryDate = new Date(item.matchDateTime)
+            .toISOString()
+            .split('T')[0];
+
+          if (
+            entryDate >= todayDate ||
+            item.status === 'ACTIVE' ||
+            item.status === 'OPEN'
+          ) {
+            item.inplay
+              ? inplayTrueData.push(item)
+              : inplayFalseData.push(item);
+          }
+        });
+
+      setInplay(data);
+      setInplayTrue(inplayTrueData);
+      setInplayFalse(inplayFalseData);
     }
   } catch (e) {
-    setLoading(false);
     console.error(`Error fetching data from ${game}:`, e);
+  } finally {
+    setLoading(false);
   }
 };
 

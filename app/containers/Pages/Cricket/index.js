@@ -1,8 +1,10 @@
-import { Loading } from '@/components';
-import DesktopGameHeader from '@/components/Desktop/DesktopGameHeader';
-import DesktopMarketAll from '@/components/DesktopMarketAll';
-import MobileMarketAll from '@/components/Mobile/MobileMarketAll';
-import MostPopular from '@/components/MostPopular';
+import {
+  DesktopGameHeader,
+  DesktopMarketAll,
+  Loading,
+  MobileMarketAll,
+  MostPopular,
+} from '@/components';
 import { fetchBetDetailsAction } from '@/redux/actions';
 import { setActiveBetSlipIndex } from '@/redux/Slices/newBetSlice';
 import { isLoggedIn } from '@/utils/apiHandlers';
