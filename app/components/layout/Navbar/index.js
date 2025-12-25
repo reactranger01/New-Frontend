@@ -14,6 +14,7 @@ import RightSidebarDrawer from '@/components/MobileComp/RightSidebarDrawer';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 import { openModal } from '@/redux/Slices/modalSlice';
+import { getImage } from '@/utils/imagekit';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -142,7 +143,8 @@ const Navbar = () => {
                   </div>
                   <img
                     onClick={() => navigate('/')}
-                    src="/images/lotusLogo.jpg"
+                    // src="https://ik.imagekit.io/esfzc31bu/images/lotusLogo.jpg"
+                    src={getImage('/images/lotusLogo.jpg')}
                     alt="LOGO"
                     className=" h-8 md:h-9 cursor-pointer"
                   />

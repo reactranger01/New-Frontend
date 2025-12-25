@@ -10,6 +10,7 @@ import {
   getUserBets,
 } from '@/utils/helper';
 import { reactIcons } from '@/utils/icons';
+import { getImage } from '@/utils/imagekit';
 import { logout } from '@/utils/logout';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
@@ -195,7 +196,7 @@ const TennisMarket = () => {
                           className="bg-[#00A725] flex p-2 rounded-md gap-1 items-center ml-auto w-auto "
                         >
                           <img
-                            src="/images/live-match.png"
+                            src={getImage('/images/live-match.png')}
                             alt="live-tv"
                             className="w-5 "
                           />

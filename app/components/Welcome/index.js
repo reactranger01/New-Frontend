@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUI } from '@/redux/actions';
 import colors from '@/api/ui';
+import { getImage } from '@/utils/imagekit';
 
 function Welcome() {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ function Welcome() {
       <h1 style={{ color }}>React Template with Webpack and Babel</h1>
       <p className="text-white">*Change text color by click on image</p>
       <img
-        src="/images/react.png"
+        src={getImage('/images/react.png')}
         className="react"
         onClick={toggleColor}
         alt="react"

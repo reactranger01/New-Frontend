@@ -1,4 +1,5 @@
 import Instructions from '@/components/NewModals/Instructions';
+import { getImage, getVideo } from '@/utils/imagekit';
 import React, { useState } from 'react';
 
 const footerAssets = {
@@ -57,7 +58,7 @@ export default function Footer() {
         <div className="border-b-[1px] border-[#282828] text-center   xl:container mx-auto xl:px-0 px-2 md:px-4 ">
           <div className="flex justify-center mb-6">
             <img
-              src={footerAssets.downloadApp}
+              src={getImage(footerAssets.downloadApp)}
               alt="Download App"
               className="h-12"
             />
@@ -83,7 +84,7 @@ export default function Footer() {
           {/* GC Logo + Description */}
           <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
             <img
-              src={footerAssets.gcLogo}
+              src={getImage(footerAssets.gcLogo)}
               alt="GC Gaming Curacao"
               className="mx-auto h-12 mb-4"
             />
@@ -102,7 +103,7 @@ export default function Footer() {
             {footerAssets.sponsors.map((src, i) => (
               <img
                 key={i}
-                src={src}
+                src={getImage(src)}
                 alt={`Sponsor ${i + 1}`}
                 className="h-[27px] w-20"
               />
@@ -116,7 +117,7 @@ export default function Footer() {
               <img
                 onClick={() => window.open(src.path, '_blank')}
                 key={i}
-                src={src.img}
+                src={getImage(src.img)}
                 alt={`Social Media ${i + 1}`}
                 className="h-9 w-9 rounded-full overflow-hidden cursor-pointer hover:scale-110 transition"
               />
@@ -147,14 +148,14 @@ export default function Footer() {
           }
           videoFile={
             openModalType === 1
-              ? '/videos/first.mp4'
+              ? getVideo('/videos/first.mp4', { q: 75 })
               : openModalType === 2
-              ? '/videos/second.mp4'
+              ? getVideo('/videos/second.mp4', { q: 75 })
               : openModalType === 3
-              ? '/videos/third.mp4'
+              ? getVideo('/videos/third.mp4', { q: 75 })
               : openModalType === 4
-              ? '/videos/fourth.mp4'
-              : '/videos/five.mp4'
+              ? getVideo('/videos/fourth.mp4', { q: 75 })
+              : getVideo('/videos/five.mp4', { q: 75 })
           }
         />
       )}

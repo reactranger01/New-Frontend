@@ -6,6 +6,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
 import { Navigation, Autoplay } from 'swiper/modules';
+import { getImage } from '@/utils/imagekit';
 
 const imagesArr = [
   {
@@ -98,7 +99,7 @@ const HomeTopSLider = () => {
             className=" h-[200px] flex items-center justify-center"
           >
             <img
-              src={item?.img}
+              src={getImage(item?.img)}
               alt=""
               className={`rounded-md w-full ${item?.css}`}
             />

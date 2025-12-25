@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
+import { getImage } from '@/utils/imagekit';
 
 const CasinoModal = ({
   setCasinoPoints,
@@ -49,7 +50,7 @@ const CasinoModal = ({
             </div>
             <div className="flex justify-center items-center my-4">
               <img
-                src="/images/casino/coin.png"
+                src={getImage('/images/casino/coin.png')}
                 className="w-[100px] h-[107px]"
                 alt=""
               />

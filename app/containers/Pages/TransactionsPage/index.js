@@ -2,6 +2,7 @@ import NoDataFound from '@/components/NoDataFound';
 import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import { getQueryString } from '@/utils/formatter';
+import { getImage } from '@/utils/imagekit';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 
@@ -120,7 +121,7 @@ const TransactionsPage = () => {
             <div className="flex gap-2">
               <div className="w-[42px] h-[42px] flex-center rounded-md overflow-hidden border border-gray-200 bg-[#ffe49687] ">
                 <img
-                  src="/images/graph.webp"
+                  src={getImage('/images/graph.webp')}
                   className="w-[26px] h-[24px]"
                   alt=""
                 />

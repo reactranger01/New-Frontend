@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { useNavigate } from 'react-router-dom';
+import { getImage } from '@/utils/imagekit';
 
 const sliderImg = [
   {
@@ -27,7 +28,7 @@ const SwiperSlider = () => {
             onClick={() => navigate('/')}
           >
             <img
-              src={item.path}
+              src={getImage(item.path)}
               alt=""
               className="h-[120px] sm:h-auto lg:w-full w-auto object-cover"
             />

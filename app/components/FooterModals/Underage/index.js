@@ -6,6 +6,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { Button } from '@mui/material';
 import { desktopModalStyle, mobileModalStyle } from '@/utils/helper';
 import { useMediaQuery } from '@mui/material';
+import { getImage } from '@/utils/imagekit';
 const Underage = ({ open, setOpen, type }) => {
   const handleClose = () => setOpen(false);
   const isMobile = useMediaQuery('(max-width:768px)');
@@ -23,7 +24,7 @@ const Underage = ({ open, setOpen, type }) => {
           {isMobile && (
             <div className="flex items-center">
               <img
-                src="/images/footer/2.png"
+                src={getImage('/images/footer/2.png')}
                 className="  invert w-[20px] h-[20px]"
                 alt="gameCare"
               />

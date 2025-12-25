@@ -1,12 +1,13 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
+import { getImage } from '@/utils/imagekit';
 
 const HeaderMarque = ({ showMarquee, setShowMarquee }) => {
   return (
     <div className="w-full bg-[#0f2327] flex px-2 items-center">
       <div className="ml-36 hidden md:block">
         <img
-          src="/images/home/ball.gif"
+          src={getImage('/images/home/ball.gif')}
           alt="gif"
           className="h-8 cursor-pointer"
         />
@@ -51,7 +52,7 @@ const HeaderMarque = ({ showMarquee, setShowMarquee }) => {
 
       <div className="mr-36 hidden md:block">
         <img
-          src="/images/home/ball.gif"
+          src={getImage('/images/home/ball.gif')}
           alt="gif"
           className="h-8 cursor-pointer"
         />

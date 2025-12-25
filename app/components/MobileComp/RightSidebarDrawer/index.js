@@ -13,6 +13,7 @@ import { numberWithCommas } from '@/utils/numberWithCommas';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { openModal } from '@/redux/Slices/modalSlice';
+import { getImage } from '@/utils/imagekit';
 export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
   const login = isLoggedIn();
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
                 className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg bg-[#1e8067] text-white"
               >
                 <img
-                  src="/images/deposit.png"
+                  src={getImage('/images/deposit.png')}
                   className="w-[18px] h-[18px]"
                   alt=""
                 />{' '}
@@ -64,7 +65,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
                 className="flex items-center justify-center py-2 gap-2 text-[13px] font-lato font-bold rounded-lg  text-white  bg-[#dc2626]"
               >
                 <img
-                  src="/images/withdraw.png"
+                  src={getImage('/images/withdraw.png')}
                   className="w-[18px] h-[18px]"
                   alt=""
                 />{' '}
@@ -131,7 +132,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-bold gap-2 "
             >
               <img
-                src={item.icon}
+                src={getImage(item.icon)}
                 className="rightS-svg w-[18px] h-[18px]"
                 alt=""
               />{' '}
@@ -145,7 +146,7 @@ export default function RightSidebarDrawer({ open, setOpen, toggleDrawer }) {
               className="text-12 border-y border-[#ddd] py-3 px-3 flex items-center font-bold gap-2 "
             >
               <img
-                src={item.icon}
+                src={getImage(item.icon)}
                 className="rightS-svg w-[18px] h-[18px]"
                 alt=""
               />{' '}

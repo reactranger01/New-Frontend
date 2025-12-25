@@ -224,7 +224,7 @@ const MobHome = () => {
               >
                 <img
                   className="h-full w-full object-cover"
-                  src={_item.path}
+                  src={_item?.path}
                   alt=""
                 />
               </div>

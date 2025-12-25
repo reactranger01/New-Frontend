@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { closeModal, openModal } from '@/redux/Slices/modalSlice';
 import { useDispatch } from 'react-redux';
+import { getImage } from '@/utils/imagekit';
 
 const sponsorArr = [
   {
@@ -197,7 +198,11 @@ const RegisterModal = ({ isOpen, handleClose }) => {
             </button>
             <div className="flex flex-col w-full gap-2 relative px-[10px] py-7">
               <div className="mx-auto">
-                <img src="/images/lotusLogo.jpg" className="h-[30px]" alt="" />
+                <img
+                  src={getImage('/images/lotusLogo.jpg')}
+                  className="h-[30px]"
+                  alt=""
+                />
               </div>
               <h1 className="text-center text-20 font-bold text-white mb-4 ">
                 Register
@@ -389,7 +394,7 @@ const RegisterModal = ({ isOpen, handleClose }) => {
                   {sponsorArr.map((item, index) => (
                     <div key={index} className="flex items-center gap-2">
                       <img
-                        src={item?.img}
+                        src={getImage(item?.img)}
                         className="h-[60px] w-[60px]"
                         alt=""
                       />

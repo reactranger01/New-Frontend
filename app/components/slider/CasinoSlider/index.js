@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { reactIcons } from '@/utils/icons';
 import { casinoImgs } from '@/utils/constants';
+import { getImage } from '@/utils/imagekit';
 
 const CasinoSlider = ({ setProviderSearch, setUrl, setSelectedIndex }) => {
   return (
@@ -58,7 +59,7 @@ const CasinoSlider = ({ setProviderSearch, setUrl, setSelectedIndex }) => {
             >
               <div className=" h-[150px]">
                 <img
-                  src={item.path}
+                  src={getImage(item.path)}
                   alt=""
                   loading="lazy"
                   className="h-full w-full object-cover"

@@ -1,3 +1,4 @@
+import { getImage } from '@/utils/imagekit';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ const NotFound = () => {
         <div className="inline-flex rounded-fullp-4">
           <div className="rounded-full p-4 ">
             <img
-              src="/images/notFound.gif"
+              src={getImage('/images/notFound.gif')}
               className="max-w-[300px] md:max-w-[600px]"
               alt="not-found"
             />

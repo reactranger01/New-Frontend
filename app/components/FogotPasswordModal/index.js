@@ -13,6 +13,7 @@ import {
   otpVerifyValidation,
 } from '@/utils/validation';
 import { isYupError, parseYupError } from '@/utils/Yup';
+import { getImage } from '@/utils/imagekit';
 
 const style = {
   position: 'absolute',
@@ -212,7 +213,11 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
             </button>
             <div className="flex flex-col gap-2 relative px-[10px] py-7">
               <div className="mx-auto">
-                <img src="/images/lotusLogo.jpg" className="h-[30px]" alt="" />
+                <img
+                  src={getImage('/images/lotusLogo.jpg')}
+                  className="h-[30px]"
+                  alt=""
+                />
               </div>
               <h1 className="text-center text-20 font-bold text-white ">
                 Forget Password

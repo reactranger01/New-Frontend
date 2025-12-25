@@ -4,6 +4,7 @@ import { links } from '@/utils/constants';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { SidebarMenu } from '..';
+import { getImage } from '@/utils/imagekit';
 
 const LeftSidebarDesk = () => {
   const [step, setStep] = useState(0);
@@ -49,8 +50,11 @@ const LeftSidebarDesk = () => {
               }
             >
               <span className="text-xl">
-                {' '}
-                <img src={item.icon} alt={item.title} className="w-4 h-4" />
+                <img
+                  src={getImage(item.icon)}
+                  alt={item.title}
+                  className="w-4 h-4"
+                />
               </span>{' '}
               {item.title}
             </NavLink>

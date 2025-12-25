@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import { resetPasswordValidation } from '@/utils/validation';
 import { postAuthData } from '@/utils/apiHandlers';
 import { useNavigate } from 'react-router-dom';
+import { getImage } from '@/utils/imagekit';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -98,7 +99,7 @@ export default function UpdateModal() {
               {reactIcons.close}
             </button>
             <div className="mx-auto">
-              <img src="/images/logo.png" className="h-20" alt="" />
+              <img src={getImage('/images/logo.png')} className="h-20" alt="" />
             </div>
             <div className="flex flex-col gap-5">
               <div className="relative">

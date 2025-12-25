@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom';
 // import CasinoModal from '../CasinoModal';
 import { useMediaQuery } from '@mui/material';
 import { openModal } from '@/redux/Slices/modalSlice';
+import { getImage } from '@/utils/imagekit';
 const Casino = () => {
   const [isLoading, setisLoading] = useState(false);
   const [allCasinoGame, setAllCasinoGame] = useState([]);
@@ -133,9 +134,8 @@ const Casino = () => {
             }}
           >
             <div>
-              {' '}
               <img
-                src={item.icon}
+                src={getImage(item.icon)}
                 alt={item?.provider}
                 className="h-7 w-7 md:h-4 md:w-4 object-cover"
               />
@@ -178,7 +178,7 @@ const Casino = () => {
                 }}
               >
                 <img
-                  src={item?.game_images}
+                  src={getImage(item?.game_images)}
                   alt={item.provider}
                   loading="lazy"
                   className="h-auto md:h-full md:w-full w-auto object-cover"

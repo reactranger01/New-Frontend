@@ -10,6 +10,7 @@ import 'swiper/css/autoplay';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { reactIcons } from '@/utils/icons';
 import { useNavigate } from 'react-router-dom';
+import { getImage } from '@/utils/imagekit';
 
 const SliderTwo = ({ number, imgs, num1, num2, hide }) => {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ const SliderTwo = ({ number, imgs, num1, num2, hide }) => {
             >
               <div className={'h-full w-full  overflow-hidden'}>
                 <img
-                  src={item.path}
+                  src={getImage(item.path)}
                   alt=""
                   className="h-full w-full object-cover"
                 />

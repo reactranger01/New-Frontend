@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
 import { Navigation, Autoplay } from 'swiper/modules';
 import { useNavigate } from 'react-router-dom';
+import { getImage } from '@/utils/imagekit';
 
 const GameSlider = ({ number }) => {
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const GameSlider = ({ number }) => {
             className="cursor-pointer h-[150px] md:h-auto"
           >
             <img
-              src="/images/home/2.webp"
+              src={getImage('/images/home/2.webp')}
               alt=""
               className="h-full w-full object-cover"
             />
@@ -63,7 +64,7 @@ const GameSlider = ({ number }) => {
         <SwiperSlide>
           <div className="cursor-pointer h-[150px] md:h-auto">
             <img
-              src="/images/home/3.webp"
+              src={getImage('/images/home/3.webp')}
               alt=""
               className="h-full w-full object-cover"
             />
@@ -75,7 +76,7 @@ const GameSlider = ({ number }) => {
             className="cursor-pointer h-[150px] md:h-auto"
           >
             <img
-              src="/images/home/4.webp"
+              src={getImage('/images/home/4.webp')}
               alt=""
               className="h-full w-full object-cover"
             />

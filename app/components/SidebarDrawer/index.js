@@ -5,6 +5,7 @@ import { links } from '@/utils/constants';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 import { reactIcons } from '@/utils/icons';
+import { getImage } from '@/utils/imagekit';
 
 const getIdArr = [
   {
@@ -57,7 +58,7 @@ export default function SidebarDrawer({ open, toggleDrawer }) {
             >
               <span className="">
                 <img
-                  src={item.icon}
+                  src={getImage(item.icon)}
                   alt={item.title}
                   className="w-[18px] h-[18px]"
                 />
@@ -74,7 +75,7 @@ export default function SidebarDrawer({ open, toggleDrawer }) {
           <div>
             {getIdArr.map((item, index) => (
               <img
-                src={item?.img}
+                src={getImage(item.img)}
                 key={index}
                 className="w-[80%] mb-2"
                 alt=""

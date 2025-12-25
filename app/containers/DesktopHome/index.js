@@ -16,6 +16,7 @@ import {
   DesktopFixtureFootball,
   DesktopFixtureTennis,
 } from '@/components';
+import { getImage } from '@/utils/imagekit';
 
 const gifArr = [
   {
@@ -303,14 +304,22 @@ const DesktopHome = () => {
               to="/account/deposit"
               className="flex items-center justify-center py-2 gap-2 text-14 font-bold rounded-sm bg-[#1e8067] text-white"
             >
-              <img src="/images/deposit.png" className="w-5 h-5" alt="" />{' '}
+              <img
+                src={getImage('/images/deposit.png')}
+                className="w-5 h-5"
+                alt=""
+              />{' '}
               Deposit
             </Link>
             <Link
               to="/account/withdrawal"
               className="flex items-center justify-center py-2 gap-2 text-14 font-bold rounded-sm  text-white  bg-[#dc2626]"
             >
-              <img src="/images/withdraw.png" className="w-5 h-5" alt="" />{' '}
+              <img
+                src={getImage('/images/withdraw.png')}
+                className="w-5 h-5"
+                alt=""
+              />{' '}
               Withdraw
             </Link>
           </div>
@@ -346,7 +355,7 @@ const DesktopHome = () => {
             >
               <img
                 className=" absolute top-1 left-1 w-4 object-cover"
-                src={_item.img}
+                src={getImage(_item.img)}
                 alt=""
               />
               <p className="absolute bottom-1 left-1 text-white  truncate text-12 leading-none font-semibold ">
@@ -374,7 +383,11 @@ const DesktopHome = () => {
               key={index}
               className="rounded-[4px] overflow-hidden"
             >
-              <img src={item?.gif} className="h-[60px] w-full" alt="" />{' '}
+              <img
+                src={getImage(item?.gif)}
+                className="h-[60px] w-full"
+                alt=""
+              />{' '}
             </div>
           ))}
         </div>
@@ -388,7 +401,7 @@ const DesktopHome = () => {
                 className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
               >
                 <div className="flex items-center gap-2">
-                  <img src={item?.img} className="h-4 w-4" alt="" />
+                  <img src={getImage(item?.img)} className="h-4 w-4" alt="" />
                   <p className="text-16 font-bold">{item?.title}</p>
                 </div>
               </div>
@@ -403,7 +416,7 @@ const DesktopHome = () => {
                 className="h-[50px] cursor-pointer min-w-[170px] w-full flex flex-col items-start justify-center px-2 text-white relative rounded-[4px] bg-cover bg-center bg-no-repeat"
               >
                 <div className="flex items-center gap-2">
-                  <img src={item?.img} className="h-4 w-4" alt="" />
+                  <img src={getImage(item?.img)} className="h-4 w-4" alt="" />
                   <p className="text-16 font-bold">{item?.title}</p>
                 </div>
               </div>

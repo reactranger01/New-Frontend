@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 import { SidebarSubMenu } from '@/components';
 import { reactIcons } from '@/utils/icons';
 import { getData } from '@/utils/apiHandlers';
+import { getImage } from '@/utils/imagekit';
 
 const SidebarMenu = ({ game, back }) => {
   const [tournamentData, setTournamentData] = useState([]);
@@ -50,7 +51,11 @@ const SidebarMenu = ({ game, back }) => {
       </button>
       <div className="py-2 bg-[#8C1000] text-white">
         <p className="pl-2 flex items-center gap-2">
-          <img src={game.icon} alt={game.icon} className="w-4 h-4 invert" />{' '}
+          <img
+            src={getImage(game.icon)}
+            alt={game.icon}
+            className="w-4 h-4 invert"
+          />{' '}
           {game.title}
         </p>
       </div>

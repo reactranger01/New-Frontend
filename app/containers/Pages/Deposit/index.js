@@ -12,6 +12,7 @@ import { Download, Share2, Maximize2 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import DepositEditStake from '@/components/NewModals/DepositEditStake';
+import { getImage } from '@/utils/imagekit';
 const rules = [
   '1. Deposit money only in the selected account to get the fastest credits and avoid possible delays.',
   '2. Deposits made 45 minutes after the account removal from the site are valid & will be added to their wallets.',
@@ -308,9 +309,13 @@ const Deposit = () => {
 
               <div className="flex flex-col max-w-[270px] p-5">
                 <h2 className="text-[#40424f] text-18 font-bold ">Notes</h2>
-                <img src="/images/deposit/1.png" alt="" />
-                <img src="/images/deposit/2.png" className="mb-4" alt="" />
-                <img src="/images/deposit/3.png" alt="" />
+                <img src={getImage('/images/deposit/1.png')} alt="" />
+                <img
+                  src={getImage('/images/deposit/2.png')}
+                  className="mb-4"
+                  alt=""
+                />
+                <img src={getImage('/images/deposit/3.png')} alt="" />
               </div>
             </div>
             <div className="lg:px-12 lg:py-10 p-2 shadow-sm lg:shadow-[1px_1px_10px_#383838] ">
@@ -550,7 +555,11 @@ const Deposit = () => {
                       }}
                     >
                       <div className="flex items-center justify-between">
-                        <img src={item.icon} className=" w-10" alt="" />
+                        <img
+                          src={getImage(item.icon)}
+                          className=" w-10"
+                          alt=""
+                        />
                         {form?.paymentMethod !== item.value ? (
                           <div className="h-5 w-5 rounded-full  bg-white border border-black"></div>
                         ) : (

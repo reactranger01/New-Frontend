@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { reactIcons } from '@/utils/icons';
 import { useDispatch } from 'react-redux';
 import { closeModal, openModal } from '@/redux/Slices/modalSlice';
+import { getImage } from '@/utils/imagekit';
 
 const LoginForm = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -111,7 +112,11 @@ const LoginForm = ({ onClose }) => {
   return (
     <div className="flex flex-col gap-2 relative px-[10px] py-7">
       <div className="mx-auto">
-        <img src="/images/lotusLogo.jpg" className="h-[30px]" alt="" />
+        <img
+          src={getImage('/images/lotusLogo.jpg')}
+          className="h-[30px]"
+          alt=""
+        />
       </div>
       <h1 className="text-center text-20 font-bold text-white ">Login Now</h1>
       <div className="grid grid-cols-2 border border-[#F4D821] rounded-md mb-4">
@@ -357,17 +362,17 @@ const LoginForm = ({ onClose }) => {
 
         <div className="my-2 flex items-center justify-center gap-4">
           <img
-            src="/images/fbIcon.webp"
+            src={getImage('/images/fbIcon.webp')}
             className="h-6 w-6 rounded-full"
             alt=""
           />
           <img
-            src="/images/instaIcon.webp"
+            src={getImage('/images/instaIcon.webp')}
             className="h-6 w-6 rounded-full"
             alt=""
           />
           <img
-            src="/images/teleIcon.webp"
+            src={getImage('/images/teleIcon.webp')}
             className="h-6 w-6 rounded-full"
             alt=""
           />
@@ -387,7 +392,7 @@ const LoginForm = ({ onClose }) => {
         </p>
         <div className="flex-center my-2">
           <img
-            src="/images/emailIcon.webp"
+            src={getImage('/images/emailIcon.webp')}
             className="w-9 h-9 rounded-full"
             alt=""
           />

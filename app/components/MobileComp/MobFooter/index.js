@@ -1,5 +1,6 @@
 import CountryRestriction from '@/components/FooterModals/CountryRestriction';
 import Underage from '@/components/FooterModals/Underage';
+import { getImage } from '@/utils/imagekit';
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -17,14 +18,14 @@ const MobFooter = () => {
         className="h-7 w-7"
       >
         <img
-          src="/images/footer/1.png"
+          src={getImage('/images/footer/1.png')}
           className="bg-white h-full w-full "
           alt="gameCare"
         />
       </div>
       <div onClick={() => setOpenCountryRestriction(true)} className="h-7 w-7">
         <img
-          src="/images/footer/3.png"
+          src={getImage('/images/footer/3.png')}
           className="bg-white h-full w-full "
           alt="gameCare"
         />
@@ -35,7 +36,7 @@ const MobFooter = () => {
       >
         <div className="h-7 w-7 ">
           <img
-            src="/images/footer/2.png"
+            src={getImage('/images/footer/2.png')}
             className="bg-white h-full w-full "
             alt="gameCare"
           />

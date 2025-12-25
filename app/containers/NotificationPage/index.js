@@ -1,4 +1,5 @@
 import GradientHeading from '@/components/GradientHeading';
+import { getImage } from '@/utils/imagekit';
 import React from 'react';
 
 const NotificationPage = () => {
@@ -11,7 +12,7 @@ const NotificationPage = () => {
         <div className="bg-white rounded flex flex-col items-center justify-center gap-2 p-3">
           <img
             className="h-[74px] w-[94px]"
-            src="/images/rightDrawer/notifIcon.svg"
+            src={getImage('/images/rightDrawer/notifIcon.svg')}
             alt=""
           />
           <p className="text-18 font-bold text-center">No notification yet!</p>

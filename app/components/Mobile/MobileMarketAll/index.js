@@ -7,6 +7,7 @@ import { Autoplay } from 'swiper/modules';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { getImage } from '@/utils/imagekit';
 
 const MobileMarketAll = ({ inplayData, gameNameS }) => {
   const navigate = useNavigate();
@@ -79,7 +80,7 @@ const MobileMarketAll = ({ inplayData, gameNameS }) => {
                   {_items.inplay && (
                     <div className="flex items-center justify-center shrink-0 px-1">
                       <img
-                        src="/images/mobTv.webp"
+                        src={getImage('/images/mobTv.webp')}
                         className="w-[13px] h-[11px]"
                         alt=""
                       />

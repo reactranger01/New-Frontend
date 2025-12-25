@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { PropTypes } from 'prop-types';
+import { getImage } from '@/utils/imagekit';
 
 const style = {
   position: 'absolute',
@@ -46,7 +47,7 @@ export default function BetProcessing({ isOpen }) {
             Please Wait...{seconds}
           </h2>
           <img
-            src="/images/timer.gif"
+            src={getImage('/images/timer.gif')}
             className="w-12 h-12 lg:h-16 lg:w-16"
             alt=""
           />

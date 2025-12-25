@@ -4,6 +4,7 @@ import Pagination from '@/containers/Pagination';
 import { getAuthData, isLoggedIn } from '@/utils/apiHandlers';
 import { getQueryString } from '@/utils/formatter';
 import { reactIcons } from '@/utils/icons';
+import { getImage } from '@/utils/imagekit';
 import { numberWithCommas } from '@/utils/numberWithCommas';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
@@ -149,7 +150,7 @@ function AccountStatement() {
             </button>
             <div className="bg-primary-1300 flex-center gap-[5px] h-[38px] w-[43px] rounded-[4px] ">
               <img
-                src="/images/rightDrawer/downloadNew.svg"
+                src={getImage('/images/rightDrawer/downloadNew.svg')}
                 className="h-5 w-5"
                 alt=""
               />

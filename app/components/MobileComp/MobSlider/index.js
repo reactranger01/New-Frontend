@@ -10,6 +10,7 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { mobSlider } from '@/utils/constants';
 import { useNavigate } from 'react-router-dom';
+import { getImage } from '@/utils/imagekit';
 
 export default function MobSlider() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function MobSlider() {
             onClick={() => navigate('/')}
           >
             <img
-              src={item.path}
+              src={getImage(item.path)}
               alt=""
               className="h-[190px] w-full object-cover"
             />

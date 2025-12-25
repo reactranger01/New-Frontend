@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getImage } from '@/utils/imagekit';
 
 const DesktopGameHeader = ({ GameName, image, isSmall = false }) => {
   return (
@@ -7,12 +8,12 @@ const DesktopGameHeader = ({ GameName, image, isSmall = false }) => {
       <div className="flex items-center gap-2 sm:pl-2">
         {isSmall ? (
           <img
-            src="/images/sidebarIcons/cricketDesk.png"
+            src={getImage('/images/sidebarIcons/cricketDesk.png')}
             className="w-6 h-6"
             alt=""
           />
         ) : (
-          <img src={image} className="sm:w-6 sm:h-6 w-5 h-5" alt="" />
+          <img src={getImage(image)} className="sm:w-6 sm:h-6 w-5 h-5" alt="" />
         )}
 
         <p className="text-16 font-bold text-center sm:text-left">
