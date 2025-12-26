@@ -23,7 +23,6 @@ const Casino = () => {
   const [activeProvider, setActiveProvider] = useState('ALL');
   const [activeCategory, setActiveCategory] = useState('All');
   const itemRefs = useRef([]);
-  console.log(user, 'user');
   // debounce search
   useEffect(() => {
     const handler = setTimeout(() => {

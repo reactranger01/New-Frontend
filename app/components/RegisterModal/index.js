@@ -130,9 +130,6 @@ const RegisterModal = ({ isOpen, handleClose }) => {
     }
   };
 
-  console.log(form);
-  console.log(formError);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -166,7 +163,7 @@ const RegisterModal = ({ isOpen, handleClose }) => {
         toast.error(response?.data?.error || 'Something went wrong');
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (isYupError(error)) {
         setFormError(parseYupError(error));
       } else {

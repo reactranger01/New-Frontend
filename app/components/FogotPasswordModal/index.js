@@ -103,7 +103,7 @@ const ForgotPasswordModal = ({ isOpen, handleClose }) => {
         toast.error(response?.error?.error || 'Internal Server Error');
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (isYupError(error)) {
         setFormError(parseYupError(error));
       } else {

@@ -58,7 +58,6 @@ const AddAccount = () => {
       [name]: '',
     });
   };
-  console.log(formError, 'formError');
   const handleAddAccountSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -66,7 +65,6 @@ const AddAccount = () => {
       await addAccountValidation.validate(form, {
         abortEarly: false,
       });
-      console.log(form, 'form');
       const response = await postAuthData('/user/add-user-bank-account', form);
       if (response?.status === 200 || response?.status === 201) {
         toast.success('Account Added Successfully');

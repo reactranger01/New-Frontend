@@ -135,7 +135,6 @@ const WithdrawCard = () => {
       toast.error(response?.data || 'Something went wrong');
     }
   };
-  console.log(bankAccountList, 'bankAccountList');
   return (
     <>
       {bankAccountList && bankAccountList.length > 0 ? (

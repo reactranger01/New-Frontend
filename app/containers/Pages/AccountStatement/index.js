@@ -36,7 +36,6 @@ function AccountStatement() {
     }
   }, [id, page, take, startDate, endDate, sportFilter]);
 
-  console.log(sportFilter, 'sportFilter');
   const getTransactionList = async () => {
     const islogin = isLoggedIn();
     if (islogin) {
