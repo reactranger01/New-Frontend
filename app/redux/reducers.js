@@ -7,6 +7,7 @@ import userBetsModule from './modules/userBets';
 import activeIndexReducer from './Slices/newBetSlice';
 import modalReducer from './Slices/modalSlice';
 import yourReducer from './modules/stateupdate';
+import casinoReducer from './Slices/casinoUrlSlice';
 
 export default function createReducer() {
   const rootReducer = combineReducers({
@@ -18,6 +19,7 @@ export default function createReducer() {
     activeNewBet: activeIndexReducer,
     updatestate: yourReducer,
     modal: modalReducer,
+    casino: casinoReducer,
   });
 
   return rootReducer;

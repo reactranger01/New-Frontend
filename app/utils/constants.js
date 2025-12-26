@@ -1,3 +1,5 @@
+import { getImage } from './imagekit';
+
 export const sportSliderLink = [
   {
     title: 'Pool Zone',
@@ -104,7 +106,7 @@ export const links = [
   },
   {
     title: 'Casino',
-    path: '/no-market',
+    path: '/casino',
     icon: '/images/sidebarIcons/live-casino.svg',
     css: '#8C1000',
     route: 'null',
@@ -750,4 +752,96 @@ export const isToday = (inputDate) => {
     dateToCompare.getMonth() === today.getMonth() &&
     dateToCompare.getDate() === today.getDate()
   );
+};
+
+export const casinoProviders = [
+  'ALL',
+  'MAC88 GAMING',
+  'MAC88 GAMING VIRTUAL',
+  'MAC EXCITE',
+  'SMARTSOFT',
+  'SPRIBE',
+  'EVOLUTION GAMING',
+  'TURBO',
+  'EZUGI',
+  'JILI',
+  'PLAYTECH',
+  'BETSOFT',
+  'GAMZIX',
+  'BETGAMES',
+  'EVOPLAY',
+  'ASIA GAMING',
+  'WINFINITY',
+  'VIVOGAMING',
+  'ROYAL GAMING',
+];
+
+export const casinoCategories = [
+  { name: 'All', icon: '/images/casinoicon/i1.png' },
+  { name: 'Aviator', icon: '/images/casinoicon/i2.png' },
+  { name: 'Mines', icon: '/images/casinoicon/i3.png' },
+  { name: 'Color Games', icon: '/images/casinoicon/i4.png' },
+  { name: 'Dragon Tiger', icon: '/images/casinoicon/i5.png' },
+  { name: 'Andarbahar', icon: '/images/casinoicon/i6.png' },
+  { name: 'Teenpatti', icon: '/images/casinoicon/i7.png' },
+  { name: 'Lottery', icon: '/images/casinoicon/i8.png' },
+  { name: 'Live Poker', icon: '/images/casinoicon/i9.png' },
+  { name: 'Live Lobby', icon: '/images/casinoicon/i10.png' },
+  { name: 'Crash Game', icon: '/images/casinoicon/i11.png' },
+  { name: 'Casual Game', icon: '/images/casinoicon/i12.png' },
+  { name: 'Scratch Cards', icon: '/images/casinoicon/i13.png' },
+  { name: 'Live Blackjack', icon: '/images/casinoicon/i14.png' },
+  { name: 'Live Baccarat', icon: '/images/casinoicon/i15.png' },
+  { name: 'Live Roulette', icon: '/images/casinoicon/i16.png' },
+  { name: 'Live Dice', icon: '/images/casinoicon/i17.png' },
+  { name: 'Table', icon: '/images/casinoicon/i18.png' },
+];
+
+export const categoryIconMap = {
+  'Casual Games': getImage('/images/casinoicon/i12.png'), // Casual Game
+  'Crash Games': '/images/casinoicon/i11.png', // Crash Game
+  'Slot Games': '/images/casinoicon/i1.png', // not found, fallback
+  'Slot games': '/images/casinoicon/i1.png', // fallback
+  'Video Slots': '/images/casinoicon/i1.png', // fallback
+  Virtual: '/images/casinoicon/i1.png', // fallback
+  Virtuals: '/images/casinoicon/i1.png', // fallback
+  'Game Shows': '/images/casinoicon/i1.png', // fallback
+  'Game Show': '/images/casinoicon/i1.png', // fallback
+  Live: '/images/casinoicon/i1.png', // fallback
+  'Live Game Shows': '/images/casinoicon/i1.png', // fallback
+  'Live Roulette': '/images/casinoicon/i16.png',
+  'Live Lobby': '/images/casinoicon/i10.png',
+  'Live Poker': '/images/casinoicon/i9.png',
+  'Live Blackjack': '/images/casinoicon/i14.png',
+  'Live Baccarat': '/images/casinoicon/i15.png',
+  'Live Dice': '/images/casinoicon/i17.png',
+  'Live Crash': '/images/casinoicon/i11.png', // treat as Crash Game
+  'Live Dragon Tiger': '/images/casinoicon/i5.png',
+  'Dragon Tiger': '/images/casinoicon/i5.png',
+  andar_bahar: '/images/casinoicon/i6.png',
+  Andarbahar: '/images/casinoicon/i6.png',
+  Teenpatti: '/images/casinoicon/i7.png',
+  Lottery: '/images/casinoicon/i8.png',
+  'Live Lottery': '/images/casinoicon/i8.png',
+  Baccarat: '/images/casinoicon/i15.png',
+  Blackjack: '/images/casinoicon/i14.png',
+  roulette: '/images/casinoicon/i16.png',
+  Roulette: '/images/casinoicon/i16.png',
+  sicbo: '/images/casinoicon/i1.png', // no specific match
+  'Live Sic Bo': '/images/casinoicon/i1.png',
+  'Live SicBo': '/images/casinoicon/i1.png',
+  Others: '/images/casinoicon/i1.png',
+  'Top Card': '/images/casinoicon/i1.png',
+  Unknown: '/images/casinoicon/i1.png',
+  'Arcade Game': '/images/casinoicon/i1.png',
+  'Arcade Games': '/images/casinoicon/i1.png',
+  card: '/images/casinoicon/i1.png',
+  casino: '/images/casinoicon/i1.png',
+  Casino: '/images/casinoicon/i1.png',
+  'Fish Shooting': '/images/casinoicon/i1.png',
+  'Scratch Card': '/images/casinoicon/i13.png',
+  'Scratch Cards': '/images/casinoicon/i13.png',
+  'Table Games': '/images/casinoicon/i18.png',
+  Table: '/images/casinoicon/i18.png',
+  Plinko: '/images/casinoicon/i1.png',
 };

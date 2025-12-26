@@ -37,6 +37,7 @@ import {
   NotificationPage,
   LayoutTwo,
   OpenBets,
+  Casino,
 } from './containers/pageListAsync';
 import {
   ImageUpload,
@@ -95,6 +96,7 @@ function App() {
             />
             <Route path="no-market" element={<NoMarketAvailable />} />
           </Route>
+          <Route path="/casino" element={<Casino />} />
 
           <Route
             path="/dashboard"
