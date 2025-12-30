@@ -19,10 +19,16 @@ const Casino = () => {
   const [casinoData, setCasinoData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [activeProvider, setActiveProvider] = useState('ALL');
   const [activeCategory, setActiveCategory] = useState('All');
   const itemRefs = useRef([]);
+
+  const LIMIT = 50;
+  const loaderRef = useRef(null);
+
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   // debounce search
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -78,46 +84,118 @@ const Casino = () => {
   };
 
   // fetch games
-  const getCasinoData = async () => {
-    setLoading(true);
+  // const getCasinoData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const params = new URLSearchParams();
+  //     if (activeProvider && activeProvider.trim().toLowerCase() !== 'all')
+  //       params.append('provider', activeProvider);
+  //     if (activeCategory && activeCategory !== 'All')
+  //       params.append('category', activeCategory);
+  //     if (debouncedSearch) params.append('search', debouncedSearch);
+
+  //     const query = params.toString() ? `?${params.toString()}` : '';
+  //     const response = await getAuthData(`/user/get-casino-games${query}`);
+
+  //     if (response?.status) {
+  //       setCasinoData(response?.data?.games || []);
+  //     } else {
+  //       toast.dismiss();
+  //       toast.error(response?.error || 'Failed to fetch casino games');
+  //     }
+  //   } catch (err) {
+  //     toast.dismiss();
+  //     toast.error(err?.message || 'Something went wrong');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const getCasinoData = async (isLoadMore = false) => {
+    if (loading || loadingMore || !hasMore) return;
+
+    isLoadMore ? setLoadingMore(true) : setLoading(true);
+
     try {
       const params = new URLSearchParams();
-      if (activeProvider && activeProvider.trim().toLowerCase() !== 'all')
+
+      if (activeProvider?.toLowerCase() !== 'all')
         params.append('provider', activeProvider);
-      if (activeCategory && activeCategory !== 'All')
-        params.append('category', activeCategory);
+
+      if (activeCategory !== 'All') params.append('category', activeCategory);
+
       if (debouncedSearch) params.append('search', debouncedSearch);
 
-      const query = params.toString() ? `?${params.toString()}` : '';
+      params.append('limit', LIMIT);
+      params.append('offset', isLoadMore ? offset : 0);
+
+      const query = `?${params.toString()}`;
       const response = await getAuthData(`/user/get-casino-games${query}`);
 
       if (response?.status) {
-        setCasinoData(response?.data?.games || []);
-      } else {
-        toast.dismiss();
-        toast.error(response?.error || 'Failed to fetch casino games');
+        const newGames = response?.data?.games || [];
+
+        setCasinoData((prev) =>
+          isLoadMore ? [...prev, ...newGames] : newGames,
+        );
+
+        setOffset((prev) => (isLoadMore ? prev + LIMIT : LIMIT));
+
+        if (newGames.length < LIMIT) {
+          setHasMore(false);
+        }
       }
     } catch (err) {
-      toast.dismiss();
       toast.error(err?.message || 'Something went wrong');
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
+
+  useEffect(() => {
+    if (!loaderRef.current || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          getCasinoData(true);
+        }
+      },
+      { threshold: 1 },
+    );
+
+    observer.observe(loaderRef.current);
+
+    return () => observer.disconnect();
+    // eslint-disable-next-line
+  }, [loaderRef.current, hasMore, offset, getCasinoData]);
+
+  useEffect(() => {
+    setOffset(0);
+    setHasMore(true);
+    setCasinoData([]);
+    getCasinoData(false);
+
+    return () => {
+      dispatch(setIframeUrl(''));
+    };
+    // eslint-disable-next-line
+  }, [activeCategory, activeProvider, debouncedSearch]);
 
   useEffect(() => {
     getCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProvider]);
 
-  useEffect(() => {
-    getCasinoData();
+  // useEffect(() => {
+  //   getCasinoData();
 
-    return () => {
-      dispatch(setIframeUrl(''));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCategory, activeProvider, debouncedSearch]);
+  //   return () => {
+  //     dispatch(setIframeUrl(''));
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [activeCategory, activeProvider, debouncedSearch]);
 
   const handleGameClick = async (game) => {
     const toastId = 'gameToast';
@@ -280,6 +358,14 @@ const Casino = () => {
                 allowFullScreen
                 title="Casino Game"
               />
+            </div>
+          )}
+          {hasMore && (
+            <div
+              ref={loaderRef}
+              className="col-span-full flex justify-center py-4"
+            >
+              {loadingMore && <Loading isLoading />}
             </div>
           )}
         </div>
