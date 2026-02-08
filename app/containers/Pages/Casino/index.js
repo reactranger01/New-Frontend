@@ -183,6 +183,24 @@ const Casino = () => {
   <script>
     ${json.gameScript || ''}
 
+      function forceContainerHeight() {
+    const el = document.getElementById("egamings_container");
+    if (el) {
+      el.style.height = "100vh";
+      el.style.maxHeight = "100vh";
+      el.style.width = "100vw";
+    }
+  }
+
+  // run immediately
+  forceContainerHeight();
+
+  // run again after delays (in case game injects late)
+  setTimeout(forceContainerHeight, 100);
+  setTimeout(forceContainerHeight, 500);
+  setTimeout(forceContainerHeight, 1000);
+
+
     setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
     setTimeout(() => window.dispatchEvent(new Event('resize')), 1000);
   </script>
