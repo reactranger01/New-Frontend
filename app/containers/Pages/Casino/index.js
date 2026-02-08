@@ -1,160 +1,100 @@
 import { Footer, Loading, Navbar } from '@/components';
 import { getAuthData, isLoggedIn, postAuthData } from '@/utils/apiHandlers';
-import { casinoProviders, categoryIconMap } from '@/utils/constants';
+import { casinoProviders } from '@/utils/constants';
 import { reactIcons } from '@/utils/icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { showToast } from '@/utils/toastHandler';
-import { setIframeUrl } from '@/redux/Slices/casinoUrlSlice';
 import { openModal } from '@/redux/Slices/modalSlice';
 
 const Casino = () => {
   const dispatch = useDispatch();
-  const iframeUrl = useSelector((state) => state?.casino?.iframeUrl);
   const user = useSelector((state) => state.user);
-  const categoriesContainerRef = useRef(null);
+
+  const itemRefs = useRef([]);
+  const loaderRef = useRef(null);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [casinoData, setCasinoData] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [activeProvider, setActiveProvider] = useState('ALL');
   const [activeCategory, setActiveCategory] = useState('All');
-  const itemRefs = useRef([]);
 
-  const [htmlString, setHtmlString] = useState('');
+  const [iframeHtml, setIframeHtml] = useState(null);
+
   const LIMIT = 50;
-  const loaderRef = useRef(null);
-
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
 
-  const containerRef = useRef(null);
-
+  /* -------------------- Debounce Search -------------------- */
   useEffect(() => {
-    if (!htmlString || !containerRef.current) return;
-
-    // Clear previous content
-    containerRef.current.innerHTML = '';
-
-    // Create a wrapper
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = htmlString;
-
-    // Extract and re-run script
-    const scripts = wrapper.getElementsByTagName('script');
-
-    for (let script of scripts) {
-      const newScript = document.createElement('script');
-      newScript.type = 'text/javascript';
-      newScript.text = script.innerHTML;
-      document.body.appendChild(newScript);
-    }
-
-    // Append HTML (without script)
-    containerRef.current.appendChild(wrapper);
-
-    return () => {
-      // Cleanup scripts on unmount
-      scripts.forEach(() => {
-        document.body.removeChild(document.body.lastChild);
-      });
-    };
-  }, [htmlString]);
-
-  // debounce search
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
-    }, 500);
-    return () => clearTimeout(handler);
+    const t = setTimeout(() => setDebouncedSearch(searchTerm), 500);
+    return () => clearTimeout(t);
   }, [searchTerm]);
 
+  /* -------------------- Handle Browser Back -------------------- */
+  useEffect(() => {
+    const handleBack = () => {
+      if (iframeHtml) {
+        setIframeHtml(null);
+      }
+    };
+
+    window.addEventListener('popstate', handleBack);
+    return () => window.removeEventListener('popstate', handleBack);
+  }, [iframeHtml]);
+
+  /* -------------------- Providers -------------------- */
   const handleProviderClick = (provider) => {
     setActiveProvider(provider);
     setActiveCategory('All');
     setSearchTerm('');
-    dispatch(setIframeUrl(null));
+    setIframeHtml(null);
   };
+
+  /* -------------------- Categories -------------------- */
   const handleCategoryClick = (category, index) => {
     setActiveCategory(category?.category || 'All');
     setSearchTerm('');
-    dispatch(setIframeUrl(null));
+    setIframeHtml(null);
 
-    // Fixed smooth scroll
     if (itemRefs.current[index]) {
-      itemRefs.current[index].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center',
-      });
+      itemRefs.current[index].scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const getPlatform = () =>
-    /Mobi|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
-
-  // ✅ fetch categories dynamically
+  /* -------------------- Fetch Categories -------------------- */
   const getCategories = async () => {
     try {
       const params = new URLSearchParams();
-      if (activeProvider && activeProvider.trim().toLowerCase() !== 'all') {
+      if (activeProvider.toLowerCase() !== 'all') {
         params.append('provider', activeProvider);
       }
 
-      const query = params.toString() ? `?${params.toString()}` : '';
-      const response = await getAuthData(`/user/get-casino-category${query}`);
+      const res = await getAuthData(
+        `/user/get-casino-category?${params.toString()}`,
+      );
 
-      if (response?.status) {
-        setCategories(response?.data?.games || []);
-      } else {
-        setCategories([{ category: 'All', icon: '/images/all.png' }]);
-      }
-    } catch (err) {
-      toast.dismiss();
-      toast.error(err?.message || 'Failed to fetch categories');
+      setCategories(res?.status ? res?.data?.games || [] : []);
+    } catch {
+      toast.error('Failed to fetch categories');
     }
   };
 
-  // fetch games
-  // const getCasinoData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const params = new URLSearchParams();
-  //     if (activeProvider && activeProvider.trim().toLowerCase() !== 'all')
-  //       params.append('provider', activeProvider);
-  //     if (activeCategory && activeCategory !== 'All')
-  //       params.append('category', activeCategory);
-  //     if (debouncedSearch) params.append('search', debouncedSearch);
-
-  //     const query = params.toString() ? `?${params.toString()}` : '';
-  //     const response = await getAuthData(`/user/get-casino-games${query}`);
-
-  //     if (response?.status) {
-  //       setCasinoData(response?.data?.games || []);
-  //     } else {
-  //       toast.dismiss();
-  //       toast.error(response?.error || 'Failed to fetch casino games');
-  //     }
-  //   } catch (err) {
-  //     toast.dismiss();
-  //     toast.error(err?.message || 'Something went wrong');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const getCasinoData = async (isLoadMore = false) => {
+  /* -------------------- Fetch Games -------------------- */
+  const getCasinoData = async (loadMore = false) => {
     if (loading || loadingMore || !hasMore) return;
 
-    isLoadMore ? setLoadingMore(true) : setLoading(true);
+    loadMore ? setLoadingMore(true) : setLoading(true);
 
     try {
       const params = new URLSearchParams();
 
-      if (activeProvider?.toLowerCase() !== 'all')
+      if (activeProvider.toLowerCase() !== 'all')
         params.append('provider', activeProvider);
 
       if (activeCategory !== 'All') params.append('category', activeCategory);
@@ -162,249 +102,206 @@ const Casino = () => {
       if (debouncedSearch) params.append('search', debouncedSearch);
 
       params.append('limit', LIMIT);
-      params.append('offset', isLoadMore ? offset : 0);
+      params.append('offset', loadMore ? offset : 0);
 
-      const query = `?${params.toString()}`;
-      const response = await getAuthData(`/user/get-casino-games${query}`);
+      const res = await getAuthData(
+        `/user/get-casino-games?${params.toString()}`,
+      );
 
-      if (response?.status) {
-        const newGames = response?.data?.games || [];
+      const games = res?.data?.games || [];
 
-        setCasinoData((prev) =>
-          isLoadMore ? [...prev, ...newGames] : newGames,
-        );
+      setCasinoData((prev) => (loadMore ? [...prev, ...games] : games));
+      setOffset((prev) => (loadMore ? prev + LIMIT : LIMIT));
 
-        setOffset((prev) => (isLoadMore ? prev + LIMIT : LIMIT));
-
-        if (newGames.length < LIMIT) {
-          setHasMore(false);
-        }
-      }
-    } catch (err) {
-      toast.error(err?.message || 'Something went wrong');
+      if (games.length < LIMIT) setHasMore(false);
     } finally {
       setLoading(false);
       setLoadingMore(false);
     }
   };
 
+  /* -------------------- Infinite Scroll -------------------- */
   useEffect(() => {
     if (!loaderRef.current || !hasMore) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          getCasinoData(true);
-        }
-      },
+      ([entry]) => entry.isIntersecting && getCasinoData(true),
       { threshold: 1 },
     );
 
     observer.observe(loaderRef.current);
-
     return () => observer.disconnect();
-    // eslint-disable-next-line
-  }, [loaderRef.current, hasMore, offset, getCasinoData]);
+  }, [hasMore, offset]);
 
   useEffect(() => {
     setOffset(0);
     setHasMore(true);
     setCasinoData([]);
-    getCasinoData(false);
-
-    return () => {
-      dispatch(setIframeUrl(''));
-    };
-    // eslint-disable-next-line
+    getCasinoData();
   }, [activeCategory, activeProvider, debouncedSearch]);
 
   useEffect(() => {
     getCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeProvider]);
 
-  // useEffect(() => {
-  //   getCasinoData();
-
-  //   return () => {
-  //     dispatch(setIframeUrl(''));
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [activeCategory, activeProvider, debouncedSearch]);
-
+  /* -------------------- Launch Game -------------------- */
   const handleGameClick = async (game) => {
-    const toastId = 'gameToast';
-    if (user?.userType?.toLowerCase() === 'demo') {
-      showToast(
-        'error',
-        'This is a demo login. To play casino, use your registered account.',
-        toastId,
-      );
+    if (!isLoggedIn()) {
+      dispatch(openModal('login'));
       return;
     }
-    setLoading(true);
-    try {
-      const platform = getPlatform();
-      if (!user?.id) {
-        showToast('error', 'User ID not found. Please log in again.', toastId);
-        return;
-      }
 
-      const payload = { platform, gameid: game?.game_id, id: user.id };
+    setLoading(true);
+
+    try {
+      const payload = {
+        platform: /Mobi|Android|iPhone/i.test(navigator.userAgent)
+          ? 'mobile'
+          : 'desktop',
+        gameid: game?.game_id,
+        id: user.id,
+      };
+
       const res = await postAuthData('/user/create-session', payload);
 
-      if (res?.status === 200) {
-        setHtmlString(res.data.data);
-        dispatch(setIframeUrl(res?.data?.url));
+      if (res?.status === 200 && res?.data?.data) {
+        const raw = res.data.data;
+        const json = JSON.parse(raw.substring(raw.indexOf('{')));
+
+        window.history.pushState({ game: true }, '');
+
+        setIframeHtml(`
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+</head>
+<body style="margin:0;padding:0;overflow:hidden;">
+  ${json.gameHtml || ''}
+  <script>
+    ${json.gameScript || ''}
+
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 1000);
+  </script>
+</body>
+</html>
+        `);
       } else {
-        showToast(
-          'error',
-          res?.data?.message || 'Failed to start game',
-          toastId,
-        );
+        showToast('error', 'Game launch failed');
       }
-    } catch (err) {
-      toast.dismiss();
-      toast.error(err?.message || 'Something went wrong');
+    } catch {
+      toast.error('Something went wrong');
     } finally {
       setLoading(false);
     }
   };
 
+  /* -------------------- UI -------------------- */
   return (
-    <div className="">
+    <div className="min-h-screen">
       <Navbar />
-      <div className="">
-        <div className="p-2  rounded-xl">
-          <div className="bg-[#249F62] py-1 px-[10px] flex items-center rounded-[3px] text-white gap-1 text-14 font-roboto font-bold">
-            <span className=""> {reactIcons.play}</span> Casino
-          </div>
 
-          <div className="relative w-full mt-2">
-            <span className="absolute ay-center left-2">
-              {reactIcons.search}
-            </span>
+      {!iframeHtml ? (
+        <>
+          <div className="p-2">
+            <div className="bg-[#249F62] py-1 px-3 rounded text-white font-bold flex gap-1">
+              {reactIcons.play} Casino
+            </div>
+
             <input
-              type="text"
+              className="w-full border mt-2 px-3 py-1"
               placeholder="Search Games"
-              className="bg-transparent w-full border border-primary-100 text-black  pl-6 pr-10 py-2 rounded-[3px] text-sm h-[26px]  placeholder:text-[#312b2b]"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            {searchTerm && (
-              <span
-                onClick={() => setSearchTerm('')}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-black bg-white text-lg rounded-full cursor-pointer"
-              >
-                {reactIcons.cross}
-              </span>
-            )}
-          </div>
 
-          {/* providers */}
-          <div className="flex border gap-[2px]  mt-2 overflow-x-auto">
-            {casinoProviders.map((provider) => (
-              <button
-                key={provider}
-                onClick={() => handleProviderClick(provider)}
-                className={`px-4 py-2 text-12 rounded-sm  whitespace-nowrap font-lato font-bold 
-                ${
-                  activeProvider === provider
-                    ? 'bg-[#F4D821] text-black'
-                    : 'bg-white text-white  bg-[linear-gradient(180deg,#00c694,#174f41)]'
-                }`}
-              >
-                {provider}
-              </button>
-            ))}
-          </div>
-
-          {/* categories */}
-          <div
-            ref={categoriesContainerRef}
-            className="flex items-center gap-1 overflow-x-auto py-2"
-          >
-            {categories?.map((cat, index) => (
-              <button
-                key={cat?.category || index}
-                ref={(el) => (itemRefs.current[index] = el)}
-                onClick={() => handleCategoryClick(cat, index)}
-                className={`px-3 py-1 flex flex-col items-center min-w-[90px] h-[55px] font-lato text-10 justify-center rounded 
-   whitespace-nowrap transition-all flex-shrink-0
-  ${
-    activeCategory === cat?.category
-      ? ' bg-[#F4D821] text-white'
-      : 'bg-[#E9E9E9] text-black'
-  }`}
-              >
-                <img
-                  src={
-                    categoryIconMap[cat?.category] ||
-                    '/images/casinoicon/i1.png'
-                  }
-                  alt={cat?.category}
-                  className="w-6 h-6 mb-1 "
-                />
-                <span>{cat?.category}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* games grid / iframe */}
-          {!htmlString ? (
-            <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-7  gap-[2px] mb-2">
-              {loading && (
-                <div className="absolute inset-0 z-30 bg-black/50 backdrop-blur-md">
-                  <Loading isLoading={loading} />
-                </div>
-              )}
-
-              {!loading && casinoData?.length === 0 && (
-                <div className="col-span-full text-center text-gray-500 py-4">
-                  No data available for casino
-                </div>
-              )}
-
-              {casinoData?.map((item, index) => (
-                <div
-                  key={index}
-                  className="relative w-full cursor-pointer"
-                  onClick={() => {
-                    if (isLoggedIn()) {
-                      handleGameClick(item);
-                    } else {
-                      dispatch(openModal('login'));
-                    }
-                  }}
+            {/* Providers */}
+            <div className="flex gap-1 mt-2 overflow-x-auto">
+              {casinoProviders.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => handleProviderClick(p)}
+                  className={`px-3 py-1 whitespace-nowrap ${
+                    activeProvider === p
+                      ? 'bg-yellow-400'
+                      : 'bg-green-600 text-white'
+                  }`}
                 >
-                  <img
-                    src={item?.game_images}
-                    className="w-full h-32 md:h-44 object-fill"
-                    alt={`Game ${index}`}
-                    loading="lazy"
-                  />
-                </div>
+                  {p}
+                </button>
               ))}
             </div>
-          ) : (
-            <div className="w-full h-[calc(100vh-290px)] lg:h-[calc(100vh-270px)]">
-              <div
-                ref={containerRef}
-                style={{ width: '100%', height: '100vh' }}
-              />
+
+            {/* Categories */}
+            <div className="flex gap-1 mt-2 overflow-x-auto">
+              {categories.map((cat, i) => (
+                <button
+                  key={i}
+                  ref={(el) => (itemRefs.current[i] = el)}
+                  onClick={() => handleCategoryClick(cat, i)}
+                  className={`px-2 py-1 whitespace-nowrap ${
+                    activeCategory === cat.category
+                      ? 'bg-yellow-400'
+                      : 'bg-gray-200'
+                  }`}
+                >
+                  {cat.category}
+                </button>
+              ))}
             </div>
-          )}
-          {hasMore && (
-            <div
-              ref={loaderRef}
-              className="col-span-full flex justify-center py-4"
-            >
-              {loadingMore && <Loading isLoading />}
+
+            {/* Games */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+              {casinoData.map((game, i) => (
+                <img
+                  key={i}
+                  src={game.game_images}
+                  className="cursor-pointer"
+                  onClick={() => handleGameClick(game)}
+                />
+              ))}
             </div>
-          )}
+
+            {hasMore && <div ref={loaderRef} className="h-10" />}
+            {loading && <Loading isLoading />}
+          </div>
+
+          <Footer />
+        </>
+      ) : (
+        /* ---------------- GAME VIEW ---------------- */
+        <div
+          className="fixed left-0 right-0 bottom-0 z-[9999] bg-black"
+          style={{ top: '64px' }}
+        >
+          {/* Back Button */}
+          <button
+            onClick={() => {
+              setIframeHtml(null);
+              window.history.back();
+            }}
+            className="absolute top-2 left-2 z-[10000] bg-yellow-400 px-3 py-1 rounded font-bold"
+          >
+            ← Back
+          </button>
+
+          <iframe
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            srcDoc={iframeHtml}
+            allowFullScreen
+            title="Casino Game"
+            style={{
+              width: '100%',
+              height: '100%',
+              border: '0',
+              display: 'block',
+            }}
+          />
         </div>
-      </div>
-      <Footer />
+      )}
     </div>
   );
 };

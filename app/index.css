@@ -465,3 +465,7 @@ input[type='number']::-webkit-outer-spin-button {
   + .MuiSwitch-track {
   background-color: #1e8067 !important;
 }
+
+#egamings_container {
+  height: 100vh !important;
+}
