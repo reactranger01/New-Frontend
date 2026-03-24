@@ -156,7 +156,7 @@ const DesktopHome = () => {
     const stopPolling = startPolling(
       () =>
         getFixtureDataMobile(
-          'cricket',
+          'Cricket',
           setCricketInplay,
           setInplayTrue,
           setInplayFalse,
@@ -174,7 +174,7 @@ const DesktopHome = () => {
     const stopPolling = startPolling(
       () =>
         getFixtureDataMobile(
-          'tennis',
+          'Tennis',
           settennisInplay,
           setInplayTrueTennis,
           setInplayFalseTennis,
@@ -192,7 +192,7 @@ const DesktopHome = () => {
     const stopPolling = startPolling(
       () =>
         getFixtureDataMobile(
-          'soccer',
+          'Soccer',
           setsoccerInplay,
           setInplayTrueSoccer,
           setInplayFalseSoccer,

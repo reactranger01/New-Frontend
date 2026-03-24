@@ -12,6 +12,7 @@ const DesktopMarketAll = ({
   showStar = false,
 }) => {
   const navigate = useNavigate();
+
   return (
     <div className="flex flex-col">
       <div className="w-full border border-[#ddd]">
@@ -47,9 +48,7 @@ const DesktopMarketAll = ({
                         key={index}
                         onClick={() =>
                           navigate(
-                            _items?.event_id
-                              ? `/${gameNameS}/market/${_items?.event_id}`
-                              : `/${gameNameS}/market/${_items?.matchId}`,
+                            _items?.id && `/${gameNameS}/market/${_items?.id}`,
                             {
                               state: { data: _items },
                             },

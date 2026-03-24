@@ -45,8 +45,8 @@ const MatchOdds = ({
     if (isLogin) {
       setBets([
         {
-          marketId: String(_marketData?.market_id || data?.market_id),
-          eventId: Number(eventId),
+          marketId: String(_marketData?.marketId || data?.marketId),
+          eventId: Number(data?.eventId || eventId),
           gameId: 2,
           selectionId: String(selectionId),
           betOn: selectType,
@@ -125,11 +125,11 @@ const MatchOdds = ({
                     : '';
                 let minLimitOdds, maxLimitOdds;
                 if (inplay) {
-                  minLimitOdds = allMarketData?.inPlayMinLimit;
-                  maxLimitOdds = allMarketData?.inPlayMaxLimit;
+                  minLimitOdds = allMarketData?.minBetAmount;
+                  maxLimitOdds = allMarketData?.maxBetAmount;
                 } else {
-                  minLimitOdds = allMarketData?.offPlayMinLimit;
-                  maxLimitOdds = allMarketData?.offPlayMaxLimit;
+                  minLimitOdds = allMarketData?.minBetAmount;
+                  maxLimitOdds = allMarketData?.maxBetAmount;
                 }
                 return (
                   <>
@@ -172,11 +172,12 @@ const MatchOdds = ({
                           <BlueBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Tennis',
-                                items?.backPrice3 || items?.back?.[2]?.price,
+                                items?.back?.[2]?.price ||
+                                  items?.back?.[2]?.price,
                                 data?.market,
                                 'BACK',
                                 data,
@@ -184,22 +185,23 @@ const MatchOdds = ({
                                 maxLimitOdds,
                               );
                             }}
-                            text={items?.backPrice3 || '0'}
+                            text={items?.back?.[2]?.price || '0'}
                             size={
-                              items?.backsize3 && items?.backPrice3
-                                ? intToString(items?.backsize3 || 0)
+                              items?.back?.[2]?.size && items?.back?.[2]?.price
+                                ? intToString(items?.back?.[2]?.size || 0)
                                 : '0'
                             }
-                            disabled={items?.backPrice3 ? false : true}
+                            disabled={items?.back?.[2]?.price ? false : true}
                           />
                           <BlueBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Tennis',
-                                items?.backPrice2 || items?.back?.[1]?.price,
+                                items?.back?.[1]?.price ||
+                                  items?.back?.[1]?.price,
                                 data?.market,
                                 'BACK',
                                 data,
@@ -207,23 +209,23 @@ const MatchOdds = ({
                                 maxLimitOdds,
                               );
                             }}
-                            text={items?.backPrice2 || '0'}
+                            text={items?.back?.[1]?.price || '0'}
                             size={
-                              items?.backsize2 && items?.backPrice2
-                                ? intToString(items?.backsize2 || 0)
+                              items?.back?.[1]?.size && items?.back?.[1]?.price
+                                ? intToString(items?.back?.[1]?.size || 0)
                                 : '0'
                             }
-                            disabled={items?.backPrice2 ? false : true}
+                            disabled={items?.back?.[1]?.price ? false : true}
                           />
 
                           <BlueBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Tennis',
-                                items?.backPrice1,
+                                items?.back?.[0]?.price,
                                 data?.market,
                                 'BACK',
                                 data,
@@ -231,23 +233,24 @@ const MatchOdds = ({
                                 maxLimitOdds,
                               );
                             }}
-                            text={items?.backPrice1 || '0'}
+                            text={items?.back?.[0]?.price || '0'}
                             size={
-                              items?.backsize1 && items?.backPrice1
-                                ? intToString(items?.backsize1 || 0)
+                              items?.back?.[0]?.size && items?.back?.[0]?.price
+                                ? intToString(items?.back?.[0]?.size || 0)
                                 : '0'
                             }
-                            disabled={items?.backPrice1 ? false : true}
+                            disabled={items?.back?.[0]?.price ? false : true}
                           />
 
                           <PinkBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Tennis',
-                                items?.layPrice1 || items?.lay?.[0]?.price,
+                                items?.lay?.[0]?.price ||
+                                  items?.lay?.[0]?.price,
                                 data?.market,
                                 'LAY',
                                 data,
@@ -255,22 +258,23 @@ const MatchOdds = ({
                                 maxLimitOdds,
                               );
                             }}
-                            text={items?.layPrice1 || '0'}
+                            text={items?.lay?.[0]?.price || '0'}
                             size={
-                              items?.laysize1 && items?.layPrice1
+                              items?.laysize1 && items?.lay?.[0]?.price
                                 ? intToString(items?.laysize1 || 0)
                                 : '0'
                             }
-                            disabled={items?.layPrice1 ? false : true}
+                            disabled={items?.lay?.[0]?.price ? false : true}
                           />
                           <PinkBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Tennis',
-                                items?.layPrice2 || items?.lay?.[1]?.price,
+                                items?.lay?.[1]?.price ||
+                                  items?.lay?.[1]?.price,
                                 data?.market,
                                 'LAY',
                                 data,
@@ -278,22 +282,23 @@ const MatchOdds = ({
                                 maxLimitOdds,
                               );
                             }}
-                            text={items?.layPrice2 || '0'}
+                            text={items?.lay?.[1]?.price || '0'}
                             size={
-                              items?.laysize2 && items?.layPrice2
+                              items?.laysize2 && items?.lay?.[1]?.price
                                 ? intToString(items?.laysize2 || 0)
                                 : '0'
                             }
-                            disabled={items?.layPrice2 ? false : true}
+                            disabled={items?.lay?.[1]?.price ? false : true}
                           />
                           <PinkBtn
                             onClick={async () => {
                               await addToBetPlace(
-                                data?.eventid || data?.matchId,
+                                data?.eventId,
                                 items?.selectionId,
                                 items?.runnerName,
                                 'Tennis',
-                                items?.layPrice3 || items?.lay?.[2]?.price,
+                                items?.lay?.[2]?.price ||
+                                  items?.lay?.[2]?.price,
                                 data?.market,
                                 'LAY',
                                 data,
@@ -301,16 +306,16 @@ const MatchOdds = ({
                                 maxLimitOdds,
                               );
                             }}
-                            text={items?.layPrice3 || '0'}
+                            text={items?.lay?.[2]?.price || '0'}
                             size={
-                              items?.laysize3 && items?.layPrice3
+                              items?.laysize3 && items?.lay?.[2]?.price
                                 ? intToString(items?.laysize3 || 0)
                                 : '0'
                             }
-                            disabled={items?.layPrice3 ? false : true}
+                            disabled={items?.lay?.[2]?.price ? false : true}
                           />
                         </div>
-                        {items?.status !== '' && items?.status !== 'ACTIVE' && (
+                        {items?.status !== '' && items?.status !== 'Active' && (
                           <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
                             <SuspendedBtn status={items?.status} />
                           </div>
@@ -344,7 +349,7 @@ const MatchOdds = ({
 
 MatchOdds.propTypes = {
   heading: PropTypes.string,
-  data: PropTypes.array,
+  data: PropTypes.object,
   allMarketData: PropTypes.array,
   placedBetWinLossDatas: PropTypes.object,
   competition_name: PropTypes.string,

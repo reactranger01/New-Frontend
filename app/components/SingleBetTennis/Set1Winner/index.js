@@ -56,8 +56,8 @@ const Set1Winner = ({
     if (isLogin) {
       setBets([
         {
-          marketId: String(_marketData?.market_id),
-          eventId: Number(eventId),
+          marketId: String(_marketData?.marketId),
+          eventId: Number(data?.eventId || eventId),
           gameId: 1,
           selectionId: String(selectionId),
           betOn: selectType,
@@ -146,11 +146,11 @@ const Set1Winner = ({
                     : '';
                 let minLimitOdds, maxLimitOdds;
                 if (inplay) {
-                  minLimitOdds = allMarketData?.inPlayMinLimit;
-                  maxLimitOdds = allMarketData?.inPlayMaxLimit;
+                  minLimitOdds = allMarketData?.minBetAmount;
+                  maxLimitOdds = allMarketData?.maxBetAmount;
                 } else {
-                  minLimitOdds = allMarketData?.offPlayMinLimit;
-                  maxLimitOdds = allMarketData?.offPlayMaxLimit;
+                  minLimitOdds = allMarketData?.minBetAmount;
+                  maxLimitOdds = allMarketData?.maxBetAmount;
                 }
                 return (
                   <>
@@ -197,7 +197,7 @@ const Set1Winner = ({
                             onClick={async () => {
                               if (isLogin) {
                                 await addToBetPlace(
-                                  data?.eventid || data?.matchId,
+                                  data?.eventId,
                                   items?.selectionId,
                                   items?.runnerName,
                                   'Tennis',
@@ -209,7 +209,7 @@ const Set1Winner = ({
                                   maxLimitOdds,
                                 );
                               } else {
-                                setOpenModal(true);
+                                dispatch(openModal('login'));
                               }
                             }}
                             text={items?.back?.[1]?.price || '0'}
@@ -224,7 +224,7 @@ const Set1Winner = ({
                             onClick={async () => {
                               if (isLogin) {
                                 await addToBetPlace(
-                                  data?.eventid || data?.matchId,
+                                  data?.eventId,
                                   items?.selectionId,
                                   items?.runnerName,
                                   'Tennis',
@@ -236,13 +236,12 @@ const Set1Winner = ({
                                   maxLimitOdds,
                                 );
                               } else {
-                                setOpenModal(true);
+                                dispatch(openModal('login'));
                               }
                             }}
                             text={items?.lay?.[0]?.price || '0'}
                             size={
-                              items?.ex?.availableToLay?.[0]?.size &&
-                              items?.lay?.[0]?.price
+                              items?.lay?.[0]?.size && items?.lay?.[0]?.price
                                 ? intToString(items?.lay?.[0]?.size || 0)
                                 : '0'
                             }
@@ -252,14 +251,13 @@ const Set1Winner = ({
                           <PinkBtn disabled={true} />
                         </div>
 
-                        {items?.status !== '' ||
-                          (items?.status !== 'ACTIVE' && (
-                            <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
-                              <SuspendedBtn
-                                status={items?.status || 'SUSPENDED'}
-                              />
-                            </div>
-                          ))}
+                        {items?.status && items?.status !== 'Active' && (
+                          <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                            <SuspendedBtn
+                              status={items?.status || 'SUSPENDED'}
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                     {activeBetSlip == Number(items?.selectionId) &&
@@ -291,7 +289,7 @@ const Set1Winner = ({
 
 Set1Winner.propTypes = {
   heading: PropTypes.string,
-  data: PropTypes.array,
+  data: PropTypes.object,
   eventId: PropTypes.any,
   competition_name: PropTypes.string,
   placedBetWinLossDatas: PropTypes.object,

@@ -230,12 +230,12 @@ const UnderMarket = ({
                           <PinkBtn disabled={true} />
                           <PinkBtn disabled={true} />
                         </div>
-                        {items?.status !== '' ||
-                          (items?.status !== 'ACTIVE' && (
-                            <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
-                              <SuspendedBtn status={items?.status} />
-                            </div>
-                          ))}
+                        {(items?.status !== '' ||
+                          items?.status !== 'ACTIVE') && (
+                          <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10">
+                            <SuspendedBtn status={items?.status} />
+                          </div>
+                        )}
                       </div>
                     </div>
                     {activeBetSlip == Number(items?.selectionId) &&

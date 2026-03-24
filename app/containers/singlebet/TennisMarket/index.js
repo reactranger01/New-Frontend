@@ -23,6 +23,7 @@ const TennisMarket = () => {
 
   const isLogin = isLoggedIn();
   const { eventId } = useParams();
+
   const [allMarketData, setAllMarketData] = useState([]);
   const [fixtureEventName, setFixtureEventName] = useState([]);
   const betData = useSelector((state) => state.bet.selectedBet);
@@ -89,12 +90,6 @@ const TennisMarket = () => {
       );
       setPlacedBetWinLossData(placedBetCalcData);
     }
-    if (odds?.runners?.[0]?.status == 'CLOSED') {
-      const timer = setTimeout(() => {
-        navigate(-1);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
   }, [usersBets?.bets, odds, allMarketData, eventId]);
 
   useEffect(() => {
@@ -134,6 +129,7 @@ const TennisMarket = () => {
       };
     }
   }, [isLiveTv]);
+
   return (
     <>
       {' '}
@@ -146,9 +142,12 @@ const TennisMarket = () => {
                 <div className="text-white">{reactIcons.play}</div>
                 <div>
                   {' '}
-                  <h1 className="text-24"> {matchData?.name || ''}</h1>
+                  <h1 className="text-24">
+                    {fixtureEventName?.eventName || matchData?.name || ''}
+                  </h1>
                   <p className="text-[#FAFAFA80] text-12 mt-1">
-                    {matchData?.competition_name}
+                    {matchData?.competition_name ||
+                      `Competition ${fixtureEventName?.competitionId || ''}`}
                   </p>
                 </div>
               </div>
@@ -285,7 +284,7 @@ const TennisMarket = () => {
                   fixtureEventName={fixtureEventName}
                   placedBetWinLossDatas={placedBetWinLossDatas}
                   competition_name={matchData?.competition_name}
-                  allMarketData={allMarketData[0]}
+                  allMarketData={allMarketData}
                 />
               ) : (
                 <Set1Winner
@@ -296,7 +295,7 @@ const TennisMarket = () => {
                   type="under15"
                   placedBetWinLossDatas={placedBetWinLossDatas}
                   competition_name={matchData?.competition_name}
-                  allMarketData={allMarketData[0]}
+                  allMarketData={allMarketData}
                 />
               ),
             )}
@@ -316,15 +315,6 @@ const TennisMarket = () => {
           eventId={eventId}
           competition_name={matchData?.competition_name}
         /> */}
-        </div>
-        <div>
-          {isLogin && betData.length > 0 ? (
-            <div className="hidden lg:block">
-              <BetSlip />
-            </div>
-          ) : (
-            ''
-          )}
         </div>
       </div>
     </>

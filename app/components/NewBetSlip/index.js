@@ -159,6 +159,7 @@ const NewBetSlip = () => {
         await betValidationSchema.validate(
           {
             ...data,
+
             minimumBet:
               userInfo.currency_type === 'HKD'
                 ? (betData?.minimumBet || 0) / 10
@@ -172,7 +173,14 @@ const NewBetSlip = () => {
         );
 
         // ✅ Start both API and 6-second timer simultaneously
-        const apiCall = postAuthData('/user/place-bet', data);
+        const payload = {
+          ...data,
+          marketName: data?.market,
+          runnerName: data?.selection,
+          marketType: data?.market === 'Match Odds' ? 'NORMAL' : 'FANCY',
+          rate: data?.price,
+        };
+        const apiCall = postAuthData('/bet/place', payload);
         const delay = new Promise((resolve) => setTimeout(resolve, 6000));
 
         // Wait until BOTH are done

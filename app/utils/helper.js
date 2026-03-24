@@ -487,43 +487,41 @@ export const desktopModalStyle = {
 // ) => {
 //   setLoading(true);
 //   try {
-//     const response = await getAuthData(
-//       `/catalogue/${game}/get-fixture-details`,
-//     );
+//     const response = await getAuthData(`/fixture?sport=${game}`);
+
 //     if (response?.status === 200 || response?.status === 201) {
 //       const data = response?.data.filter((item) => item.isDelete === false);
-//       if (data) {
-//         setLoading(false);
-//         const todayDate = new Date().toISOString().split('T')[0];
-//         const inplayTrueData = [];
-//         const inplayFalseData = [];
-//         data
-//           .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
-//           .forEach((item) => {
-//             const entryDate = new Date(item?.matchDateTime)
-//               ?.toISOString()
-//               ?.split('T')[0];
-//             if (
-//               entryDate >= todayDate ||
-//               item?.status === 'ACTIVE' ||
-//               item?.status === 'OPEN'
-//             ) {
-//               if (item?.inplay === true) {
-//                 inplayTrueData.push(item);
-//               } else {
-//                 inplayFalseData.push(item);
-//               }
-//             }
-//           });
 
-//         setInplay(data);
-//         setInplayTrue(inplayTrueData);
-//         setInplayFalse(inplayFalseData);
-//       }
+//       const todayDate = new Date().toISOString().split('T')[0];
+//       const inplayTrueData = [];
+//       const inplayFalseData = [];
+
+//       data
+//         .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
+//         .forEach((item) => {
+//           const entryDate = new Date(item.matchDateTime)
+//             .toISOString()
+//             .split('T')[0];
+
+//           if (
+//             entryDate >= todayDate ||
+//             item.status === 'ACTIVE' ||
+//             item.status === 'OPEN'
+//           ) {
+//             item.inplay
+//               ? inplayTrueData.push(item)
+//               : inplayFalseData.push(item);
+//           }
+//         });
+
+//       setInplay(data);
+//       setInplayTrue(inplayTrueData);
+//       setInplayFalse(inplayFalseData);
 //     }
 //   } catch (e) {
-//     setLoading(false);
 //     console.error(`Error fetching data from ${game}:`, e);
+//   } finally {
+//     setLoading(false);
 //   }
 // };
 export const getFixtureDataMobile = async (
@@ -535,46 +533,44 @@ export const getFixtureDataMobile = async (
 ) => {
   setLoading(true);
   try {
-    const response = await getAuthData(
-      `/catalogue/${game}/get-fixture-details`,
+    // 🔴 Inplay TRUE
+    const inplayRes = await getAuthData(`/fixture?sport=${game}&inplay=true`);
+
+    // 🔵 Upcoming (inplay FALSE)
+    const upcomingRes = await getAuthData(
+      `/fixture?sport=${game}&inplay=false&matchTime=upcoming`,
     );
 
-    if (response?.status === 200 || response?.status === 201) {
-      const data = response?.data.filter((item) => item.isDelete === false);
+    let inplayTrueData = [];
+    let inplayFalseData = [];
 
-      const todayDate = new Date().toISOString().split('T')[0];
-      const inplayTrueData = [];
-      const inplayFalseData = [];
-
-      data
-        .sort((a, b) => new Date(a.matchDateTime) - new Date(b.matchDateTime))
-        .forEach((item) => {
-          const entryDate = new Date(item.matchDateTime)
-            .toISOString()
-            .split('T')[0];
-
-          if (
-            entryDate >= todayDate ||
-            item.status === 'ACTIVE' ||
-            item.status === 'OPEN'
-          ) {
-            item.inplay
-              ? inplayTrueData.push(item)
-              : inplayFalseData.push(item);
-          }
-        });
-
-      setInplay(data);
-      setInplayTrue(inplayTrueData);
-      setInplayFalse(inplayFalseData);
+    // ✅ use response.fixture directly
+    if (inplayRes?.status === 200 || inplayRes?.status === 201) {
+      inplayTrueData = inplayRes?.data?.fixture || [];
     }
+
+    if (upcomingRes?.status === 200 || upcomingRes?.status === 201) {
+      inplayFalseData = upcomingRes?.data?.fixture || [];
+    }
+
+    // ✅ sort using startTime
+    inplayTrueData.sort(
+      (a, b) => new Date(a.startTime) - new Date(b.startTime),
+    );
+
+    inplayFalseData.sort(
+      (a, b) => new Date(a.startTime) - new Date(b.startTime),
+    );
+    // 👇 SAME STATES (UI SAFE)
+    setInplay([...inplayTrueData, ...inplayFalseData]);
+    setInplayTrue(inplayTrueData);
+    setInplayFalse(inplayFalseData);
   } catch (e) {
     console.error(`Error fetching data from ${game}:`, e);
   } finally {
     setLoading(false);
   }
 };
-
 export const getFixtureData = async (
   game,
   setInplayTrue,
@@ -584,9 +580,7 @@ export const getFixtureData = async (
 ) => {
   setLoading(true);
   try {
-    const response = await getAuthData(
-      `/catalogue/${game}/get-fixture-details`,
-    );
+    const response = await getAuthData('fixture', `/fixture?sport=${game}`);
     if (response?.status === 200 || response?.status === 201) {
       const data = response?.data.filter((item) => item.isDelete === false);
       if (data) {
@@ -625,6 +619,62 @@ export const getFixtureData = async (
   }
 };
 
+// export const fetchEventData = async (game, eventId, setters) => {
+//   const {
+//     setLoading,
+//     setLoaderOneTime,
+//     setOddsData,
+//     setBookmakerData,
+//     setFancyData,
+//     setSessionData,
+//     setMatchOddsMarket,
+//     setParticularMatchData,
+//     setFixtureEventName,
+//     setAllMarketData,
+//   } = setters;
+
+//   setLoading(true);
+//   try {
+//     const response = await getAuthData(`/catalogue/${eventId}?sport=${game}`);
+//     if (response?.status === 200 || response?.status === 201) {
+//       if (response?.data) {
+//         const { data } = response;
+//         setLoading(false);
+//         setLoaderOneTime(true);
+//         if (
+//           setOddsData &&
+//           setBookmakerData &&
+//           setFancyData &&
+//           setSessionData &&
+//           setMatchOddsMarket &&
+//           setParticularMatchData
+//         ) {
+//           const matchOddsData = data?.events.find(
+//             (item) => item.market_name === 'Match Odds',
+//           );
+//           setOddsData(matchOddsData);
+//           setBookmakerData(data?.bookmakerData);
+//           setFancyData(data?.fancyData);
+//           setSessionData(data?.sessionData);
+//           setMatchOddsMarket({
+//             catalogue: [matchOddsData],
+//             marketName: matchOddsData?.market_name,
+//           });
+//           setParticularMatchData({
+//             eventName: matchOddsData?.name,
+//             marketId: matchOddsData?.market_id,
+//           });
+//         }
+//         if (setFixtureEventName) setFixtureEventName(data);
+//         if (setAllMarketData) setAllMarketData(data?.events);
+//       }
+//     }
+//   } catch (e) {
+//     setLoading(false);
+//     setLoaderOneTime(true);
+//     console.error(`Error fetching event data from ${game}:`, e);
+//   }
+// };
 export const fetchEventData = async (game, eventId, setters) => {
   const {
     setLoading,
@@ -640,15 +690,39 @@ export const fetchEventData = async (game, eventId, setters) => {
   } = setters;
 
   setLoading(true);
+
   try {
-    const response = await getAuthData(
-      `/catalogue/${game}/get-catalogue-details?eventId=${eventId}`,
-    );
+    const response = await getAuthData(`/catalogue/${eventId}?sport=${game}`);
+
     if (response?.status === 200 || response?.status === 201) {
-      if (response?.data) {
-        const { data } = response;
+      const resData = response?.data;
+
+      if (resData) {
         setLoading(false);
         setLoaderOneTime(true);
+
+        const catalogue = resData?.catalogue;
+
+        // 🔥 Transform markets object → array (UI compatible)
+        const transformMarkets = (marketsObj) => {
+          if (!marketsObj) return [];
+
+          return Object.keys(marketsObj).flatMap((marketName) =>
+            marketsObj[marketName].map((market) => ({
+              ...market,
+              market_name: marketName, // 👈 required by UI
+            })),
+          );
+        };
+
+        const allMarkets = transformMarkets(catalogue?.markets);
+
+        // ✅ Match Odds extract
+        const matchOddsData = allMarkets.find(
+          (item) => item.market_name === 'Match Odds',
+        );
+
+        // ✅ OLD setters compatibility
         if (
           setOddsData &&
           setBookmakerData &&
@@ -657,24 +731,25 @@ export const fetchEventData = async (game, eventId, setters) => {
           setMatchOddsMarket &&
           setParticularMatchData
         ) {
-          const matchOddsData = data?.events.find(
-            (item) => item.market_name === 'Match Odds',
-          );
-          setOddsData(matchOddsData);
-          setBookmakerData(data?.bookmakerData);
-          setFancyData(data?.fancyData);
-          setSessionData(data?.sessionData);
+          setOddsData(matchOddsData || {});
+          setBookmakerData(resData?.bookmakerData || {});
+          setFancyData(resData?.fancyMarkets || {});
+          setSessionData(resData?.sessionMarkets || {});
+
           setMatchOddsMarket({
             catalogue: [matchOddsData],
             marketName: matchOddsData?.market_name,
           });
+
           setParticularMatchData({
-            eventName: matchOddsData?.name,
-            marketId: matchOddsData?.market_id,
+            eventName: catalogue?.eventName,
+            marketId: matchOddsData?.marketId,
           });
         }
-        if (setFixtureEventName) setFixtureEventName(data);
-        if (setAllMarketData) setAllMarketData(data?.events);
+
+        // ✅ For TennisMarket (your current screen)
+        if (setFixtureEventName) setFixtureEventName(catalogue);
+        if (setAllMarketData) setAllMarketData(allMarkets);
       }
     }
   } catch (e) {

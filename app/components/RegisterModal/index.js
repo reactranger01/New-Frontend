@@ -11,6 +11,14 @@ import { closeModal, openModal } from '@/redux/Slices/modalSlice';
 import { useDispatch } from 'react-redux';
 import { getImage } from '@/utils/imagekit';
 
+const countryCodes = [
+  { code: '91', country: 'India' },
+  { code: '880', country: 'Bangladesh' },
+  { code: '971', country: 'United Arab Emirates' },
+  { code: '977', country: 'Nepal' },
+  { code: '92', country: 'Pakistan' },
+];
+
 const sponsorArr = [
   {
     id: 1,
@@ -80,6 +88,9 @@ const RegisterModal = ({ isOpen, handleClose }) => {
       [name]: '',
     });
   };
+
+  const getCountryByCode = (code) =>
+    countryCodes.find((item) => item.code === code)?.country || '';
   const handleSendOtp = async () => {
     try {
       // Validate payload first
@@ -92,19 +103,19 @@ const RegisterModal = ({ isOpen, handleClose }) => {
       });
       const toastId = toast.loading('Sending OTP...');
       setIsOtpButtonDisabled(true);
+
       try {
         const payload = {
-          mobile: form?.dialCode + form?.mobile,
+          mobile: '+' + form?.dialCode + form?.mobile,
+          type: 'register',
+          country: getCountryByCode(form?.dialCode),
         };
-        const response = await postData(
-          '/user/send-verification-code',
-          payload,
-        );
+        const response = await postData('/auth/send-code', payload);
 
         if (response?.status) {
           // setResetOtpTimer(true);
           setIsOtpSent(true);
-          toast.success(response?.data?.message);
+          toast.success('OTP Sent Successfully');
         } else {
           toast.error(
             response?.error?.message ||
@@ -147,20 +158,25 @@ const RegisterModal = ({ isOpen, handleClose }) => {
       const payload = {
         username: form?.username,
         password: form?.password,
-        phoneNumber: form?.dialCode + form?.mobile,
-        otp: form?.otp,
-        status: true,
+        mobile: '+' + form?.dialCode + form?.mobile,
+        mobileVerificationCode: form?.otp,
         confirmPassword: form?.confirmPassword,
+        country: getCountryByCode(form?.dialCode),
       };
-      const response = await postData('/user/register', payload);
-      if (response?.status === 200) {
+      const response = await postData('/auth/register', payload);
+      console.log(response, 'ress');
+      if (response?.status === 201) {
         toast.success('Registered Successfully');
-        window.location.reload();
+        // window.location.reload();
 
         handleClose();
       } else {
         toast.dismiss();
-        toast.error(response?.data?.error || 'Something went wrong');
+        if (Array.isArray(response.data.message)) {
+          response.data.message.map((item) => toast.error(item));
+        } else {
+          toast.error(response?.data?.message || 'Something went wrong');
+        }
       }
     } catch (error) {
       console.error(error);

@@ -11,10 +11,11 @@ export const getUser = async () => {
     try {
       // Add a 1-second delay before making the API call
       await delay(1000);
-      const response = await getAuthData('/user/get-user-details');
-      localStorage.setItem('lotus_userID', response?.data?.data?.id);
+      const response = await getAuthData('/users/me');
+      console.log(response, 'resss');
+      localStorage.setItem('lotus_userID', response?.data?.id);
       if (response?.status === 200) {
-        return response?.data?.data;
+        return response?.data;
       } else if (response?.status == 403) {
         logout();
       }

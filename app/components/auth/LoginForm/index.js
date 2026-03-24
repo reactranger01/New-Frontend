@@ -78,13 +78,14 @@ const LoginForm = ({ onClose }) => {
       await loginValidation.validate(form, {
         abortEarly: false,
       });
-      const response = await postData('/user/signin', form);
-      if (response?.status === 200 && response?.data?.data?.ut === 'USER') {
+      const response = await postData('/auth/login', form);
+      console.log(response, 'ress');
+      if (response?.status === 200 && response?.data?.type === 'user') {
         setAuthCookie();
-        Cookies.set('__users__isLoggedIn', response?.data?.data?.token);
+        Cookies.set('__users__isLoggedIn', response?.data?.accessToken);
         localStorage.setItem(
           '__users__isLoggedIn',
-          response?.data?.data?.token,
+          response?.data?.accessToken,
         );
         toast.success('Login Successfully');
         window.location.reload();
